@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "distributions/new", :type => :view do
+RSpec.describe "distributions/new", type: :view do
   before(:each) do
-    assign(:distribution, Distribution.new())
+    assign(:distribution, FactoryGirl.build(:distribution))
   end
 
   it "renders new distribution form" do

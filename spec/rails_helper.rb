@@ -1,15 +1,15 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
+
+require 'simplecov'
+SimpleCov.start 'rails'
+
 require 'spec_helper'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 require 'webmock/rspec'
-WebMock.disable_net_connect!(:allow_localhost => true)
-
-# note: require 'devise' after require 'rspec/rails'
-# require 'devise'
 
 # For front-end testing with phantomjs and poltergeist
 require 'capybara/rails'
@@ -24,6 +24,8 @@ Capybara.default_host = 'example.com'
 
 require 'shoulda'
 require 'factory_girl'
+require 'support/factory_girl'
+
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -77,4 +79,8 @@ RSpec.configure do |config|
     config.include ::Rails::Controller::Testing::TemplateAssertions, :type => type
     config.include ::Rails::Controller::Testing::Integration, :type => type
   end
+
+  config.include FactoryGirl::Syntax::Methods
+  config.include Devise::TestHelpers, type: :controller
+  config.include Warden::Test::Helpers
 end

@@ -23,4 +23,5 @@ class Dataset < ApplicationRecord
   belongs_to :maintainer, class_name: 'User'
   has_many :distributions
 
+  validates :title, presence: true, uniqueness: true
 end

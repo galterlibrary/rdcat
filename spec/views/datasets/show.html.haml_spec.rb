@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "datasets/show", :type => :view do
+RSpec.describe "datasets/show", type: :view do
   before(:each) do
-    @dataset = assign(:dataset, Dataset.create!())
+    @dataset = assign(:dataset, FactoryGirl.create(:dataset))
   end
 
   it "renders attributes in <p>" do

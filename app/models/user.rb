@@ -21,6 +21,10 @@
 #
 
 class User < ActiveRecord::Base
+
+  has_many :datasets_as_author,     class_name: 'Dataset', foreign_key: 'author_id'
+  has_many :datasets_as_maintainer, class_name: 'Dataset', foreign_key: 'maintainer_id'
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :ldap_authenticatable, :registerable,

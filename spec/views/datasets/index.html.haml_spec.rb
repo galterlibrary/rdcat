@@ -1,10 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe "datasets/index", :type => :view do
+RSpec.describe "datasets/index", type: :view do
   before(:each) do
     assign(:datasets, [
-      Dataset.create!(),
-      Dataset.create!()
+      FactoryGirl.create(:dataset)
     ])
   end
 

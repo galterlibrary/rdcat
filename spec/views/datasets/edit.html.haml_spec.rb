@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "datasets/edit", :type => :view do
+RSpec.describe "datasets/edit", type: :view do
   before(:each) do
-    @dataset = assign(:dataset, Dataset.create!())
+    @dataset = assign(:dataset, FactoryGirl.create(:dataset))
   end
 
   it "renders the edit dataset form" do

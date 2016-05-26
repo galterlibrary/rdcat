@@ -14,4 +14,7 @@
 
 class Distribution < ApplicationRecord
   belongs_to :dataset
+
+  validates :name, presence: true, uniqueness: true
+  validates :dataset, presence: true
 end

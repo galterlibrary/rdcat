@@ -22,6 +22,8 @@
 
 FactoryGirl.define do
   factory :user do
-    
+    email 'user@test.edu'
+    password Devise.friendly_token[0,20]
+    username 'username'
   end
 end
