@@ -1,0 +1,19 @@
+%h1 Listing distributions
+
+%table
+  %thead
+    %tr
+      %th
+      %th
+      %th
+
+  %tbody
+    - @distributions.each do |distribution|
+      %tr
+        %td= link_to 'Show', distribution
+        %td= link_to 'Edit', edit_distribution_path(distribution)
+        %td= link_to 'Destroy', distribution, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Distribution', new_distribution_path
