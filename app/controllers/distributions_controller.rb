@@ -69,6 +69,10 @@ class DistributionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def distribution_params
-      params.fetch(:distribution, {})
+      params.fetch(:distribution, {}).permit(:dataset_id,
+                                             :uri,
+                                             :name,
+                                             :description,
+                                             :format)
     end
 end

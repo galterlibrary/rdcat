@@ -16,4 +16,8 @@ require 'rails_helper'
 
 RSpec.describe Distribution, :type => :model do
   it { should belong_to(:dataset) }
+
+  it { should validate_uniqueness_of(:name) }
+  it { should validate_presence_of(:name) }
+  it { should validate_presence_of(:dataset) }
 end

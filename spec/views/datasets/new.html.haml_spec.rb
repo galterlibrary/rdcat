@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "datasets/new", :type => :view do
+RSpec.describe "datasets/new", type: :view do
   before(:each) do
-    assign(:dataset, Dataset.new())
+    assign(:dataset, FactoryGirl.build(:dataset))
   end
 
   it "renders new dataset form" do

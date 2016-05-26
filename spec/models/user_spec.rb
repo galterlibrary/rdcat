@@ -23,5 +23,6 @@
 require 'rails_helper'
 
 RSpec.describe User, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { should have_many(:datasets_as_author) }
+  it { should have_many(:datasets_as_maintainer) }
 end

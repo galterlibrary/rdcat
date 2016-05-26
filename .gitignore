@@ -4,10 +4,29 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+# ignore local configuration files
+.env
+.powenv
+.powrc
+.rvmrc
+.powrc.orig
+
 # Ignore bundler config.
 /.bundle
 
 # Ignore all logfiles and tempfiles.
 /log/*
+/tmp/*
 !/log/.keep
-/tmp
+!/tmp/.keep
+
+# Ignore Byebug command history file.
+.byebug_history
+
+# Ignore test/spec output
+/coverage
+/coverage/*
+
+/config/database.yml
+/config/ldap.yml
+

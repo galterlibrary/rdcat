@@ -14,6 +14,7 @@
 
 FactoryGirl.define do
   factory :distribution do
-    
+    name 'Distribution Name'
+    association :dataset, factory: :dataset 
   end
 end

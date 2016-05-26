@@ -19,6 +19,6 @@
 
 FactoryGirl.define do
   factory :dataset do
-    
+    title 'Dataset Title'
   end
 end

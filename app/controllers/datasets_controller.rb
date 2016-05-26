@@ -69,6 +69,25 @@ class DatasetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def dataset_params
-      params.fetch(:dataset, {})
+#  title           :string
+#  description     :text
+#  license         :string
+#  organization_id :integer
+#  visibility      :string
+#  state           :string
+#  source          :string
+#  version         :string
+#  author_id       :integer
+#  maintainer_id   :integer
+      params.fetch(:dataset, {}).permit(:title, 
+                                        :description, 
+                                        :license, 
+                                        :organization_id,
+                                        :visibility, 
+                                        :state,
+                                        :source,
+                                        :version,
+                                        :author_id,
+                                        :maintainer_id)
     end
 end
