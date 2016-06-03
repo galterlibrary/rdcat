@@ -1,4 +1,5 @@
 class DistributionsController < ApplicationController
+  before_action :set_dataset
   before_action :set_distribution, only: [:show, :edit, :update, :destroy]
 
   # GET /distributions
@@ -25,10 +26,11 @@ class DistributionsController < ApplicationController
   # POST /distributions.json
   def create
     @distribution = Distribution.new(distribution_params)
+    @distribution.dataset = @dataset
 
     respond_to do |format|
       if @distribution.save
-        format.html { redirect_to @distribution, notice: 'Distribution was successfully created.' }
+        format.html { redirect_to @dataset, notice: 'Distribution was successfully created.' }
         format.json { render :show, status: :created, location: @distribution }
       else
         format.html { render :new }
@@ -42,7 +44,7 @@ class DistributionsController < ApplicationController
   def update
     respond_to do |format|
       if @distribution.update(distribution_params)
-        format.html { redirect_to @distribution, notice: 'Distribution was successfully updated.' }
+        format.html { redirect_to @dataset, notice: 'Distribution was successfully updated.' }
         format.json { render :show, status: :ok, location: @distribution }
       else
         format.html { render :edit }
@@ -56,12 +58,16 @@ class DistributionsController < ApplicationController
   def destroy
     @distribution.destroy
     respond_to do |format|
-      format.html { redirect_to distributions_url, notice: 'Distribution was successfully destroyed.' }
+      format.html { redirect_to @dataset, notice: 'Distribution was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
+    def set_dataset
+      @dataset = Dataset.find(params[:dataset_id])
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_distribution
       @distribution = Distribution.find(params[:id])

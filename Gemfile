@@ -33,11 +33,12 @@ gem 'capistrano-rails', group: :development
 gem 'haml'
 gem 'haml-rails'
 gem 'foundation-rails'
+gem 'simple_form'
 
 gem 'dotenv-rails'
 gem 'exception_notification'
 
-gem 'devise_ldap_authenticatable' #, :git => 'git://github.com/nubic/devise_ldap_authenticatable.git'
+gem 'devise_ldap_authenticatable' #, git: 'git://github.com/nubic/devise_ldap_authenticatable.git'
 gem 'net-ldap'
 
 group :development, :test do
@@ -46,7 +47,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
   %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
-    gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'master'
+    gem lib, git: "https://github.com/rspec/#{lib}.git", branch: 'master'
   end
   gem 'factory_girl_rails'
   gem 'capybara'
@@ -56,6 +57,7 @@ group :development, :test do
   gem 'shoulda'
   gem 'simplecov', require: false
   gem 'fakeweb'
+  gem 'faker'
   gem 'webmock', require: false
   gem 'rack-test'
 

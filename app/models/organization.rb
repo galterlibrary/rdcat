@@ -15,6 +15,6 @@ class Organization < ApplicationRecord
   has_many :datasets
   validates :name, presence: true, uniqueness: true
   validates :abbreviation, presence: true, uniqueness: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, uniqueness: true, allow_nil: true
   validates :url, presence: true, uniqueness: true
 end

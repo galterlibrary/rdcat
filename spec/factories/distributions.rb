@@ -14,7 +14,7 @@
 
 FactoryGirl.define do
   factory :distribution do
-    name 'Distribution Name'
+    name Faker::Hipster.word
     association :dataset, factory: :dataset 
   end
 end

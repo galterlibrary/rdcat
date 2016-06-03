@@ -15,6 +15,8 @@ class DatasetsController < ApplicationController
   # GET /datasets/new
   def new
     @dataset = Dataset.new
+    @dataset.author = current_user
+    @dataset.maintainer = current_user
   end
 
   # GET /datasets/1/edit
@@ -69,16 +71,6 @@ class DatasetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def dataset_params
-#  title           :string
-#  description     :text
-#  license         :string
-#  organization_id :integer
-#  visibility      :string
-#  state           :string
-#  source          :string
-#  version         :string
-#  author_id       :integer
-#  maintainer_id   :integer
       params.fetch(:dataset, {}).permit(:title, 
                                         :description, 
                                         :license, 
