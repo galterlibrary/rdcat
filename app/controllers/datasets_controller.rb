@@ -1,5 +1,8 @@
 class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
+  before_action :set_categories, only: [:new, :edit]
+
+  before_action :clean_select_multiple_params, only: [:create, :update]
 
   # GET /datasets
   # GET /datasets.json
@@ -67,6 +70,10 @@ class DatasetsController < ApplicationController
       @dataset = Dataset.find(params[:id])
     end
 
+    def set_categories
+      @categories = Category.pluck(:name).sort
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def dataset_params
       params.fetch(:dataset, {}).permit(:title, 
@@ -78,6 +85,17 @@ class DatasetsController < ApplicationController
                                         :source,
                                         :version,
                                         :author_id,
-                                        :maintainer_id)
+                                        :maintainer_id,
+                                        { categories: [] })
+    end
+
+    # Used to strip blank first values from array-type params.
+    def clean_select_multiple_params(hash = params)
+      hash.each do |key, value|
+        case value
+        when Array then value.reject!(&:blank?)
+        when Hash then clean_select_multiple_params(value)
+        end
+      end
     end
 end

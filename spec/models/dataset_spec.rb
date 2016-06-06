@@ -15,6 +15,7 @@
 #  maintainer_id   :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  categories      :text             default([]), is an Array
 #
 
 require 'rails_helper'

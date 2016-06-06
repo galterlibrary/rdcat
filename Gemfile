@@ -34,6 +34,7 @@ gem 'haml'
 gem 'haml-rails'
 gem 'foundation-rails'
 gem 'simple_form'
+gem 'chosen-rails'
 
 gem 'dotenv-rails'
 gem 'exception_notification'

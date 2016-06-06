@@ -1,7 +1,7 @@
 // Place all the styles related to the datasets controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-#new_dataset, #edit_dataset {
+.new_dataset, .edit_dataset {
   label {
     font-size: 1.25em;
     display: inline-block;
@@ -20,4 +20,30 @@
     font-size: 1.5em;
     width: 12.5em;
   }  
+}
+
+.chosen-container {
+  margin: 0 0 1rem -4px;
+  padding: 0;
+}
+
+.chosen-container-multi {
+  .chosen-choices {
+    -moz-appearance: none;
+    background-color: #fefefe;
+    border: 1px solid #cacaca;
+    border-radius: 0;
+    box-shadow: 0 1px 2px rgba(10, 10, 10, 0.1) inset;
+    box-sizing: border-box;
+    color: #0a0a0a;
+    display: block;
+    font-family: inherit;
+    font-size: 1rem;
+    height: 2.4375rem;
+    transition: box-shadow 0.5s ease 0s, border-color 0.25s ease-in-out 0s;
+    width: 100%;
+    li.search-choice { 
+      margin: 9px 5px 3px 0;
+    }
+  }
 }
