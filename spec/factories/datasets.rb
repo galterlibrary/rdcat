@@ -20,5 +20,7 @@
 FactoryGirl.define do
   factory :dataset do
     title Faker::Hipster.word
+    association :organization, factory: :organization
+    association :maintainer, factory: :user
   end
 end

@@ -15,8 +15,6 @@ class DatasetsController < ApplicationController
   # GET /datasets/new
   def new
     @dataset = Dataset.new
-    @dataset.author = current_user
-    @dataset.maintainer = current_user
   end
 
   # GET /datasets/1/edit
@@ -30,7 +28,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully created.' }
+        format.html { redirect_to datasets_path, notice: 'Dataset was successfully created.' }
         format.json { render :show, status: :created, location: @dataset }
       else
         format.html { render :new }
@@ -44,7 +42,7 @@ class DatasetsController < ApplicationController
   def update
     respond_to do |format|
       if @dataset.update(dataset_params)
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully updated.' }
+        format.html { redirect_to datasets_path, notice: 'Dataset was successfully updated.' }
         format.json { render :show, status: :ok, location: @dataset }
       else
         format.html { render :edit }

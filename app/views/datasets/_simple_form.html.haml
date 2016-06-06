@@ -2,12 +2,12 @@
   = f.input :title, error: 'Title is required, please enter one', input_html: { class: 'required' }, required: true, inline_label: true
   = f.input :description, placeholder: 'e.g. Some useful notes about the data', inline_label: true
   = f.input :license, inline_label: true
-  = f.association :organization, collection: Organization.all.order(:name), prompt: 'Choose an Organization'
+  = f.association :organization, collection: Organization.all.order(:name), prompt: 'Choose an Organization', input_html: { class: 'required' }, required: true
   = f.input :visibility
   = f.input :state
   = f.input :source
   = f.input :version
   = f.association :author, label_method: :name, collection: User.all.order(:last_name), prompt: 'Choose an Author'
-  = f.association :maintainer, label_method: :name, collection: User.all.order(:last_name), prompt: 'Choose a Maintainer'
+  = f.association :maintainer, label_method: :name, collection: User.all.order(:last_name), prompt: 'Choose a Maintainer', input_html: { class: 'required' }, required: true
 
   = f.button :submit

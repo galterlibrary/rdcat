@@ -8,13 +8,7 @@
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = csrf_meta_tag
   %body
-    .menu
-      %ul.hmenu
-        = render 'devise/menu/login_items'
-    .flash
-      %p.notice 
-        = notice
-      %p.alert
-        = alert
+    = render 'layouts/menu'
+    = render 'layouts/messages'
     .content
       = yield

@@ -84,9 +84,9 @@ RSpec.describe DatasetsController, type: :controller do
         expect(assigns(:dataset)).to be_persisted
       end
 
-      it 'redirects to the created dataset' do
+      it 'redirects to the datasets index' do
         post :create, params: {dataset: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Dataset.last)
+        expect(response).to redirect_to(datasets_path)
       end
     end
 
@@ -123,10 +123,10 @@ RSpec.describe DatasetsController, type: :controller do
         expect(assigns(:dataset)).to eq(dataset)
       end
 
-      it 'redirects to the dataset' do
+      it 'redirects to the datasets index' do
         dataset = Dataset.create! valid_attributes
         put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(dataset)
+        expect(response).to redirect_to(datasets_path)
       end
     end
 

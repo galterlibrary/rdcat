@@ -24,4 +24,6 @@ class Dataset < ApplicationRecord
   has_many :distributions
 
   validates :title, presence: true, uniqueness: true
+  validates :organization, presence: true
+  validates :maintainer, presence: true
 end
