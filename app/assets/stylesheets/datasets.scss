@@ -11,6 +11,9 @@
     display: inline-block;
     width: 80%;
   }
+  textarea {
+    height: 5.9375rem;
+  }
   .text {
     label {
       vertical-align: top;
@@ -44,6 +47,19 @@
     width: 100%;
     li.search-choice { 
       margin: 9px 5px 3px 0;
+    }
+  }
+}
+
+#dataset_show {
+  p {
+    font-size: 1.25em;
+  }
+  .distributions {
+    margin: 0 33px;
+    font-size: 1.25em;
+    .distribution {
+      padding: 1rem;
     }
   }
 }

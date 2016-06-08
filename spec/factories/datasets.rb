@@ -23,5 +23,7 @@ FactoryGirl.define do
     title Faker::Hipster.word
     association :organization, factory: :organization
     association :maintainer, factory: :user
+    visibility Dataset::PUBLIC
+    state Dataset::ACTIVE
   end
 end

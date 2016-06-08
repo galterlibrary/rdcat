@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   
   resources :organizations
   resources :datasets do 
-    resources :distributions
+    resources :distributions do
+      member do 
+        get 'download'
+      end
+    end
   end
   resources :users
   # The priority is based upon order of creation: first created -> highest priority.

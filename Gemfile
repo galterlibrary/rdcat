@@ -35,6 +35,7 @@ gem 'haml-rails'
 gem 'foundation-rails'
 gem 'simple_form'
 gem 'chosen-rails'
+gem 'carrierwave'
 
 gem 'dotenv-rails'
 gem 'exception_notification'

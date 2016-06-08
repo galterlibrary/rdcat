@@ -2,28 +2,28 @@ class DistributionsController < ApplicationController
   before_action :set_dataset
   before_action :set_distribution, only: [:show, :edit, :update, :destroy]
 
-  # GET /distributions
-  # GET /distributions.json
+  # GET /datasets/:dataset_id/distributions
+  # GET /datasets/:dataset_id/distributions.json
   def index
     @distributions = Distribution.all
   end
 
-  # GET /distributions/1
-  # GET /distributions/1.json
+  # GET /datasets/:dataset_id/distributions/1
+  # GET /datasets/:dataset_id/distributions/1.json
   def show
   end
 
-  # GET /distributions/new
+  # GET /datasets/:dataset_id/distributions/new
   def new
     @distribution = Distribution.new
   end
 
-  # GET /distributions/1/edit
+  # GET /datasets/:dataset_id/distributions/1/edit
   def edit
   end
 
-  # POST /distributions
-  # POST /distributions.json
+  # POST /datasets/:dataset_id/distributions
+  # POST /datasets/:dataset_id/distributions.json
   def create
     @distribution = Distribution.new(distribution_params)
     @distribution.dataset = @dataset
@@ -39,8 +39,8 @@ class DistributionsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /distributions/1
-  # PATCH/PUT /distributions/1.json
+  # PATCH/PUT /datasets/:dataset_id/distributions/1
+  # PATCH/PUT /datasets/:dataset_id/distributions/1.json
   def update
     respond_to do |format|
       if @distribution.update(distribution_params)
@@ -53,14 +53,20 @@ class DistributionsController < ApplicationController
     end
   end
 
-  # DELETE /distributions/1
-  # DELETE /distributions/1.json
+  # DELETE /datasets/:dataset_id//distributions/1
+  # DELETE /datasets/:dataset_id//distributions/1.json
   def destroy
     @distribution.destroy
     respond_to do |format|
       format.html { redirect_to @dataset, notice: 'Distribution was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  # GET /datasets/:dataset_id/distributions/:id/download
+  def download
+    @document = Dataset.find(params[:dataset_id]).distributions.find(params[:id])
+    send_file @document.content.current_path
   end
 
   private
@@ -79,6 +85,7 @@ class DistributionsController < ApplicationController
                                              :uri,
                                              :name,
                                              :description,
+                                             :artifact,
                                              :format)
     end
 end
