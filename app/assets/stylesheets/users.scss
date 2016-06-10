@@ -1,0 +1,23 @@
+// Place all the styles related to the users controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+#new_user, #edit_user {
+  label {
+    font-size: 1.25em;
+    display: inline-block;
+    width: 10em;
+  }
+  input, select, textarea {
+    display: inline-block;
+    width: 80%;
+  }
+  .text {
+    label {
+      vertical-align: top;
+    }
+  }
+  .button {
+    font-size: 1.5em;
+    width: 12.5em;
+  }
+}

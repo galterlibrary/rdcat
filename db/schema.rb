@@ -11,10 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160523175153) do
+ActiveRecord::Schema.define(version: 20160607193316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "datasets", force: :cascade do |t|
     t.string   "title"
@@ -27,8 +33,9 @@ ActiveRecord::Schema.define(version: 20160523175153) do
     t.string   "version"
     t.integer  "author_id"
     t.integer  "maintainer_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.text     "categories",      default: [],              array: true
     t.index ["author_id"], name: "index_datasets_on_author_id", using: :btree
     t.index ["maintainer_id"], name: "index_datasets_on_maintainer_id", using: :btree
     t.index ["organization_id"], name: "index_datasets_on_organization_id", using: :btree
@@ -42,6 +49,7 @@ ActiveRecord::Schema.define(version: 20160523175153) do
     t.string   "format"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.string   "artifact"
     t.index ["dataset_id"], name: "index_distributions_on_dataset_id", using: :btree
   end
 

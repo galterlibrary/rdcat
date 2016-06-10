@@ -1,7 +1,7 @@
 %h1 Editing distribution
 
-= render 'form'
+= render 'simple_form'
 
-= link_to 'Show', @distribution
+= link_to 'Show', dataset_distribution_path(@dataset, @distribution)
 \|
-= link_to 'Back', distributions_path
+= link_to 'Back', dataset_path(@dataset)

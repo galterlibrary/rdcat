@@ -15,6 +15,7 @@
 #  maintainer_id   :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  categories      :text             default([]), is an Array
 #
 
 class Dataset < ApplicationRecord
@@ -24,4 +25,19 @@ class Dataset < ApplicationRecord
   has_many :distributions
 
   validates :title, presence: true, uniqueness: true
+  validates :organization, presence: true
+  validates :maintainer, presence: true
+
+  # Visibility
+  PUBLIC   = 'Public'
+  PRIVATE  = 'Private'
+  VISIBILITY_OPTIONS = [ PUBLIC, PRIVATE ]
+  
+  # State
+  ACTIVE   = 'Active'
+  DELETED  = 'Deleted'
+  STATE_OPTIONS = [ ACTIVE, DELETED ]
+
+  validates :visibility, inclusion: { in: VISIBILITY_OPTIONS }
+  validates :state, inclusion: { in: STATE_OPTIONS }
 end

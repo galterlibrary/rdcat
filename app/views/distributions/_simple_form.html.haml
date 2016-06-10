@@ -1,0 +1,28 @@
+/  uri         :string
+/  name        :string
+/  description :text
+/  format      :string
+
+= simple_form_for [@dataset, @distribution], html: { multipart: true } do |f|
+  = f.input :name, error: 'Name is required, please enter one', input_html: { class: 'required' }, required: true, inline_label: true
+  = f.input :description, placeholder: 'e.g. Some useful notes about the data', inline_label: true
+
+  .distribution_file
+    = label_tag 'File'
+
+    %span{ class: 'uri_show btn' }
+      URL
+    %span{ class: 'artifact_show btn' }
+      Upload
+
+  .uri.hide
+    = label_tag 'File', nil, class: 'uri'
+    = f.input_field :uri, placeholder: 'http://example.edu/dataset.json', inline_label: true
+    %span{ class: 'cancel' }
+  .artifact.hide
+    = label_tag 'File', nil, class: 'artifact'
+    = f.input_field :artifact, type: :file, inline_label: true
+    %span{ class: 'cancel' }
+  = f.input :format, inline_label: true
+
+  = f.button :submit

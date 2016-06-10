@@ -1,5 +1,8 @@
 class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
+  before_action :set_categories, only: [:new, :edit]
+
+  before_action :clean_select_multiple_params, only: [:create, :update]
 
   # GET /datasets
   # GET /datasets.json
@@ -28,7 +31,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully created.' }
+        format.html { redirect_to datasets_path, notice: 'Dataset was successfully created.' }
         format.json { render :show, status: :created, location: @dataset }
       else
         format.html { render :new }
@@ -42,7 +45,7 @@ class DatasetsController < ApplicationController
   def update
     respond_to do |format|
       if @dataset.update(dataset_params)
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully updated.' }
+        format.html { redirect_to datasets_path, notice: 'Dataset was successfully updated.' }
         format.json { render :show, status: :ok, location: @dataset }
       else
         format.html { render :edit }
@@ -67,18 +70,12 @@ class DatasetsController < ApplicationController
       @dataset = Dataset.find(params[:id])
     end
 
+    def set_categories
+      @categories = Category.pluck(:name).sort
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def dataset_params
-#  title           :string
-#  description     :text
-#  license         :string
-#  organization_id :integer
-#  visibility      :string
-#  state           :string
-#  source          :string
-#  version         :string
-#  author_id       :integer
-#  maintainer_id   :integer
       params.fetch(:dataset, {}).permit(:title, 
                                         :description, 
                                         :license, 
@@ -88,6 +85,17 @@ class DatasetsController < ApplicationController
                                         :source,
                                         :version,
                                         :author_id,
-                                        :maintainer_id)
+                                        :maintainer_id,
+                                        { categories: [] })
+    end
+
+    # Used to strip blank first values from array-type params.
+    def clean_select_multiple_params(hash = params)
+      hash.each do |key, value|
+        case value
+        when Array then value.reject!(&:blank?)
+        when Hash then clean_select_multiple_params(value)
+        end
+      end
     end
 end

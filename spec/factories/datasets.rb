@@ -15,10 +15,15 @@
 #  maintainer_id   :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  categories      :text             default([]), is an Array
 #
 
 FactoryGirl.define do
   factory :dataset do
-    title 'Dataset Title'
+    title Faker::Hipster.word
+    association :organization, factory: :organization
+    association :maintainer, factory: :user
+    visibility Dataset::PUBLIC
+    state Dataset::ACTIVE
   end
 end

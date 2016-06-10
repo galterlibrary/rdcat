@@ -1,0 +1,13 @@
+= form_tag '/user_lookup/ldap' do |f|
+  .input.string.netid
+    = text_field_tag 'netid', nil, placeholder: 'Lookup User by NetID', class: 'string'
+    = submit_tag 'Lookup User'
+
+
+= simple_form_for @user do |f|
+  = f.input :username, error: 'Username is required, please enter one', input_html: { class: 'required' }, required: true
+  = f.input :email, error: 'Email is required, please enter one', input_html: { class: 'required' }, required: true
+  = f.input :first_name
+  = f.input :last_name
+
+  = f.button :submit

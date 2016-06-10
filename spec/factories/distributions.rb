@@ -10,11 +10,12 @@
 #  format      :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  artifact    :string
 #
 
 FactoryGirl.define do
   factory :distribution do
-    name 'Distribution Name'
+    name Faker::Hipster.word
     association :dataset, factory: :dataset 
   end
 end

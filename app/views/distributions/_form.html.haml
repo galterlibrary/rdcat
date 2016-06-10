@@ -1,4 +1,4 @@
-= form_for @distribution do |f|
+= form_for [@dataset, @distribution] do |f|
   - if @distribution.errors.any?
     #error_explanation
       %h2= "#{pluralize(@distribution.errors.count, "error")} prohibited this distribution from being saved:"

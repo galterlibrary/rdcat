@@ -1,6 +1,59 @@
-%p#notice= notice
-
-
-= link_to 'Edit', edit_dataset_path(@dataset)
-\|
-= link_to 'Back', datasets_path
+#dataset_show
+  %p
+    %b Title:
+    = @dataset.title
+  %p
+    %b Description:
+    = @dataset.description
+  %p
+    %b License:
+    = @dataset.license
+  %p
+    %b Organization:
+    = @dataset.organization.try(:name)
+  %p
+    %b Visibility:
+    = @dataset.visibility
+  %p
+    %b State:
+    = @dataset.state
+  %p
+    %b Source:
+    = @dataset.source
+  %p
+    %b Categories:
+    = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
+  %p
+    %b Version:
+    = @dataset.version
+  %p
+    %b Author:
+    = @dataset.author.try(:name)
+  %p
+    %b Author Email:
+    = @dataset.author.try(:email)
+  %p
+    %b Maintainer:
+    = @dataset.maintainer.try(:name)
+  %p
+    %b Maintainer Email:
+    = @dataset.maintainer.try(:email)
+  .distributions
+    %b Distributions:
+    - if @dataset.distributions.blank?
+      %p
+        %b
+          No distributions exist for dataset.
+    - else
+      - @dataset.distributions.each do |d|
+        .distribution
+          = link_to d.name, download_dataset_distribution_path(@dataset, d)
+          = link_to 'Destroy', [@dataset, d], :method => :delete, :data => { :confirm => 'Are you sure?' }
+  %p
+    %b
+      = link_to 'Add distribution', new_dataset_distribution_path(@dataset)
+  %p
+  .links
+    = link_to 'Edit', edit_dataset_path(@dataset)
+    \|
+    = link_to 'Back', datasets_path

@@ -1,3 +1,48 @@
 // Place all the styles related to the distributions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.new_distribution, .edit_distribution {
+  label {
+    font-size: 1.25em;
+    display: inline-block;
+    width: 10em;
+  }
+  input, select, textarea {
+    display: inline-block;
+    width: 80%;
+  }
+  textarea {
+    height: 5.9375rem;
+  }
+  .text {
+    label {
+      vertical-align: top;
+    }
+  }
+  .button {
+    font-size: 1.5em;
+    width: 12.5em;
+  }
+  .distribution_file {
+    margin: 0 0 1rem;
+  }
+  #distribution_uri {
+    width: 75%;
+  }
+  #distribution_artifact {
+    width: 13rem;
+  }
+  .uri, .artifact {
+    margin: 0;
+    padding: 0;
+  }
+  .cancel {
+    background-image: url('close.png');
+    background-size: contain;
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+    position: absolute;
+    margin-left: 0.5em;
+  }
+}

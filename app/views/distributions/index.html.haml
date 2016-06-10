@@ -10,10 +10,10 @@
   %tbody
     - @distributions.each do |distribution|
       %tr
-        %td= link_to 'Show', distribution
-        %td= link_to 'Edit', edit_distribution_path(distribution)
-        %td= link_to 'Destroy', distribution, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        %td= link_to 'Show', dataset_distribution_path(@dataset, distribution)
+        %td= link_to 'Edit', edit_dataset_distribution_path(@dataset, distribution)
+        %td= link_to 'Destroy', dataset_distribution_path(@dataset, distribution), :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
 
-= link_to 'New Distribution', new_distribution_path
+= link_to 'New Distribution', new_dataset_distribution_path(@dataset)

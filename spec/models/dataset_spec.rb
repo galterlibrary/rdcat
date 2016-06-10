@@ -15,6 +15,7 @@
 #  maintainer_id   :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  categories      :text             default([]), is an Array
 #
 
 require 'rails_helper'
@@ -27,4 +28,6 @@ RSpec.describe Dataset, :type => :model do
 
   it { should validate_uniqueness_of(:title) }
   it { should validate_presence_of(:title) }
+  it { should validate_presence_of(:organization) }
+  it { should validate_presence_of(:maintainer) }
 end

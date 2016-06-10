@@ -1,3 +1,4 @@
+require_relative 'support/database_cleaner'
 require_relative 'support/controller_macros'
 require 'devise'
 

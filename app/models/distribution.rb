@@ -10,6 +10,7 @@
 #  format      :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  artifact    :string
 #
 
 class Distribution < ApplicationRecord
@@ -17,4 +18,6 @@ class Distribution < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :dataset, presence: true
+
+  mount_uploader :artifact, ArtifactUploader
 end
