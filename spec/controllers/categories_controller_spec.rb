@@ -52,11 +52,38 @@ RSpec.describe CategoriesController, type: :controller do
     end
   end
 
+
   describe "GET #new" do
-    it "assigns a new category as @category" do
-          get :new, params: {}, session: valid_session
-          expect(assigns(:category)).to be_a_new(Category)
+    context 'with a logged in user' do 
+      sign_in_user
+
+      it "assigns a new category as @category" do
+            get :new, params: {}, session: valid_session
+            expect(assigns(:category)).to be_a_new(Category)
+      end
+
+      it 'redirects user to root path' do 
+        get :new, params: {}, session: valid_session
+        expect(response).to be_redirect
+        expect(response).to redirect_to(root_path)
+      end
     end
+
+    context 'with a logged in admin user' do 
+      sign_in_admin
+
+      it "assigns a new category as @category" do
+            get :new, params: {}, session: valid_session
+            expect(assigns(:category)).to be_a_new(Category)
+      end
+
+      it 'shows the new Category page' do 
+        get :new, params: {}, session: valid_session
+        expect(response).to be_success
+      end
+    end
+
+
   end
 
   describe "GET #edit" do

@@ -1,4 +1,4 @@
-%h1 Listing Organizations
+%h1 Organizations
 
 %table
   %thead
@@ -24,5 +24,7 @@
         %td= link_to 'Destroy', organization, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
+
+= will_paginate @organizations
 
 = link_to 'New Organization', new_organization_path

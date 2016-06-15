@@ -43,6 +43,9 @@ gem 'exception_notification'
 gem 'devise_ldap_authenticatable' #, git: 'git://github.com/nubic/devise_ldap_authenticatable.git'
 gem 'net-ldap'
 
+gem 'pundit'
+gem 'will_paginate'
+
 group :development, :test do
   gem 'annotate'
 

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe WelcomeController, type: :controller do
   context 'with a logged in user' do 
-    login_user
+    sign_in_user
 
     describe 'GET index' do 
       it 'renders the page upon requst' do 

@@ -1,27 +1,33 @@
-%h1 Listing datasets
+%h1 Datasets
 
-%table
-  %thead
-    %tr
-      %th
-        Title
-      %th
-        Organization
-      %th
-        Maintainer
-      %th
-      %th
-      %th
+- if @datasets.blank?
+  %p
+    No datasets currently exist
 
-  %tbody
-    - @datasets.each do |dataset|
+- else
+
+  %table
+    %thead
       %tr
-        %td= dataset.title
-        %td= dataset.organization.name
-        %td= "#{dataset.maintainer.name} #{dataset.maintainer.email}"
-        %td= link_to 'Show', dataset
-        %td= link_to 'Edit', edit_dataset_path(dataset)
-        %td= link_to 'Destroy', dataset, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        %th
+          Title
+        %th
+          Organization
+        %th
+          Maintainer
+        %th
+        %th
+        %th
+
+    %tbody
+      - @datasets.each do |dataset|
+        %tr
+          %td= dataset.title
+          %td= dataset.organization.name
+          %td= "#{dataset.maintainer.name} #{dataset.maintainer.email}"
+          %td= link_to 'Show', dataset
+          %td= link_to 'Edit', edit_dataset_path(dataset)
+          %td= link_to 'Destroy', dataset, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
 

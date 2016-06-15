@@ -1,10 +1,12 @@
 class CategoriesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_category, only: [:show, :edit, :update, :destroy]
 
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.all
+    @categories = Category.paginate(page: params[:page])
+    authorize @categories
   end
 
   # GET /categories/1
@@ -15,6 +17,7 @@ class CategoriesController < ApplicationController
   # GET /categories/new
   def new
     @category = Category.new
+    authorize @category
   end
 
   # GET /categories/1/edit
