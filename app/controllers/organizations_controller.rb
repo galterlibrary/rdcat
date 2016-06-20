@@ -1,10 +1,12 @@
 class OrganizationsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_organization, only: [:show, :edit, :update, :destroy]
 
   # GET /organizations
   # GET /organizations.json
   def index
-    @organizations = Organization.all
+    @organizations = Organization.paginate(page: params[:page])
+    authorize @organizations
   end
 
   # GET /organizations/1

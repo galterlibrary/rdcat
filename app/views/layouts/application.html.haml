@@ -8,8 +8,10 @@
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = csrf_meta_tag
   %body
-    = render 'layouts/menu'
-    = render 'layouts/messages'
-    .content
-      = yield
+    = render 'layouts/header'
+    %main
+      = render 'layouts/messages'
+
+      .content
+        = yield
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'

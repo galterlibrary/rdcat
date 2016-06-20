@@ -90,8 +90,4 @@ RSpec.configure do |config|
   config.extend ControllerMacros, type: :controller
   config.extend ControllerMacros, type: :feature
 
-  config.after do 
-    Warden.test_reset!
-  end
-
 end

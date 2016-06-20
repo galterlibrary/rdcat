@@ -51,9 +51,8 @@
           = link_to 'Destroy', [@dataset, d], :method => :delete, :data => { :confirm => 'Are you sure?' }
   %p
     %b
-      = link_to 'Add distribution', new_dataset_distribution_path(@dataset)
+      = link_to 'Add distribution', new_dataset_distribution_path(@dataset) if can_edit?(@dataset)
   %p
   .links
-    = link_to 'Edit', edit_dataset_path(@dataset)
-    \|
+    = link_to 'Edit', edit_dataset_path(@dataset), class: 'edit_link' if can_edit?(@dataset)
     = link_to 'Back', datasets_path

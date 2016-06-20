@@ -1,0 +1,5 @@
+en:
+  pundit:
+    default: 'You cannot perform this action.'
+    organization_policy:
+      index?: 'Only administrators can view all organizations.'

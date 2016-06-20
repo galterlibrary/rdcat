@@ -1,4 +1,5 @@
 class DatasetsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :set_categories, only: [:new, :edit]
 
@@ -22,6 +23,7 @@ class DatasetsController < ApplicationController
 
   # GET /datasets/1/edit
   def edit
+    authorize @dataset
   end
 
   # POST /datasets
@@ -43,6 +45,7 @@ class DatasetsController < ApplicationController
   # PATCH/PUT /datasets/1
   # PATCH/PUT /datasets/1.json
   def update
+    authorize @dataset
     respond_to do |format|
       if @dataset.update(dataset_params)
         format.html { redirect_to datasets_path, notice: 'Dataset was successfully updated.' }
@@ -57,6 +60,7 @@ class DatasetsController < ApplicationController
   # DELETE /datasets/1
   # DELETE /datasets/1.json
   def destroy
+    authorize @dataset
     @dataset.destroy
     respond_to do |format|
       format.html { redirect_to datasets_url, notice: 'Dataset was successfully destroyed.' }

@@ -39,125 +39,132 @@ RSpec.describe DatasetsController, type: :controller do
   # DatasetsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe 'GET index' do
-    it 'assigns all datasets as @datasets' do
-      dataset = Dataset.create! valid_attributes
-      get :index, params: {}, session: valid_session
-      expect(assigns(:datasets)).to eq([dataset])
-    end
-  end
+  context 'with a logged in user' do 
+    sign_in_user
 
-  describe 'GET show' do
-    it 'assigns the requested dataset as @dataset' do
-      dataset = Dataset.create! valid_attributes
-      get :show, params: {id: dataset.to_param}, session: valid_session
-      expect(assigns(:dataset)).to eq(dataset)
-    end
-  end
-
-  describe 'GET new' do
-    it 'assigns a new dataset as @dataset' do
-      get :new, params: {}, session: valid_session
-      expect(assigns(:dataset)).to be_a_new(Dataset)
-    end
-  end
-
-  describe 'GET edit' do
-    it 'assigns the requested dataset as @dataset' do
-      dataset = Dataset.create! valid_attributes
-      get :edit, params: {id: dataset.to_param}, session: valid_session
-      expect(assigns(:dataset)).to eq(dataset)
-    end
-  end
-
-  describe 'POST create' do
-    describe 'with valid params' do
-      it 'creates a new Dataset' do
-        expect {
-          post :create, params: {dataset: valid_attributes}, session: valid_session
-        }.to change(Dataset, :count).by(1)
-      end
-
-      it 'assigns a newly created dataset as @dataset' do
-        post :create, params: {dataset: valid_attributes}, session: valid_session
-        expect(assigns(:dataset)).to be_a(Dataset)
-        expect(assigns(:dataset)).to be_persisted
-      end
-
-      it 'redirects to the datasets index' do
-        post :create, params: {dataset: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(datasets_path)
-      end
-    end
-
-    describe 'with invalid params' do
-      it 'assigns a newly created but unsaved dataset as @dataset' do
-        post :create, params: {dataset: invalid_attributes}, session: valid_session
-        expect(assigns(:dataset)).to be_a_new(Dataset)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, params: {dataset: invalid_attributes}, session: valid_session
-        expect(response).to render_template('new')
-      end
-    end
-  end
-
-  describe 'PUT update' do
-    describe 'with valid params' do
-      let(:updated_title) { 'Updated DS Title' }
-      let(:new_attributes) {
-        { title: updated_title, description: 'Updated description', organization_id: org.id, author_id: usr.id, maintainer_id: usr.id }
-      }
-
-      it 'updates the requested dataset' do
+    describe 'GET index' do
+      it 'assigns all datasets as @datasets' do
         dataset = Dataset.create! valid_attributes
-        put :update, params: {id: dataset.to_param, dataset: new_attributes}, session: valid_session
-        dataset.reload
-        expect(dataset.title).to eq(updated_title)
+        get :index, params: {}, session: valid_session
+        expect(assigns(:datasets)).to eq([dataset])
       end
+    end
 
+    describe 'GET show' do
       it 'assigns the requested dataset as @dataset' do
         dataset = Dataset.create! valid_attributes
-        put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
+        get :show, params: {id: dataset.to_param}, session: valid_session
         expect(assigns(:dataset)).to eq(dataset)
-      end
-
-      it 'redirects to the datasets index' do
-        dataset = Dataset.create! valid_attributes
-        put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(datasets_path)
       end
     end
 
-    describe 'with invalid params' do
-      it 'assigns the dataset as @dataset' do
-        dataset = Dataset.create! valid_attributes
-        put :update, params: {id: dataset.to_param, dataset: invalid_attributes}, session: valid_session
-        expect(assigns(:dataset)).to eq(dataset)
-      end
-
-      it "re-renders the 'edit' template" do
-        dataset = Dataset.create! valid_attributes
-        put :update, params: {id: dataset.to_param, dataset: invalid_attributes}, session: valid_session
-        expect(response).to render_template('edit')
+    describe 'GET new' do
+      it 'assigns a new dataset as @dataset' do
+        get :new, params: {}, session: valid_session
+        expect(assigns(:dataset)).to be_a_new(Dataset)
       end
     end
-  end
 
-  describe 'DELETE destroy' do
-    it 'destroys the requested dataset' do
-      dataset = Dataset.create! valid_attributes
-      expect {
+    describe 'GET edit' do
+      it 'assigns the requested dataset as @dataset' do
+        dataset = Dataset.create! valid_attributes
+        get :edit, params: {id: dataset.to_param}, session: valid_session
+        expect(assigns(:dataset)).to eq(dataset)
+      end
+    end
+
+    describe 'POST create' do
+      describe 'with valid params' do
+        it 'creates a new Dataset' do
+          expect {
+            post :create, params: {dataset: valid_attributes}, session: valid_session
+          }.to change(Dataset, :count).by(1)
+        end
+
+        it 'assigns a newly created dataset as @dataset' do
+          post :create, params: {dataset: valid_attributes}, session: valid_session
+          expect(assigns(:dataset)).to be_a(Dataset)
+          expect(assigns(:dataset)).to be_persisted
+        end
+
+        it 'redirects to the datasets index' do
+          post :create, params: {dataset: valid_attributes}, session: valid_session
+          expect(response).to redirect_to(datasets_path)
+        end
+      end
+
+      describe 'with invalid params' do
+        it 'assigns a newly created but unsaved dataset as @dataset' do
+          post :create, params: {dataset: invalid_attributes}, session: valid_session
+          expect(assigns(:dataset)).to be_a_new(Dataset)
+        end
+
+        it "re-renders the 'new' template" do
+          post :create, params: {dataset: invalid_attributes}, session: valid_session
+          expect(response).to render_template('new')
+        end
+      end
+    end
+
+    describe 'PUT update' do
+      describe 'with valid params' do
+        let(:updated_title) { 'Updated DS Title' }
+        let(:new_attributes) {
+          { title: updated_title, 
+            description: 'Updated description', 
+            organization_id: org.id, 
+            author_id: usr.id, 
+            maintainer_id: controller.current_user.id }
+        }
+
+        it 'updates the requested dataset' do
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
+          put :update, params: {id: dataset.to_param, dataset: new_attributes}, session: valid_session
+          dataset.reload
+          expect(dataset.title).to eq(updated_title)
+        end
+
+        it 'assigns the requested dataset as @dataset' do
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
+          put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
+          expect(assigns(:dataset)).to eq(dataset)
+        end
+
+        it 'redirects to the datasets index' do
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
+          put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
+          expect(response).to redirect_to(datasets_path)
+        end
+      end
+
+      describe 'with invalid params' do
+        it 'assigns the dataset as @dataset' do
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
+          put :update, params: {id: dataset.to_param, dataset: invalid_attributes}, session: valid_session
+          expect(assigns(:dataset)).to eq(dataset)
+        end
+
+        it "re-renders the 'edit' template" do
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
+          put :update, params: {id: dataset.to_param, dataset: invalid_attributes}, session: valid_session
+          expect(response).to render_template('edit')
+        end
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'destroys the requested dataset' do
+        dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
+        expect {
+          delete :destroy, params: {id: dataset.to_param}, session: valid_session
+        }.to change(Dataset, :count).by(-1)
+      end
+
+      it 'redirects to the datasets list' do
+        dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
         delete :destroy, params: {id: dataset.to_param}, session: valid_session
-      }.to change(Dataset, :count).by(-1)
-    end
-
-    it 'redirects to the datasets list' do
-      dataset = Dataset.create! valid_attributes
-      delete :destroy, params: {id: dataset.to_param}, session: valid_session
-      expect(response).to redirect_to(datasets_url)
+        expect(response).to redirect_to(datasets_url)
+      end
     end
   end
-
 end
