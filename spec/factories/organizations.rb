@@ -12,10 +12,11 @@
 #
 
 FactoryGirl.define do
+
   factory :organization do
-    name "Organization Name"
-    abbreviation "ORG"
-    email "org@example.com"
-    url "http://www.example.com"
+    name
+    abbreviation
+    email
+    url
   end
 end

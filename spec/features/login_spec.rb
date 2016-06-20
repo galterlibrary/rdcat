@@ -25,7 +25,6 @@ describe 'Logging in', type: :feature do
         expect(page).to_not have_content('Logout')
         expect(page).to have_content('Login')
         expect(page).to have_content('Datasets')
-        expect(page).to have_content('New Dataset')
       end
 
     end
@@ -49,15 +48,75 @@ describe 'Logging in', type: :feature do
 
           expect(page).to have_link('Show')
           # TODO: only show these if the logged in user is the author or maintainer of the dataset
+          # expect(page).to have_link('Edit')
+          # expect(page).to have_link('Destroy')
+        end
+
+      end
+
+    end
+
+  end
+
+  context 'having logged in', js: true do
+
+    before(:each) do
+      @user = FactoryGirl.create(:user) 
+      login_as(@user, scope: :user)
+    end
+
+    describe 'visiting the index page' do
+
+      it 'shows the Logout link' do 
+
+        visit '/' 
+
+        expect(page).to have_content('Logout')
+        expect(page).to_not have_content('Login')
+      end
+
+    end
+
+    context 'with Dataset data' do 
+      let(:description) { Faker::Hipster.sentence }
+      before do
+        @dataset = FactoryGirl.create(:dataset, description: description)
+      end
+
+      describe 'visiting the index page' do
+
+        it 'shows links for logged in users' do 
+
+          visit '/' 
+
+          expect(page).to have_link('New Dataset')
+
+          expect(page).to_not have_link('Edit')
+          expect(page).to_not have_link('Destroy')
+        end
+
+      end
+    end
+
+    context 'with Dataset data maintained by the logged in user' do 
+      let(:description) { Faker::Hipster.sentence }
+      before do
+        @dataset = FactoryGirl.create(:dataset, description: description, maintainer: @user)
+      end
+
+      describe 'visiting the index page' do
+
+        it 'shows links for logged in users' do 
+
+          visit '/' 
+
           expect(page).to have_link('Edit')
           expect(page).to have_link('Destroy')
         end
 
       end
-
-
-
     end
+
 
   end
 

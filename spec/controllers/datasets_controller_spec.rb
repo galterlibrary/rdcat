@@ -110,24 +110,28 @@ RSpec.describe DatasetsController, type: :controller do
       describe 'with valid params' do
         let(:updated_title) { 'Updated DS Title' }
         let(:new_attributes) {
-          { title: updated_title, description: 'Updated description', organization_id: org.id, author_id: usr.id, maintainer_id: usr.id }
+          { title: updated_title, 
+            description: 'Updated description', 
+            organization_id: org.id, 
+            author_id: usr.id, 
+            maintainer_id: controller.current_user.id }
         }
 
         it 'updates the requested dataset' do
-          dataset = Dataset.create! valid_attributes
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
           put :update, params: {id: dataset.to_param, dataset: new_attributes}, session: valid_session
           dataset.reload
           expect(dataset.title).to eq(updated_title)
         end
 
         it 'assigns the requested dataset as @dataset' do
-          dataset = Dataset.create! valid_attributes
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
           put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
           expect(assigns(:dataset)).to eq(dataset)
         end
 
         it 'redirects to the datasets index' do
-          dataset = Dataset.create! valid_attributes
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
           put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
           expect(response).to redirect_to(datasets_path)
         end
@@ -135,13 +139,13 @@ RSpec.describe DatasetsController, type: :controller do
 
       describe 'with invalid params' do
         it 'assigns the dataset as @dataset' do
-          dataset = Dataset.create! valid_attributes
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
           put :update, params: {id: dataset.to_param, dataset: invalid_attributes}, session: valid_session
           expect(assigns(:dataset)).to eq(dataset)
         end
 
         it "re-renders the 'edit' template" do
-          dataset = Dataset.create! valid_attributes
+          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
           put :update, params: {id: dataset.to_param, dataset: invalid_attributes}, session: valid_session
           expect(response).to render_template('edit')
         end
@@ -150,14 +154,14 @@ RSpec.describe DatasetsController, type: :controller do
 
     describe 'DELETE destroy' do
       it 'destroys the requested dataset' do
-        dataset = Dataset.create! valid_attributes
+        dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
         expect {
           delete :destroy, params: {id: dataset.to_param}, session: valid_session
         }.to change(Dataset, :count).by(-1)
       end
 
       it 'redirects to the datasets list' do
-        dataset = Dataset.create! valid_attributes
+        dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
         delete :destroy, params: {id: dataset.to_param}, session: valid_session
         expect(response).to redirect_to(datasets_url)
       end

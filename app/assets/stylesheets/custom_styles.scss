@@ -29,3 +29,35 @@
   background-image: linear-gradient(to bottom, #ddd, #555);
   background-repeat: repeat-x;
 }
+
+table {
+  font-size: initial;
+}
+
+.links {
+  a {
+    font-size: initial;
+  }
+  .edit_link {
+    display: inline-block;
+    padding-right: 1em;
+    margin-right: 0.5em;
+    border-right: 1px solid #cdcdcd;
+  }
+}
+
+.top-bar, .menu { 
+  padding-left: 0.1rem !important;
+  background-color: white !important;
+  ul {
+    background-color: inherit;
+  }
+  li {
+    display: inline-block;
+    font-size: initial;
+  }
+  .title {
+    margin: 0;
+    padding-left: 0;
+  }
+}

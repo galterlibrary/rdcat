@@ -1,0 +1,20 @@
+%header
+  .top-bar.menu
+    .top-bar-left.no-bullet
+      %ul.dropdown.menu{ 'data-dropdown-menu': ''}
+        %li.menu-text.title
+          RDCAT
+        %li
+          = link_to 'Datasets', datasets_path
+        - if user_signed_in? && current_user.admin?
+          %li
+            %a{ href: '#' }
+              Admin
+            %ul.menu
+              %li
+                = link_to 'Categories', categories_path
+              %li
+                = link_to 'Organizations', organizations_path
+    .top-bar-right.no-bullet
+      %ul.dropdown.menu{"data-dropdown-menu" => ""}
+        = render 'devise/menu/login_items'
