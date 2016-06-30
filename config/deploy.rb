@@ -1,9 +1,10 @@
 # config valid only for current version of Capistrano
 lock '3.5.0'
 
-set :application, 'rdcat'
-set :repo_url, 'ssh://git@stash.nubic.northwestern.edu:7999/RDCAT/rdcat.git'
+APP_CONFIG = YAML.load(File.open('config/app_config.yml'))
 
+set :application,  APP_CONFIG['application']
+set :repo_url,     APP_CONFIG['repository']
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -78,4 +79,63 @@ namespace :deploy do
   end
   before 'deploy:assets:precompile', 'deploy:symlink:database_config'
 
+  task :httpd_graceful do
+    on roles(:web), in: :sequence, wait: 5 do
+      execute :sudo, "service httpd graceful"
+    end
+  end
+
 end
+
+
+namespace :deploy_prepare do
+  desc 'Configure virtual host'
+  task :create_vhost do
+    on roles(:web), in: :sequence, wait: 5 do
+      vhost_config = <<-EOF
+NameVirtualHost *:80
+NameVirtualHost *:443
+
+<VirtualHost *:80>
+  ServerName #{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }
+  ServerAlias #{ APP_CONFIG[ fetch(:stage).to_s ]['server_alias'] }
+  Redirect permanent / https://#{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }/
+</VirtualHost>
+
+<VirtualHost *:443>
+  PassengerFriendlyErrorPages off
+  PassengerAppEnv #{ fetch(:stage) }
+  PassengerRuby /usr/local/rvm/wrappers/ruby-#{ fetch(:rvm_ruby_version) }/ruby
+
+  ServerName #{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }
+
+  SSLEngine On
+  SSLCertificateFile #{ APP_CONFIG[ fetch(:stage).to_s ]['cert_file'] }
+  SSLCertificateChainFile #{ APP_CONFIG[ fetch(:stage).to_s ]['chain_file'] }
+  SSLCertificateKeyFile #{ APP_CONFIG[ fetch(:stage).to_s ]['key_file'] }
+
+  DocumentRoot #{ fetch(:deploy_to) }/current/public
+  RailsBaseURI /
+  PassengerDebugLogFile /var/log/httpd/#{ fetch(:application) }_passenger.log
+
+  <Location /admin >
+    Order deny,allow
+    Deny from all
+    Allow from 129.105.0.0/16 165.124.0.0/16
+  </Location>
+
+  <Directory #{ fetch(:deploy_to) }/current/public >
+    Allow from all
+    Options -MultiViews
+  </Directory>
+</VirtualHost>
+EOF
+      execute :echo, "\"#{ vhost_config }\"", ">", "/etc/httpd/conf.d/#{ fetch(:application) }.conf"
+    end
+  end
+end
+
+after "deploy:updated", "deploy:cleanup"
+after "deploy:finished", "deploy_prepare:create_vhost"
+after "deploy_prepare:create_vhost", "deploy:httpd_graceful"
+after "deploy:httpd_graceful", "deploy:restart"

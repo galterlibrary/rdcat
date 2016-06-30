@@ -1,0 +1,20 @@
+---
+application: rdcat
+repository: ssh://git@stash.nubic.northwestern.edu:7999/rdcat/rdcat.git
+deployer: deploy
+contact_email: p-friedman@northwestern.edu
+development:
+  server_name: rdcat.dev
+test:
+  server_name: rdcat.dev
+staging:
+  app_host: vtfsmnubicapps01.fsm.northwestern.edu
+  server_name: rdcat-staging.nubic.northwestern.edu
+  server_alias: rdcat-staging.nubic.northwestern.edu
+  cert_file: /etc/pki/tls/certs/rdcat-staging_nubic_northwestern_edu_cert.cer
+  chain_file: /etc/pki/tls/certs/rdcat-staging_nubic_northwestern_edu_interm.cer
+  key_file: /etc/pki/tls/private/rdcat-staging.key
+production:
+  app_host: vfsmnubicapps01.fsm.northwestern.edu
+  server_name: rdcat.nubic.northwestern.edu
+  server_alias: rdcat.nubic.northwestern.edu
