@@ -3,15 +3,20 @@
   %head
     %meta{ charset: 'utf-8' }
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
-    %title= content_for?(:title) ? yield(:title) : 'RDCAT'
+    %title= content_for?(:title) ? yield(:title) : 'Ruby Data Catalog (RDCAT)'
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     = csrf_meta_tag
   %body
-    = render 'layouts/header'
+    .row
+      .columns
+        = render 'layouts/header'
     %main
-      = render 'layouts/messages'
+      .row
+        .columns
+          = render 'layouts/messages'
 
-      .content
-        = yield
+      .row.content
+        .columns
+          = yield
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'

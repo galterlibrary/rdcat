@@ -1,1 +1,17 @@
-index.html.haml
+.welcome
+  %h1
+    CDSI Data Indexing Project
+  %h3
+    Feinberg School of Medicine Northwestern University Data Portal (proof of concept)
+
+  .button 
+    = link_to('Start Browsing', datasets_path)
+
+  .categories
+    %h3
+      Browse by Category
+    %ul
+      - @categories.each_with_index do |c, i|
+        - c_class = i == 0 ? 'first category_item' : 'category_item'
+        %li{ class: c_class}
+          = link_to(c, datasets_path(category: c))

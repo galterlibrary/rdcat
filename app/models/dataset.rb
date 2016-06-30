@@ -40,4 +40,13 @@ class Dataset < ApplicationRecord
 
   validates :visibility, inclusion: { in: VISIBILITY_OPTIONS }
   validates :state, inclusion: { in: STATE_OPTIONS }
+
+  def self.chosen_categories
+    pluck('categories').flatten.select{ |c| !c.blank? }.uniq.sort
+  end
+
+  def self.known_organizations
+    Organization.order(:name).where(id: pluck(:organization_id)).distinct.to_a
+  end
+
 end

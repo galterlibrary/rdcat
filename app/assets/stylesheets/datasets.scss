@@ -63,3 +63,18 @@
     }
   }
 }
+
+table.categories,
+table.organizations {
+  a {
+    display: inline-block;
+    width: 100%;
+  }
+  tr.selected_category,
+  tr.selected_organization, {
+    background-color: #2199e8;
+    a {
+      color: white;
+    }
+  }
+}

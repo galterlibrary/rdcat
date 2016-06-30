@@ -8,7 +8,20 @@ class DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.all
+    @categories = Dataset.chosen_categories
+    @organizations = Dataset.known_organizations
+
+    visibility = user_signed_in? ? Dataset::VISIBILITY_OPTIONS : Dataset::PUBLIC
+    @datasets = Dataset.where(visibility: visibility)
+
+    if params[:category] 
+      # Book.where("subjects @> ?", '{finances}')
+      @datasets = @datasets.where("'#{params[:category]}' = ANY (categories)")
+    end
+
+    if params[:organization_id]
+      @datasets = @datasets.where(organization_id: params[:organization_id])
+    end
   end
 
   # GET /datasets/1
@@ -33,10 +46,12 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
+
+        write_json_to_file(@dataset)
+        
         format.html { redirect_to datasets_path, notice: 'Dataset was successfully created.' }
         format.json { render :show, status: :created, location: @dataset }
       else
-        format.html { render :new }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
       end
     end
@@ -48,6 +63,9 @@ class DatasetsController < ApplicationController
     authorize @dataset
     respond_to do |format|
       if @dataset.update(dataset_params)
+
+        write_json_to_file(@dataset)
+
         format.html { redirect_to datasets_path, notice: 'Dataset was successfully updated.' }
         format.json { render :show, status: :ok, location: @dataset }
       else
@@ -101,5 +119,20 @@ class DatasetsController < ApplicationController
         when Hash then clean_select_multiple_params(value)
         end
       end
+    end
+
+    def write_json_to_file(dataset)
+      without_html_escaping_in_json do 
+        json_str = render_to_string( template: 'datasets/show.json.jbuilder', locals: { dataset: dataset })
+        filename = "output/datasets/#{dataset.id}.json"
+        File.open(filename, 'w') { |file| file.write(json_str) }
+      end
+    end
+
+    def without_html_escaping_in_json(&block)
+      ActiveSupport.escape_html_entities_in_json = false
+      result = yield
+      ActiveSupport.escape_html_entities_in_json = true
+      result
     end
 end

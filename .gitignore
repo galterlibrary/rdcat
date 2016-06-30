@@ -35,3 +35,5 @@
 
 # Ignore notes
 /doc
+
+/output/datasets/*.json
