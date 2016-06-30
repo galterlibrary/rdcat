@@ -10,7 +10,7 @@
 set :stage, :staging
 set :rails_env, :staging
 
-set :rvm_ruby_version, '2.3.0@rails5.0'
+set :rvm_ruby_version, '2.3.0@rdcat'
 
 server 'vtfsmnubicapps01.fsm.northwestern.edu', user: 'pfr957', roles: %w{web app}, primary: true
 

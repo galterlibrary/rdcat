@@ -2,7 +2,7 @@
 lock '3.5.0'
 
 set :application, 'rdcat'
-set :repo_url, 'ssh://git@stash.nubic.northwestern.edu:7999/rdcat/rdcat.git'
+set :repo_url, 'ssh://git@stash.nubic.northwestern.edu:7999/RDCAT/rdcat.git'
 
 
 # Default branch is :master
