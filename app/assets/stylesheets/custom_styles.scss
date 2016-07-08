@@ -36,7 +36,7 @@ table {
 
 .links {
   a {
-    font-size: initial;
+    font-size: inherit;
   }
   .edit_link {
     display: inline-block;
@@ -104,4 +104,8 @@ label {
 .field_note {
   font-size: 0.8rem;
   margin-right: 2rem;
+}
+
+.large-text {
+  font-size: 1.5em !important;
 }

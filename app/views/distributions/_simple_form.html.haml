@@ -7,6 +7,10 @@
   = f.input :name, error: 'Name is required, please enter one', input_html: { class: 'required' }, required: true, inline_label: true
   = f.input :description, placeholder: 'e.g. Some useful notes about the data', inline_label: true
 
+  .field_note.text-right
+    We recommended distributions to be added to
+    %a{ href: 'https://digitalhub.northwestern.edu/', target: '_blank' }
+      Digital Hub
   .distribution_file
     = label_tag 'File'
 

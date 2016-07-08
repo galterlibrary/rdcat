@@ -5,7 +5,8 @@
         .top-bar-left.no-bullet
           %ul.dropdown.menu{ 'data-dropdown-menu': ''}
             %li.menu-text.title
-              Dataset Indexing Project
+              %a{ href: root_path }
+                Dataset Indexing Project
             %li
               = link_to 'Datasets', datasets_path
             - if user_signed_in? && current_user.admin?

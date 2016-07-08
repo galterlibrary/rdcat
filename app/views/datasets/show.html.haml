@@ -5,12 +5,27 @@
   %p
     %b Description:
     = @dataset.description
+
   %p
-    %b License:
-    = @dataset.license
+    %b Maintainer:
+    = @dataset.maintainer.try(:name)
+  %p
+    %b Maintainer Email:
+    = @dataset.maintainer.try(:email)
+  %p
+    %b Author:
+    = @dataset.author.try(:name)
+  %p
+    %b Author Email:
+    = @dataset.author.try(:email)
+
   %p
     %b Organization:
     = @dataset.organization.try(:name)
+  %p
+    %b Categories:
+    = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
+    
   %p
     %b Visibility:
     = @dataset.visibility
@@ -20,24 +35,16 @@
   %p
     %b Source:
     = @dataset.source
+
   %p
-    %b Categories:
-    = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
+    %b License:
+    = @dataset.license
+
   %p
     %b Version:
     = @dataset.version
-  %p
-    %b Author:
-    = @dataset.author.try(:name)
-  %p
-    %b Author Email:
-    = @dataset.author.try(:email)
-  %p
-    %b Maintainer:
-    = @dataset.maintainer.try(:name)
-  %p
-    %b Maintainer Email:
-    = @dataset.maintainer.try(:email)
+
+
   .distributions
     %b Distributions:
     - if @dataset.distributions.blank?
@@ -50,9 +57,8 @@
           = link_to d.name, download_dataset_distribution_path(@dataset, d)
           = link_to 'Destroy', [@dataset, d], :method => :delete, :data => { :confirm => 'Are you sure?' }
   %p
-    %b
-      = link_to 'Add distribution', new_dataset_distribution_path(@dataset) if can_edit?(@dataset)
-  %p
+    = link_to 'Add distribution', new_dataset_distribution_path(@dataset), class: 'button' if can_edit?(@dataset)
+
   .links
     = link_to 'Edit', edit_dataset_path(@dataset), class: 'edit_link' if can_edit?(@dataset)
     = link_to 'Back', datasets_path

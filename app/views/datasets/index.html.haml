@@ -1,44 +1,46 @@
 .row 
-  .column
+  .small-10.columns
     %h1 Datasets
+  .small-2.columns.links.text-right
+    = link_to 'New Dataset', new_dataset_path, class: 'button' if can_create?(Dataset)
+.row
+  .small-3.columns
+    %table{ class: 'categories' }
+      %thead
+        %tr
+          %th
+            Categories
+      %tbody
+        - @categories.each do |c|
+          - selected = (params[:category].to_s == c)
+          - cls = selected ? 'selected_category category' : 'category'
+          %tr{ class: cls }
+            %td
+              - path = selected ? datasets_path(organization_id: params[:organization_id]) : datasets_path(organization_id: params[:organization_id], category: c)
+              = link_to(c, path)
 
-- if @datasets.blank?
-  .row
-    .column
-      No datasets currently exist
+    %table{ class: 'organizations' }
+      %thead
+        %tr
+          %th
+            Organizations
+      %tbody
+        - @organizations.each do |o|
+          - selected = (params[:organization_id] == o.id.to_s)
+          - cls = selected ? 'selected_organization organization' : 'organization'
+          %tr{ class: cls }
+            %td
+              - path = selected ? datasets_path(category: params[:category]) : datasets_path(organization_id: o.id, category: params[:category])
+              = link_to(o.name, path)
 
-- else
+  - if @datasets.blank?
+    .small-9.columns
+      - if params[:category].nil? && params[:organization_id].nil?
+        No datasets currently exist
+      - else
+        No dataset matches criteria
 
-  .row
-    .small-3.columns
-      %table{ class: 'categories' }
-        %thead
-          %tr
-            %th
-              Categories
-        %tbody
-          - @categories.each do |c|
-            - selected = (params[:category].to_s == c)
-            - cls = selected ? 'selected_category category' : 'category'
-            %tr{ class: cls }
-              %td
-                - path = selected ? datasets_path(organization_id: params[:organization_id]) : datasets_path(organization_id: params[:organization_id], category: c)
-                = link_to(c, path)
-
-      %table{ class: 'organizations' }
-        %thead
-          %tr
-            %th
-              Organizations
-        %tbody
-          - @organizations.each do |o|
-            - selected = (params[:organization_id] == o.id.to_s)
-            - cls = selected ? 'selected_organization organization' : 'organization'
-            %tr{ class: cls }
-              %td
-                - path = selected ? datasets_path(category: params[:category]) : datasets_path(organization_id: o.id, category: params[:category])
-                = link_to(o.name, path)
-
+  - else
     .small-9.columns
       %table{ class: 'datasets' }
         %thead
@@ -63,6 +65,3 @@
               %td= link_to 'Edit', edit_dataset_path(dataset) if can_edit?(dataset)
               %td= link_to 'Destroy', dataset, :method => :delete, :data => { :confirm => 'Are you sure?' } if can_destroy?(dataset)
 
-.row
-  .columns.links
-    = link_to 'New Dataset', new_dataset_path if can_create?(Dataset)

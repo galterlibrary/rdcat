@@ -39,4 +39,20 @@ class User < ActiveRecord::Base
   def name
     "#{first_name} #{last_name}".strip
   end
+
+  require 'ldap'
+  def self.find_or_create_by_username(username)
+    user = User.where(username: username).first
+    if user.nil?
+      if ldap_entry = Ldap.instance.find_entry_by_netid(username)
+        user = User.new(username: username)
+        user.email = ldap_entry['mail'].first
+        user.first_name = ldap_entry['givenName'].first
+        user.last_name = ldap_entry['sn'].first
+        user.password = Devise.friendly_token[0, 20]
+        user.save!
+      end
+    end
+    user
+  end
 end
