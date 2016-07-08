@@ -5,33 +5,35 @@
     = link_to 'New Dataset', new_dataset_path, class: 'button' if can_create?(Dataset)
 .row
   .small-3.columns
-    %table{ class: 'categories' }
-      %thead
-        %tr
-          %th
-            Categories
-      %tbody
-        - @categories.each do |c|
-          - selected = (params[:category].to_s == c)
-          - cls = selected ? 'selected_category category' : 'category'
-          %tr{ class: cls }
-            %td
-              - path = selected ? datasets_path(organization_id: params[:organization_id]) : datasets_path(organization_id: params[:organization_id], category: c)
-              = link_to(c, path)
+    - unless @categories.blank?
+      %table{ class: 'categories' }
+        %thead
+          %tr
+            %th
+              Categories
+        %tbody
+          - @categories.each do |c|
+            - selected = (params[:category].to_s == c)
+            - cls = selected ? 'selected_category category' : 'category'
+            %tr{ class: cls }
+              %td
+                - path = selected ? datasets_path(organization_id: params[:organization_id]) : datasets_path(organization_id: params[:organization_id], category: c)
+                = link_to(c, path)
 
-    %table{ class: 'organizations' }
-      %thead
-        %tr
-          %th
-            Organizations
-      %tbody
-        - @organizations.each do |o|
-          - selected = (params[:organization_id] == o.id.to_s)
-          - cls = selected ? 'selected_organization organization' : 'organization'
-          %tr{ class: cls }
-            %td
-              - path = selected ? datasets_path(category: params[:category]) : datasets_path(organization_id: o.id, category: params[:category])
-              = link_to(o.name, path)
+    - unless @organizations.blank?
+      %table{ class: 'organizations' }
+        %thead
+          %tr
+            %th
+              Organizations
+        %tbody
+          - @organizations.each do |o|
+            - selected = (params[:organization_id] == o.id.to_s)
+            - cls = selected ? 'selected_organization organization' : 'organization'
+            %tr{ class: cls }
+              %td
+                - path = selected ? datasets_path(category: params[:category]) : datasets_path(organization_id: o.id, category: params[:category])
+                = link_to(o.name, path)
 
   - if @datasets.blank?
     .small-9.columns
