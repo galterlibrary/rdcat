@@ -76,8 +76,16 @@ namespace :deploy do
         execute "ln -nfs /etc/nubic/db/rdcat.yml #{release_path}/config/database.yml"
       end
     end
+
+    task :ldap_config do
+      on roles(:web) do
+        execute "ln -nfs /etc/nubic/db/studystarter_ldap.yml #{release_path}/config/ldap.yml"
+      end
+    end
   end
   before 'deploy:assets:precompile', 'deploy:symlink:database_config'
+  before 'deploy:assets:precompile', 'deploy:symlink:ldap_config'
+
 
   task :httpd_graceful do
     on roles(:web), in: :sequence, wait: 5 do

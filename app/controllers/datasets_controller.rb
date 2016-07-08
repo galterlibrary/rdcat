@@ -2,6 +2,7 @@ class DatasetsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :set_categories, only: [:new, :edit]
+  before_action :set_licenses, only: [:new, :edit]
 
   before_action :clean_select_multiple_params, only: [:create, :update]
 
@@ -94,6 +95,10 @@ class DatasetsController < ApplicationController
 
     def set_categories
       @categories = Category.pluck(:name).sort
+    end
+
+    def set_licenses
+      @licenses = License.pluck(:title).sort
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

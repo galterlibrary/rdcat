@@ -23,3 +23,5 @@ categories = YAML::load_file(seed_file)['categories']
 categories.each do |c|
   Category.where(name: c['name']).first_or_create
 end
+
+License.create_records!

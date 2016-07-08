@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160614174341) do
+ActiveRecord::Schema.define(version: 20160707185149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,22 @@ ActiveRecord::Schema.define(version: 20160614174341) do
     t.datetime "updated_at",  null: false
     t.string   "artifact"
     t.index ["dataset_id"], name: "index_distributions_on_dataset_id", using: :btree
+  end
+
+  create_table "licenses", force: :cascade do |t|
+    t.boolean  "domain_content"
+    t.boolean  "domain_data"
+    t.boolean  "domain_software"
+    t.string   "family"
+    t.string   "identifier"
+    t.string   "maintainer"
+    t.string   "od_conformance"
+    t.string   "osd_conformance"
+    t.string   "status"
+    t.string   "title"
+    t.string   "url"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "organizations", force: :cascade do |t|
