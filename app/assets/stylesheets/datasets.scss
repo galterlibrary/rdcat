@@ -78,3 +78,12 @@ table.organizations {
     }
   }
 }
+
+#dataset_search_form {
+  input {
+    display: inline-block;
+  }
+  #q {
+    width: 30rem;
+  }
+}

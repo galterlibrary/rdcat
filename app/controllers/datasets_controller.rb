@@ -1,5 +1,5 @@
 class DatasetsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show, :search]
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :set_categories, only: [:new, :edit]
   before_action :set_licenses, only: [:new, :edit]
@@ -25,9 +25,21 @@ class DatasetsController < ApplicationController
     end
   end
 
+  def search
+    @categories = Dataset.chosen_categories
+    @organizations = Dataset.known_organizations
+
+    visibility = user_signed_in? ? Dataset::VISIBILITY_OPTIONS : Dataset::PUBLIC
+    @datasets = Dataset.where(visibility: visibility)
+
+    q = "'%#{params[:q].gsub(' ', '%')}%'"
+    @datasets = Dataset.where("title like #{q} OR description like #{q}")
+  end
+
   # GET /datasets/1
   # GET /datasets/1.json
   def show
+    redirect_to datasets_path if params[:id] == 'search' 
   end
 
   # GET /datasets/new
@@ -90,7 +102,7 @@ class DatasetsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dataset
-      @dataset = Dataset.find(params[:id])
+      @dataset = Dataset.find(params[:id]) unless params[:id] == 'search'
     end
 
     def set_categories
