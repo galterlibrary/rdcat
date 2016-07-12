@@ -54,7 +54,8 @@
     - else
       - @dataset.distributions.each do |d|
         .distribution
-          = link_to d.name, download_dataset_distribution_path(@dataset, d)
+          = link_to d.name, dataset_distribution_path(@dataset, d)
+          = link_to 'Download', download_dataset_distribution_path(@dataset, d) if d.artifact.current_path
           = link_to 'Destroy', [@dataset, d], :method => :delete, :data => { :confirm => 'Are you sure?' }
   %p
     = link_to 'Add distribution', new_dataset_distribution_path(@dataset), class: 'button' if can_edit?(@dataset)

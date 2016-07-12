@@ -21,6 +21,7 @@ class DistributionsController < ApplicationController
 
   # GET /datasets/:dataset_id/distributions/1/edit
   def edit
+    authorize @distribution
   end
 
   # POST /datasets/:dataset_id/distributions
@@ -43,6 +44,7 @@ class DistributionsController < ApplicationController
   # PATCH/PUT /datasets/:dataset_id/distributions/1
   # PATCH/PUT /datasets/:dataset_id/distributions/1.json
   def update
+    authorize @distribution
     respond_to do |format|
       if @distribution.update(distribution_params)
         format.html { redirect_to @dataset, notice: 'Distribution was successfully updated.' }
@@ -57,6 +59,7 @@ class DistributionsController < ApplicationController
   # DELETE /datasets/:dataset_id//distributions/1
   # DELETE /datasets/:dataset_id//distributions/1.json
   def destroy
+    authorize @distribution
     @distribution.destroy
     respond_to do |format|
       format.html { redirect_to @dataset, notice: 'Distribution was successfully destroyed.' }
@@ -67,7 +70,7 @@ class DistributionsController < ApplicationController
   # GET /datasets/:dataset_id/distributions/:id/download
   def download
     @document = Dataset.find(params[:dataset_id]).distributions.find(params[:id])
-    send_file @document.content.current_path
+    send_file @document.artifact.current_path
   end
 
   private
