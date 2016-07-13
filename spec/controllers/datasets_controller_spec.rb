@@ -89,7 +89,7 @@ RSpec.describe DatasetsController, type: :controller do
 
         it 'redirects to the datasets index' do
           post :create, params: {dataset: valid_attributes}, session: valid_session
-          expect(response).to redirect_to(datasets_path)
+          expect(response).to redirect_to(dataset_path(Dataset.last))
         end
       end
 
@@ -134,7 +134,7 @@ RSpec.describe DatasetsController, type: :controller do
         it 'redirects to the datasets index' do
           dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
           put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
-          expect(response).to redirect_to(datasets_path)
+          expect(response).to redirect_to(dataset_path(dataset))
         end
       end
 

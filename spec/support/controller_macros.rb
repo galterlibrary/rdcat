@@ -1,8 +1,8 @@
 module ControllerMacros
-  def sign_in_user
+  def sign_in_user(usr = nil)
     before(:each) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
-      user = FactoryGirl.create(:user)
+      user = usr.nil? ? FactoryGirl.create(:user) : usr
       sign_in user
     end
   end

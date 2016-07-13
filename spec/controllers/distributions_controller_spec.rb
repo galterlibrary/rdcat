@@ -42,6 +42,12 @@ RSpec.describe DistributionsController, type: :controller do
   context 'with a logged in user' do 
     sign_in_user
 
+    before do 
+      # TODO: test when user is not associated with the dataset
+      dataset.maintainer = controller.current_user
+      dataset.save!
+    end
+
     describe 'GET index' do
       it 'assigns all distributions as @distributions' do
         distribution = Distribution.create! valid_attributes
@@ -114,7 +120,6 @@ RSpec.describe DistributionsController, type: :controller do
         }
 
         it 'updates the requested distribution' do
-          distribution = Distribution.create! valid_attributes
           put :update, params: { dataset_id: dataset.id, id: distribution.to_param, distribution: new_attributes }, session: valid_session
           distribution.reload
           expect(distribution.name).to eq(updated_name)

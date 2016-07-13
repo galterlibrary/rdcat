@@ -28,7 +28,7 @@ class DistributionPolicy < ApplicationPolicy
   end
 
   def user_associated_with_record?
-    record.author == user || record.maintainer == user 
+    record.dataset.author == user || record.dataset.maintainer == user 
   end
   private :user_associated_with_record?
 end
