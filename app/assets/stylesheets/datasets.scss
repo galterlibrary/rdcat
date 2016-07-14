@@ -79,6 +79,15 @@ table.organizations {
   }
 }
 
+.dataset_header_row {
+  h1 {
+    margin-top: -1rem;
+  }
+  .button {
+    margin: 0;
+  }
+}
+
 #dataset_search_form {
   input {
     display: inline-block;
