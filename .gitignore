@@ -37,3 +37,5 @@
 /doc
 
 /output/datasets/*.json
+
+*.swp
