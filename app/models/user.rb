@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   def ldap_before_save
+    return if Rails.env.development? && ENV['BYPASS_LDAP'] == 'true'
     self.email      = Devise::LDAP::Adapter.get_ldap_param(self.username,'mail').first
     self.first_name = Devise::LDAP::Adapter.get_ldap_param(self.username,'givenName').first
     self.last_name  = Devise::LDAP::Adapter.get_ldap_param(self.username,'sn').first
