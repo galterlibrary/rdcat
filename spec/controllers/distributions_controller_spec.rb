@@ -79,6 +79,33 @@ RSpec.describe DistributionsController, type: :controller do
       end
     end
 
+    describe 'GET download' do
+      let(:distr) { Distribution.create! valid_attributes }
+
+      subject {
+        get(
+          :download,
+          :params => {
+            :dataset_id => distr.dataset.id,
+            :id => distr.id
+          }
+        )
+      }
+
+      before do
+        expect(Dataset).to receive(:find) {
+          double(Dataset, distributions: double(ActiveRecord, find: distr))
+        }.twice
+        expect(distr).to receive(:artifact) {
+          double('Uploader', current_path: 'spec/fixtures/artifact1.txt')
+        }
+      end
+
+      specify do
+        expect(subject.body).to eq(IO.binread('spec/fixtures/artifact1.txt'))
+      end
+    end
+
     describe 'POST create' do
       describe 'with valid params' do
         it 'creates a new Distribution' do
