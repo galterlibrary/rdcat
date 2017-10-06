@@ -27,9 +27,6 @@
 /coverage
 /coverage/*
 
-/config/database.yml
-/config/ldap.yml
-
 # Ignore uploaded files
 /public/uploads/
 
@@ -39,3 +36,5 @@
 /output/datasets/*.json
 
 *.swp
+
+config/local_env.rb
