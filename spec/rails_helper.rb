@@ -17,7 +17,9 @@ require 'capybara/rspec'
 require 'capybara/poltergeist'
 
 Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, js_errors: true, inspector: true)
+  Capybara::Poltergeist::Driver.new(
+    app, js_errors: true, inspector: true, phantomjs: Phantomjs.path
+  )
 end
 Capybara.javascript_driver = :poltergeist
 Capybara.default_host = 'http://example.com'
