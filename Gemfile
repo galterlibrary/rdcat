@@ -49,6 +49,11 @@ group :development, :test do
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'pry'
+  gem 'pry-byebug'
+end
+
+group :test do
   %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
     gem lib, git: "https://github.com/rspec/#{lib}.git", branch: 'master'
   end
@@ -65,7 +70,6 @@ group :development, :test do
   gem 'webmock', require: false
   gem 'rack-test'
 
-  gem 'pry'
   gem 'launchy'
   
   gem 'rails-controller-testing'
