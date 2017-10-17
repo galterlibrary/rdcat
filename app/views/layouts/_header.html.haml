@@ -1,10 +1,10 @@
 %header
   .row
     .columns
-      .top-bar.menu
+      .top-bar
         .top-bar-left.no-bullet
-          %ul.dropdown.menu{ 'data-dropdown-menu': ''}
-            %li.menu-text.title
+          %ul.menu
+            %li.title.menu-text
               %a{ href: root_path }
                 Dataset Indexing Project
             %li
@@ -19,5 +19,5 @@
                   %li
                     = link_to 'Organizations', organizations_path
         .top-bar-right.no-bullet
-          %ul.dropdown.menu{"data-dropdown-menu" => ""}
+          %ul.menu
             = render 'devise/menu/login_items'

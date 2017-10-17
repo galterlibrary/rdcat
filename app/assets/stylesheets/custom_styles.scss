@@ -53,12 +53,15 @@ table {
     background-color: inherit;
   }
   li {
-    display: inline-block;
     font-size: initial;
+    align-self: center;
   }
   .title {
     margin: 0;
-    padding-left: 0;
+    padding-left: 0 !important;
+    a {
+      padding: unset;
+    }
   }
 }
 
