@@ -1,5 +1,9 @@
 %h1 Create User
 
-= render 'simple_form'
+= form_tag '/user_lookup/ldap' do |f|
+  .input.string.netid
+    = text_field_tag 'netid', nil, placeholder: 'Enter NetID', class: 'string'
+    = submit_tag 'Lookup User', :class => "button"
 
-= link_to 'Back', users_path
+.links
+  = link_to 'List Users', users_path

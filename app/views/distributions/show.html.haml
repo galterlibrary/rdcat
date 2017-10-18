@@ -1,6 +1,25 @@
-%p#notice= notice
+#distribution_show
 
+  %p
+    %b Name:
+    = @distribution.name
+  %p
+    %b Description:
+    = @distribution.description
+  %p
+    %b Format:
+    = @distribution.format
+  - if @distribution.artifact.current_path
+    %p
+      %b Artifact:
+      = @distribution.artifact.current_path
+      = link_to @distribution.artifact.current_path, download_dataset_distribution_path(@dataset, @distribution) 
 
-= link_to 'Edit', edit_distribution_path(@distribution)
-\|
-= link_to 'Back', distributions_path
+  - if @distribution.uri
+    %p
+      %b URI:
+      = @distribution.uri
+
+  .links
+    = link_to 'Edit', edit_dataset_distribution_path(@dataset, @distribution), class: 'edit_link' if can_edit?(@distribution)
+    = link_to 'Back', @dataset

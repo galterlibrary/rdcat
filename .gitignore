@@ -27,11 +27,14 @@
 /coverage
 /coverage/*
 
-/config/database.yml
-/config/ldap.yml
-
 # Ignore uploaded files
 /public/uploads/
 
 # Ignore notes
 /doc
+
+/output/datasets/*.json
+
+*.swp
+
+config/local_env.rb

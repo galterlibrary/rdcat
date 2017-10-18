@@ -1,3 +1,4 @@
+require  File.expand_path('./lib/devise/strategies/development.rb')
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -18,6 +19,7 @@ Devise.setup do |config|
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
   # config.secret_key = '01fc24b8b6f350e1f23a08eae2d5f0d7b11be18579efe34d8fdd336d36db7f47c7dfd94ebdc40a263e130952371f9fda55d9717cbb4c1aca559df2f6e2cde510'
+  config.secret_key = '00e94ec82ec839cd861e7aab52082229ae2904cdb53d5f75496674b97fd42e53393d63109ff0898c3afd7801a052a847cf159cb9cc0a282e75bc876b869bf09d'
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
@@ -159,7 +161,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length.
-  config.password_length = 6..128
+  config.password_length = 4..128
 
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly
@@ -258,10 +260,12 @@ Devise.setup do |config|
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
   #
-  # config.warden do |manager|
-  #   manager.intercept_401 = false
-  #   manager.default_strategies(scope: :user).unshift :some_external_strategy
-  # end
+  config.warden do |manager|
+    if Rails.env.development? && ENV['BYPASS_LDAP'] == 'true'
+      manager.strategies.add(:development,Devise::Strategies::Development)
+      manager.default_strategies(:scope => :user).unshift :development
+    end
+  end
 
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine

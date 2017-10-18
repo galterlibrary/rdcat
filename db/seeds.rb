@@ -6,137 +6,22 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-[
-  ['Bluhm Cardiovascular Institute', 'Bluhm', 'http://heart.nm.org/'],
-  ['Center for Circadian and Sleep Medicine', 'Sleep', 'http://www.feinberg.northwestern.edu/sites/sleep/'],
-  ['Center for Psychosocial Research in Gastrointestinal Conditions', 'GI', 'url: http://www.medicine.northwestern.edu/divisions/gastroenterology-and-hepatology/'],
-  ["Cognitive Neurology and Alzheimer's Disease Center", 'Brain', 'url: http://www.brain.northwestern.edu/about/index.html'],
-  ["Illinois Women's Health Registry at Northwestern University", "Women's Health", 'http://www.womenshealth.northwestern.edu/programs/illinois-womens-health-registry'],
-  ['Ken & Ruth Davee Department of Neurology', 'Neurology', 'http://www.neurology.northwestern.edu/about/index.html'],
-  ['Northwestern Medicine Digestive Health Center', 'Digestive Health', 'http://digestivehealth.nm.org/'],
-  ['Northwestern University Allergy, Asthma, and Immunology Clinical Research Unit', 'Allergy', 'http://www.medicine.northwestern.edu/divisions/allergy-immunology/'],
-  ['Northwestern University Comprehensive Center on Obesity (NCCO)', 'Obesity', 'http://www.ncco.northwestern.edu/'],
-  ['Northwestern University Comprehensive Transplant Center (CTC)', 'Transplant', 'http://www.feinberg.northwestern.edu/sites/transplant/'],
-  ['Northwestern University Department of Obstetrics and Gynecology', 'OB/GYN', 'http://www.feinberg.northwestern.edu/sites/obgyn/'],
-  ['Northwestern University Department of Pediatrics', 'Pediatrics', 'https://www.luriechildrens.org/en-us/Pages/index.aspx'],
-  ['Northwestern University Department of Preventive Medicine', 'Preventive Medicine', 'http://www.preventivemedicine.northwestern.edu/'],
-  ['Northwestern University Department of Psychiatry and Behavioral Sciences', 'Psych', 'http://psychiatry.northwestern.edu/'],
-  ['Northwestern University Department of Dermatology', 'Derm', 'http://www.feinberg.northwestern.edu/sites/dermatology/'],
-  ["Northwestern University Parkinson's Disease and Movement Disorders Center", "Parkinson's", 'http://www.parkinsons.northwestern.edu/'],
-  ['Northwestern University Clinical and Translational Sciences Institute (NUCATS)', 'NUCATS', 'http://nucats.northwestern.edu/'],
-  ['Robert H. Lurie Comprehensive Cancer Center of Northwestern University', 'Cancer', 'http://cancer.northwestern.edu/home/index.cfm'],
-].each do |arr|
-  Organization.create(name: arr[0], abbreviation: arr[1], url: arr[2])
+
+# Load organizations
+seed_file = Rails.root.join('db', 'seeds', 'organizations.yml')
+orgs = YAML::load_file(seed_file)['organizations']
+orgs.each do |o|
+  org = Organization.where(abbreviation: o['abbreviation']).first
+  if org.blank?
+    Organization.create(name: o['name'], abbreviation: o['abbreviation'], url: o['url'])
+  end
 end
 
-[
-"Aging, geriatrics, and eldercare",
-"Allergies",
-"Alzheimer's disease",
-"Amyotrophic Lateral Sclerosis (ALS)",
-"Arthritis",
-"Asthma",
-"Back and spine",
-"Behavioral symptoms",
-"Behavior change",
-"Bipolar disorder",
-"Birth (partruition)",
-"Bladder and urinary tract",
-"Blood and bleeding disorders",
-"Brain and nervous system",
-"Brain disease",
-"Breast disease",
-"Bronchiectasis",
-"Cancer",
-"Cardiovascular",
-"Cartilage, joints, muscles",
-"CAT Scan (Radiology, Xray, CAT Scan, Medical Imaging)",
-"Cervical cancer",
-"Children and adolescent clinical trials",
-"Chronic obstructive pulmonary disease (COPD)",
-"Circulation",
-"Cirrhosis of the liver",
-"Cosmetic procedures and surgery",
-"Crohn's disease",
-"Cystic fibrosis",
-"Dementia",
-"Depression and mood disorders",
-"Diabetes, endocrine, and metabolism",
-"Diet",
-"Digestive system",
-"Ears, nose, throat, mouth",
-"Epilepsy",
-"Exercise",
-"Eyes",
-"Fibroids",
-"General surgery",
-"Genetic testing/counseling",
-"Gynecology (OB/GYN)",
-"Hand surgery",
-"Headache",
-"Healthy lifestyle",
-"Hearing",
-"Heart disease",
-"Hepatitis A, B, & C",
-"Hernias",
-"HIV/AIDS",
-"Infectious disease",
-"Infertility",
-"Inflammatory bowel disease",
-"Influenza",
-"Irritable bowel syndrome",
-"Kidney",
-"Labor pain",
-"Liver disorders",
-"Lungs and breathing problems",
-"Lupus",
-"Medical imaging (radiology, Xray, CAT Scan, medical imaging)",
-"Medicine, Health and Life Sciences",
-"Meditation",
-"Menopause",
-"Mental health",
-"Metabolic bone disease",
-"Mood disorders",
-"Multiple sclerosis",
-"Neurology",
-"Nutrition",
-"OB/GYN",
-"Obesity",
-"Osteoporosis",
-"Ovarian cancer",
-"Pain management",
-"Palliative care and hospice",
-"Parkinson's disease/movement disorders",
-"Partruition (childbirth)",
-"Patient Reported Outcomes",
-"Peripheral Artery Disease",
-"Physical activity",
-"Pregnancy",
-"Primary Progressive Aphasia Study (PPA)",
-"Psychiatry",
-"Pulmonary fibrosis",
-"Pulmonary hypertension",
-"Radiology (radiology, Xray, CAT Scan, medical imaging)",
-"Schizophrenia",
-"Scleroderma",
-"Sedentary activity",
-"Seizures",
-"Sickle cell",
-"Sinus problems",
-"Skin diseases",
-"Sleep Disorders",
-"Smoking or smoking cessation",
-"Social sciences",
-"Sports injuries",
-"Stress management",
-"SuperAging Study",
-"Transplantation",
-"Urology",
-"Uterine diseases",
-"Weight loss",
-"Weight management",
-"Wellness and fitness",
-"Women's health"
-].each do |name|
-  Category.create(name: name)
+# Load categories
+seed_file = Rails.root.join('db', 'seeds', 'categories.yml')
+categories = YAML::load_file(seed_file)['categories']
+categories.each do |c|
+  Category.where(name: c['name']).first_or_create
 end
+
+License.create_records!

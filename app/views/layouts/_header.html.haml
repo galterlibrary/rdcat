@@ -1,0 +1,23 @@
+%header
+  .row
+    .columns
+      .top-bar
+        .top-bar-left.no-bullet
+          %ul.menu
+            %li.title.menu-text
+              %a{ href: root_path }
+                Dataset Indexing Project
+            %li
+              = link_to 'Datasets', datasets_path
+            - if user_signed_in? && current_user.admin?
+              %li
+                %a{ href: '#' }
+                  Admin
+                %ul.menu
+                  %li
+                    = link_to 'Categories', categories_path
+                  %li
+                    = link_to 'Organizations', organizations_path
+        .top-bar-right.no-bullet
+          %ul.menu
+            = render 'devise/menu/login_items'

@@ -52,8 +52,8 @@
 }
 
 #dataset_show {
-  p {
-    font-size: 1.25em;
+  p, .button {
+    font-size: 1.25rem;
   }
   .distributions {
     margin: 0 33px;
@@ -61,5 +61,38 @@
     .distribution {
       padding: 1rem;
     }
+  }
+}
+
+table.categories,
+table.organizations {
+  a {
+    display: inline-block;
+    width: 100%;
+  }
+  tr.selected_category,
+  tr.selected_organization, {
+    background-color: #2199e8;
+    a {
+      color: white;
+    }
+  }
+}
+
+.dataset_header_row {
+  h1 {
+    margin-top: -1rem;
+  }
+  .button {
+    margin: 0;
+  }
+}
+
+#dataset_search_form {
+  input {
+    display: inline-block;
+  }
+  #q {
+    width: 30rem;
   }
 }

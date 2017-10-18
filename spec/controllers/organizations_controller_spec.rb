@@ -36,125 +36,140 @@ RSpec.describe OrganizationsController, type: :controller do
   # OrganizationsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe 'GET index' do
-    it 'assigns all organizations as @organizations' do
-      organization = Organization.create! valid_attributes
-      get :index, params: {}, session: valid_session
-      expect(assigns(:organizations)).to eq([organization])
-    end
-  end
+  context 'with a logged in user' do 
+    sign_in_user
 
-  describe 'GET show' do
-    it 'assigns the requested organization as @organization' do
-      organization = Organization.create! valid_attributes
-      get :show, params: {id: organization.to_param}, session: valid_session
-      expect(assigns(:organization)).to eq(organization)
-    end
-  end
-
-  describe 'GET new' do
-    it 'assigns a new organization as @organization' do
-      get :new, params: {}, session: valid_session
-      expect(assigns(:organization)).to be_a_new(Organization)
-    end
-  end
-
-  describe 'GET edit' do
-    it 'assigns the requested organization as @organization' do
-      organization = Organization.create! valid_attributes
-      get :edit, params: {id: organization.to_param}, session: valid_session
-      expect(assigns(:organization)).to eq(organization)
-    end
-  end
-
-  describe 'POST create' do
-    describe 'with valid params' do
-      it 'creates a new Organization' do
-        expect {
-          post :create, params: {organization: valid_attributes}, session: valid_session
-        }.to change(Organization, :count).by(1)
-      end
-
-      it 'assigns a newly created organization as @organization' do
-        post :create, params: {organization: valid_attributes}, session: valid_session
-        expect(assigns(:organization)).to be_a(Organization)
-        expect(assigns(:organization)).to be_persisted
-      end
-
-      it 'redirects to the created organization' do
-        post :create, params: {organization: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Organization.last)
-      end
-    end
-
-    describe 'with invalid params' do
-      it 'assigns a newly created but unsaved organization as @organization' do
-        post :create, params: {organization: invalid_attributes}, session: valid_session
-        expect(assigns(:organization)).to be_a_new(Organization)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, params: {organization: invalid_attributes}, session: valid_session
-        expect(response).to render_template('new')
+    describe 'GET index' do
+      it 'redirects user to the root path' do
+        get :index, params: {}, session: valid_session
+        expect(response).to be_redirect
+        expect(response).to redirect_to(root_path)
       end
     end
   end
 
-  describe 'PUT update' do
-    describe 'with valid params' do
-      let(:updated_org_name) { 'Updated Org Name' }
-      let(:new_attributes) {
-        { name: updated_org_name}
-      }
+  context 'with a logged in admin user' do 
+    sign_in_admin
 
-      it 'updates the requested organization' do
+    describe 'GET index' do
+      it 'assigns all organizations as @organizations' do
         organization = Organization.create! valid_attributes
-        put :update, params: {id: organization.to_param, organization: new_attributes}, session: valid_session
-        organization.reload
-        expect(organization.name).to eq(updated_org_name)
+        get :index, params: {}, session: valid_session
+        expect(assigns(:organizations)).to eq([organization])
       end
+    end
 
+    describe 'GET show' do
       it 'assigns the requested organization as @organization' do
         organization = Organization.create! valid_attributes
-        put :update, params: {id: organization.to_param, organization: valid_attributes}, session: valid_session
+        get :show, params: {id: organization.to_param}, session: valid_session
         expect(assigns(:organization)).to eq(organization)
-      end
-
-      it 'redirects to the organization' do
-        organization = Organization.create! valid_attributes
-        put :update, params: {id: organization.to_param, organization: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(organization)
       end
     end
 
-    describe 'with invalid params' do
-      it 'assigns the organization as @organization' do
-        organization = Organization.create! valid_attributes
-        put :update, params: {id: organization.to_param, organization: invalid_attributes}, session: valid_session
-        expect(assigns(:organization)).to eq(organization)
-      end
-
-      it "re-renders the 'edit' template" do
-        organization = Organization.create! valid_attributes
-        put :update, params: {id: organization.to_param, organization: invalid_attributes}, session: valid_session
-        expect(response).to render_template('edit')
+    describe 'GET new' do
+      it 'assigns a new organization as @organization' do
+        get :new, params: {}, session: valid_session
+        expect(assigns(:organization)).to be_a_new(Organization)
       end
     end
-  end
 
-  describe 'DELETE destroy' do
-    it 'destroys the requested organization' do
-      organization = Organization.create! valid_attributes
-      expect {
+    describe 'GET edit' do
+      it 'assigns the requested organization as @organization' do
+        organization = Organization.create! valid_attributes
+        get :edit, params: {id: organization.to_param}, session: valid_session
+        expect(assigns(:organization)).to eq(organization)
+      end
+    end
+
+    describe 'POST create' do
+      describe 'with valid params' do
+        it 'creates a new Organization' do
+          expect {
+            post :create, params: {organization: valid_attributes}, session: valid_session
+          }.to change(Organization, :count).by(1)
+        end
+
+        it 'assigns a newly created organization as @organization' do
+          post :create, params: {organization: valid_attributes}, session: valid_session
+          expect(assigns(:organization)).to be_a(Organization)
+          expect(assigns(:organization)).to be_persisted
+        end
+
+        it 'redirects to the created organization' do
+          post :create, params: {organization: valid_attributes}, session: valid_session
+          expect(response).to redirect_to(Organization.last)
+        end
+      end
+
+      describe 'with invalid params' do
+        it 'assigns a newly created but unsaved organization as @organization' do
+          post :create, params: {organization: invalid_attributes}, session: valid_session
+          expect(assigns(:organization)).to be_a_new(Organization)
+        end
+
+        it "re-renders the 'new' template" do
+          post :create, params: {organization: invalid_attributes}, session: valid_session
+          expect(response).to render_template('new')
+        end
+      end
+    end
+
+    describe 'PUT update' do
+      describe 'with valid params' do
+        let(:updated_org_name) { 'Updated Org Name' }
+        let(:new_attributes) {
+          { name: updated_org_name}
+        }
+
+        it 'updates the requested organization' do
+          organization = Organization.create! valid_attributes
+          put :update, params: {id: organization.to_param, organization: new_attributes}, session: valid_session
+          organization.reload
+          expect(organization.name).to eq(updated_org_name)
+        end
+
+        it 'assigns the requested organization as @organization' do
+          organization = Organization.create! valid_attributes
+          put :update, params: {id: organization.to_param, organization: valid_attributes}, session: valid_session
+          expect(assigns(:organization)).to eq(organization)
+        end
+
+        it 'redirects to the organization' do
+          organization = Organization.create! valid_attributes
+          put :update, params: {id: organization.to_param, organization: valid_attributes}, session: valid_session
+          expect(response).to redirect_to(organization)
+        end
+      end
+
+      describe 'with invalid params' do
+        it 'assigns the organization as @organization' do
+          organization = Organization.create! valid_attributes
+          put :update, params: {id: organization.to_param, organization: invalid_attributes}, session: valid_session
+          expect(assigns(:organization)).to eq(organization)
+        end
+
+        it "re-renders the 'edit' template" do
+          organization = Organization.create! valid_attributes
+          put :update, params: {id: organization.to_param, organization: invalid_attributes}, session: valid_session
+          expect(response).to render_template('edit')
+        end
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'destroys the requested organization' do
+        organization = Organization.create! valid_attributes
+        expect {
+          delete :destroy, params: {id: organization.to_param}, session: valid_session
+        }.to change(Organization, :count).by(-1)
+      end
+
+      it 'redirects to the organizations list' do
+        organization = Organization.create! valid_attributes
         delete :destroy, params: {id: organization.to_param}, session: valid_session
-      }.to change(Organization, :count).by(-1)
-    end
-
-    it 'redirects to the organizations list' do
-      organization = Organization.create! valid_attributes
-      delete :destroy, params: {id: organization.to_param}, session: valid_session
-      expect(response).to redirect_to(organizations_url)
+        expect(response).to redirect_to(organizations_url)
+      end
     end
   end
-
 end

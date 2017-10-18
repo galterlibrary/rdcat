@@ -1,18 +1,33 @@
 = simple_form_for @dataset do |f|
   = f.input :title, error: 'Title is required, please enter one', input_html: { class: 'required' }, required: true, inline_label: true
   = f.input :description, placeholder: 'e.g. Some useful notes about the data', inline_label: true
-  = f.input :license, inline_label: true
+
+  .field_note.text-right
+    If a user does not appear in the list
+    %a{ href: new_user_url }
+      go here to add users by NetID
+  = f.association :maintainer, label_method: :name, collection: User.all.order(:last_name), prompt: 'Choose a Maintainer', input_html: { class: 'required' }, required: true
+  = f.association :author, label_method: :name, collection: User.all.order(:last_name), prompt: 'Choose an Author'
+
+  .field_note.text-right
+    Organization and categories pulled from 
+    %a{ href: 'http://www.feinberg.northwestern.edu/research/clinical-trials/' }
+      http://www.feinberg.northwestern.edu/research/clinical-trials/
   = f.association :organization, collection: Organization.all.order(:name), prompt: 'Choose an Organization', input_html: { class: 'required' }, required: true
+  .input.select.optional.dataset_categories
+    = f.label :categories
+    = f.select :categories, @categories, {}, { multiple: true, class: 'chosen-select' }
+  
   = f.input :visibility, collection: Dataset::VISIBILITY_OPTIONS, selected: Dataset::PUBLIC
   = f.input :state, collection: Dataset::STATE_OPTIONS, selected: Dataset::ACTIVE
   = f.input :source, placeholder: 'http://example.edu/dataset.json'
 
-  .input.select.optional.dataset_categories
-    = f.label :categories
-    = f.select :categories, @categories, {}, { multiple: true, class: 'chosen-select' }
+  .field_note.text-right
+    For more about licenses go to 
+    %a{ href: 'http://licenses.opendefinition.org/', target: '_blank' }
+      http://licenses.opendefinition.org/
+  = f.input :license, collection: @licenses, prompt: 'Choose a License'
 
   = f.input :version, placeholder: '1.0'
-  = f.association :author, label_method: :name, collection: User.all.order(:last_name), prompt: 'Choose an Author'
-  = f.association :maintainer, label_method: :name, collection: User.all.order(:last_name), prompt: 'Choose a Maintainer', input_html: { class: 'required' }, required: true
 
   = f.button :submit

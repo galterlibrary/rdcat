@@ -1,18 +1,45 @@
 class DatasetsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show, :search]
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :set_categories, only: [:new, :edit]
+  before_action :set_licenses, only: [:new, :edit]
 
   before_action :clean_select_multiple_params, only: [:create, :update]
 
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.all
+    @categories = Dataset.chosen_categories
+    @organizations = Dataset.known_organizations
+
+    visibility = user_signed_in? ? Dataset::VISIBILITY_OPTIONS : Dataset::PUBLIC
+    @datasets = Dataset.where(visibility: visibility)
+
+    if params[:category] 
+      # Book.where("subjects @> ?", '{finances}')
+      @datasets = @datasets.where("'#{params[:category]}' = ANY (categories)")
+    end
+
+    if params[:organization_id]
+      @datasets = @datasets.where(organization_id: params[:organization_id])
+    end
+  end
+
+  def search
+    @categories = Dataset.chosen_categories
+    @organizations = Dataset.known_organizations
+
+    visibility = user_signed_in? ? Dataset::VISIBILITY_OPTIONS : Dataset::PUBLIC
+    @datasets = Dataset.where(visibility: visibility)
+
+    q = "'%#{params[:q].gsub(' ', '%')}%'"
+    @datasets = Dataset.where("title like #{q} OR description like #{q}")
   end
 
   # GET /datasets/1
   # GET /datasets/1.json
   def show
+    redirect_to datasets_path if params[:id] == 'search' 
   end
 
   # GET /datasets/new
@@ -22,6 +49,7 @@ class DatasetsController < ApplicationController
 
   # GET /datasets/1/edit
   def edit
+    authorize @dataset
   end
 
   # POST /datasets
@@ -31,10 +59,12 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to datasets_path, notice: 'Dataset was successfully created.' }
+
+        write_json_to_file(@dataset)
+        
+        format.html { redirect_to @dataset, notice: 'Dataset was successfully created.' }
         format.json { render :show, status: :created, location: @dataset }
       else
-        format.html { render :new }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
       end
     end
@@ -43,9 +73,13 @@ class DatasetsController < ApplicationController
   # PATCH/PUT /datasets/1
   # PATCH/PUT /datasets/1.json
   def update
+    authorize @dataset
     respond_to do |format|
       if @dataset.update(dataset_params)
-        format.html { redirect_to datasets_path, notice: 'Dataset was successfully updated.' }
+
+        write_json_to_file(@dataset)
+
+        format.html { redirect_to @dataset, notice: 'Dataset was successfully updated.' }
         format.json { render :show, status: :ok, location: @dataset }
       else
         format.html { render :edit }
@@ -57,6 +91,7 @@ class DatasetsController < ApplicationController
   # DELETE /datasets/1
   # DELETE /datasets/1.json
   def destroy
+    authorize @dataset
     @dataset.destroy
     respond_to do |format|
       format.html { redirect_to datasets_url, notice: 'Dataset was successfully destroyed.' }
@@ -67,11 +102,15 @@ class DatasetsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dataset
-      @dataset = Dataset.find(params[:id])
+      @dataset = Dataset.find(params[:id]) unless params[:id] == 'search'
     end
 
     def set_categories
       @categories = Category.pluck(:name).sort
+    end
+
+    def set_licenses
+      @licenses = License.pluck(:title).sort
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -97,5 +136,20 @@ class DatasetsController < ApplicationController
         when Hash then clean_select_multiple_params(value)
         end
       end
+    end
+
+    def write_json_to_file(dataset)
+      without_html_escaping_in_json do 
+        json_str = render_to_string( template: 'datasets/show.json.jbuilder', locals: { dataset: dataset })
+        filename = "output/datasets/#{dataset.id}.json"
+        File.open(filename, 'w') { |file| file.write(json_str) }
+      end
+    end
+
+    def without_html_escaping_in_json(&block)
+      ActiveSupport.escape_html_entities_in_json = false
+      result = yield
+      ActiveSupport.escape_html_entities_in_json = true
+      result
     end
 end

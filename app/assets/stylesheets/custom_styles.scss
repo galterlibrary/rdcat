@@ -1,0 +1,114 @@
+.btn {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background-color: #f7f7f7;
+  background-image: linear-gradient(to bottom, #ffffff, #eaeaea);
+  background-repeat: repeat-x;
+  border-color: #cccccc #cccccc #b3b3b3;
+  border-image: none;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+  color: #333333;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  margin-bottom: 0;
+  padding: 4px 12px;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  vertical-align: middle;
+}
+
+.btn:hover {
+  background-image: linear-gradient(to bottom, #ddd, #555);
+  background-repeat: repeat-x;
+}
+
+table {
+  font-size: initial;
+}
+
+.links {
+  a {
+    font-size: inherit;
+  }
+  .edit_link {
+    display: inline-block;
+    padding-right: 1em;
+    margin-right: 0.5em;
+    border-right: 1px solid #cdcdcd;
+  }
+}
+
+.top-bar, .menu { 
+  padding-left: 0.1rem !important;
+  background-color: white !important;
+  ul {
+    background-color: inherit;
+  }
+  li {
+    font-size: initial;
+    align-self: center;
+  }
+  .title {
+    margin: 0;
+    padding-left: 0 !important;
+    a {
+      padding: unset;
+    }
+  }
+}
+
+#notice {
+  color: green;
+}
+
+.field_with_errors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#error_explanation {
+  width: 450px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+
+  h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px;
+    margin-bottom: 0;
+    background-color: #c00;
+    color: #fff;
+  }
+
+  ul li {
+    font-size: 12px;
+    list-style: square;
+  }
+}
+
+label {
+  display: block;
+}
+
+.field_note {
+  font-size: 0.8rem;
+  margin-right: 2rem;
+}
+
+.large-text {
+  font-size: 1.5em !important;
+}

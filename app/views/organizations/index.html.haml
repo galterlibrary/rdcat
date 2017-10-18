@@ -1,28 +1,35 @@
-%h1 Listing Organizations
+.row 
+  .small-10.columns
+    %h1 Organizations
+  .small-2.columns.links.text-right
+    = link_to 'New Organization', new_organization_path, class: 'button' if can_create?(Organization)
 
-%table
-  %thead
-    %tr
-      %th 
-        Name
-      %th 
-        Abbreviation
-      %th 
-        URL
-      %th 
-      %th
-      %th
+.row
+  .column
+    %table
+      %thead
+        %tr
+          %th 
+            Name
+          %th 
+            Abbreviation
+          %th 
+            URL
+          %th 
+          %th
+          %th
 
-  %tbody
-    - @organizations.each do |organization|
-      %tr
-        %td= organization.name
-        %td= organization.abbreviation
-        %td= link_to organization.url, organization.url
-        %td= link_to 'Show', organization
-        %td= link_to 'Edit', edit_organization_path(organization)
-        %td= link_to 'Destroy', organization, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      %tbody
+        - @organizations.each do |organization|
+          %tr
+            %td= organization.name
+            %td= organization.abbreviation
+            %td= link_to organization.url, organization.url
+            %td= link_to 'Show', organization
+            %td= link_to 'Edit', edit_organization_path(organization)
+            %td= link_to 'Destroy', organization, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
-%br
+.row
+  .column
+    = will_paginate @organizations
 
-= link_to 'New Organization', new_organization_path
