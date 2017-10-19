@@ -1,4 +1,15 @@
 GIT
+  remote: git://github.com/elastic/elasticsearch-rails.git
+  revision: 22b698aa3f4138db6ec1d1a082e8cd24f8132224
+  branch: 5.x
+  specs:
+    elasticsearch-model (5.0.1)
+      activesupport (> 3)
+      elasticsearch (~> 5)
+      hashie
+    elasticsearch-rails (5.0.1)
+
+GIT
   remote: https://github.com/rspec/rspec-core.git
   revision: 72a0b3b5d257370ac188a0dcfb171850b50d84a8
   branch: master
@@ -92,6 +103,7 @@ GEM
     annotate (2.7.2)
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 13.0)
+    ansi (1.5.0)
     arel (7.1.4)
     autoprefixer-rails (7.1.4.1)
       execjs
@@ -161,6 +173,18 @@ GEM
     dotenv-rails (2.2.1)
       dotenv (= 2.2.1)
       railties (>= 3.2, < 5.2)
+    elasticsearch (5.0.4)
+      elasticsearch-api (= 5.0.4)
+      elasticsearch-transport (= 5.0.4)
+    elasticsearch-api (5.0.4)
+      multi_json
+    elasticsearch-extensions (0.0.26)
+      ansi
+      elasticsearch
+      ruby-prof
+    elasticsearch-transport (5.0.4)
+      faraday
+      multi_json
     erubis (2.7.0)
     exception_notification (4.2.2)
       actionmailer (>= 4.0, < 6)
@@ -174,6 +198,8 @@ GEM
     faker (1.8.4)
       i18n (~> 0.5)
     fakeweb (1.3.0)
+    faraday (0.13.1)
+      multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
     foundation-rails (6.4.1.2)
       railties (>= 3.1.0)
@@ -191,6 +217,7 @@ GEM
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
     hashdiff (0.3.6)
+    hashie (3.5.6)
     html2haml (2.2.0)
       erubis (~> 2.7.0)
       haml (>= 4.0, < 6)
@@ -225,6 +252,7 @@ GEM
     mini_portile2 (2.3.0)
     minitest (5.10.3)
     multi_json (1.12.2)
+    multipart-post (2.0.0)
     net-ldap (0.11)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -287,6 +315,7 @@ GEM
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
       railties (>= 4.2.0, < 5.3)
+    ruby-prof (0.16.2)
     ruby_dep (1.5.0)
     ruby_parser (3.10.1)
       sexp_processor (~> 4.9)
@@ -381,6 +410,9 @@ DEPENDENCIES
   database_cleaner
   devise_ldap_authenticatable
   dotenv-rails
+  elasticsearch-extensions
+  elasticsearch-model!
+  elasticsearch-rails!
   exception_notification
   factory_girl_rails
   faker

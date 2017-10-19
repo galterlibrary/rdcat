@@ -30,6 +30,15 @@ class User < ActiveRecord::Base
   devise :ldap_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  after_save do
+    self.datasets_as_author.each {|ds| ds.__elasticsearch__.index_document }
+    self.datasets_as_maintainer.each {|ds| ds.__elasticsearch__.index_document }
+  end
+
+  around_destroy do
+    #TODO
+  end
+
   def ldap_before_save
     return if Rails.env.development? && ENV['BYPASS_LDAP'] == 'true'
     self.email      = Devise::LDAP::Adapter.get_ldap_param(self.username,'mail').first

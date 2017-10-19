@@ -28,6 +28,10 @@ require 'shoulda'
 require 'factory_girl'
 require 'support/factory_girl'
 
+require 'elasticsearch/model'
+require 'elasticsearch/extensions/test/cluster'
+require 'elasticsearch/extensions/test/startup_shutdown'
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end

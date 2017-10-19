@@ -73,6 +73,8 @@ group :test do
   gem 'launchy'
   
   gem 'rails-controller-testing'
+
+  gem 'elasticsearch-extensions'
 end
 
 group :development do
@@ -88,3 +90,6 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
 end
+
+gem 'elasticsearch-model', github: 'elastic/elasticsearch-rails', branch: '5.x'
+gem 'elasticsearch-rails', github: 'elastic/elasticsearch-rails', branch: '5.x'
