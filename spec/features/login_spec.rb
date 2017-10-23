@@ -5,6 +5,7 @@ describe 'Logging in', type: :feature do
 
   before(:each) do 
     Warden.test_mode!
+    stub_request(:any, /localhost:9250/)
   end
 
   after(:each) do 

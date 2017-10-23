@@ -60,15 +60,17 @@ class Dataset < ApplicationRecord
             multi_match: {
               query: query,
               fields: [
-                'title^5',
-                'description',
+                'title^10',
+                'description^5',
+                'categories^3',
                 'license',
-                'categories',
                 'source',
                 'organization.name',
                 'author.*',
                 'maintainer.*',
-                'distributions.*'
+                'distributions.name^5',
+                'distributions.description^3',
+                'distributions.format'
               ]
             }
           }
@@ -104,7 +106,7 @@ class Dataset < ApplicationRecord
 
   def as_indexed_json(options={})
     self.as_json(
-      only: [:title, :description, :license, :categories],
+      only: [:title, :description, :license, :categories, :source],
       include: {
         organization: { only: :name },
         author: { only: [:email], methods: [:name] },
@@ -121,5 +123,4 @@ class Dataset < ApplicationRecord
   def self.known_organizations
     Organization.order(:name).where(id: pluck(:organization_id)).distinct.to_a
   end
-
 end

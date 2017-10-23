@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Distributions", type: :request do
+RSpec.describe "Distributions", type: :request, elasticsearch: true do
 
   let(:dataset) { FactoryGirl.create(:dataset) }
 

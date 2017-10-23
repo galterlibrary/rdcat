@@ -3,9 +3,7 @@ require 'rails_helper'
 RSpec.describe DatasetsController, type: :controller do
   before do
     #FIXME
-    WebMock.disable_net_connect!(allow_localhost: true)
-    stub_request(:any, 'localhost:9200')
-    WebMock.enable!
+    stub_request(:any, /localhost:9250/)
   end
 
   let(:org) { FactoryGirl.create(:organization) }
