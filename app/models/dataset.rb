@@ -53,27 +53,37 @@ class Dataset < ApplicationRecord
     import
   end
 
-  def self.search(query)
+  def self.search(query, current_netid: nil)
      __elasticsearch__.search(
        {
          query: {
-            multi_match: {
-              query: query,
-              fields: [
-                'title^10',
-                'description^5',
-                'categories^3',
-                'license',
-                'source',
-                'organization.name',
-                'author.*',
-                'maintainer.*',
-                'distributions.name^5',
-                'distributions.description^3',
-                'distributions.format'
-              ]
-            }
-          }
+           bool: {
+             must: {
+               multi_match: {
+                 operator: 'and',
+                 fields: [
+                   'title^10',
+                   'description^5',
+                   'categories^3',
+                   'license',
+                   'source',
+                   'organization.name',
+                   'author.*',
+                   'maintainer.*',
+                   'distributions.name^5',
+                   'distributions.description^3',
+                   'distributions.format'
+                 ],
+                 query: query
+               }
+             },
+             filter: {
+               terms: {
+                 view_authz: (['OPENZ'] | [current_netid]).compact
+               }
+             }
+           }
+         }
        }
      )
   end
@@ -101,6 +111,7 @@ class Dataset < ApplicationRecord
         indexes :description, analyzer: 'english'
         indexes :format, analyzer: 'english'
       end
+      indexes :view_authz, type: 'keyword'
     end
   end
 
@@ -112,8 +123,20 @@ class Dataset < ApplicationRecord
         author: { only: [:email], methods: [:name] },
         maintainer: { only: [:email], methods: [:name] },
         distributions: { only: [:name, :description, :format] }
-      }
+      },
+      methods: [:view_authz]
     )
+  end
+
+  def view_authz
+    if visibility == 'Private'
+      [
+        author.try(:username),
+        maintainer.try(:username)
+      ].compact.map {|o| o.to_s.downcase }
+    else
+      ['OPENZ']
+    end
   end
 
   def self.chosen_categories

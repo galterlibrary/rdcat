@@ -40,6 +40,10 @@ RSpec.describe Dataset, :type => :model do
   end
 
   describe 'elasticsearch integration', elasticsearch: true do
+    before do
+      FactoryGirl.create(:dataset, title: "NEVERMATCH")
+    end
+
     context 'title' do
       before do
         FactoryGirl.create(:dataset, title: "Blood Meridian's Dataset")
@@ -441,6 +445,103 @@ RSpec.describe Dataset, :type => :model do
 
         it 'will not match' do
           expect(subject.count).to eq(0)
+        end
+      end
+    end
+
+    describe 'netid passed for public dataset' do
+      before do
+        FactoryGirl.create(
+          :dataset,
+          maintainer: FactoryGirl.create(:user, username: 'alibaba'),
+          visibility: 'Public',
+          title: "Blood Meridian's Dataset"
+        )
+        Dataset.__elasticsearch__.refresh_index!
+      end
+
+      subject { Dataset.search('Blood', current_netid: 'nonsense') }
+
+      it 'matches' do
+        expect(subject.count).to eq(1)
+        expect(subject.first.title).to eq("Blood Meridian's Dataset")
+      end
+    end
+
+    context 'private datasets' do
+      describe 'authorized visibility does not match the passed netid' do
+        before do
+          FactoryGirl.create(
+            :dataset,
+            visibility: 'Private',
+            title: "Blood Meridian's Dataset"
+          )
+          Dataset.__elasticsearch__.refresh_index!
+        end
+
+        subject { Dataset.search('Blood', current_netid: 'nonsense') }
+
+        it 'does not match' do
+          expect(subject.count).to eq(0)
+        end
+      end
+
+      describe 'author matches the passed netid' do
+        before do
+          FactoryGirl.create(
+            :dataset,
+            author: FactoryGirl.create(:user, username: 'alibaba'),
+            visibility: 'Private',
+            title: "Blood Meridian's Dataset"
+          )
+          Dataset.__elasticsearch__.refresh_index!
+        end
+
+        subject { Dataset.search('Blood', current_netid: 'alibaba') }
+
+        it 'matches' do
+          expect(subject.count).to eq(1)
+          expect(subject.first.title).to eq("Blood Meridian's Dataset")
+        end
+      end
+
+      describe 'author matches the passed netid' do
+        before do
+          FactoryGirl.create(
+            :dataset,
+            maintainer: FactoryGirl.create(:user, username: 'alibaba'),
+            visibility: 'Private',
+            title: "Blood Meridian's Dataset"
+          )
+          Dataset.__elasticsearch__.refresh_index!
+        end
+
+        subject { Dataset.search('Blood', current_netid: 'alibaba') }
+
+        it 'matches' do
+          expect(subject.count).to eq(1)
+          expect(subject.first.title).to eq("Blood Meridian's Dataset")
+        end
+      end
+
+      describe 'author and maintainer matches the passed netid' do
+        before do
+          u = FactoryGirl.create(:user, username: 'alibaba')
+          FactoryGirl.create(
+            :dataset,
+            maintainer: u,
+            author: u,
+            visibility: 'Private',
+            title: "Blood Meridian's Dataset"
+          )
+          Dataset.__elasticsearch__.refresh_index!
+        end
+
+        subject { Dataset.search('Blood', current_netid: 'alibaba') }
+
+        it 'matches' do
+          expect(subject.count).to eq(1)
+          expect(subject.first.title).to eq("Blood Meridian's Dataset")
         end
       end
     end

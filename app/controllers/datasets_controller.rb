@@ -28,12 +28,10 @@ class DatasetsController < ApplicationController
   def search
     @categories = Dataset.chosen_categories
     @organizations = Dataset.known_organizations
-
-    visibility = user_signed_in? ? Dataset::VISIBILITY_OPTIONS : Dataset::PUBLIC
-    @datasets = Dataset.where(visibility: visibility)
-
-    q = "'%#{params[:q].gsub(' ', '%')}%'"
-    @datasets = Dataset.where("title like #{q} OR description like #{q}")
+    @datasets = Dataset.search(
+      params[:q],
+      current_netid: current_user.try(:username)
+    ).records
   end
 
   # GET /datasets/1
