@@ -89,6 +89,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Warden::Test::Helpers, type: :request
   config.include Warden::Test::Helpers, type: :feature
+  config.include Capybara::DSL
 
   es_config = {
     command: ENV['ELASTIC_SEARCH_EXEC']  || 'elasticsearch',

@@ -545,5 +545,22 @@ RSpec.describe Dataset, :type => :model do
         end
       end
     end
+
+    context 'results order' do
+      subject { Dataset.search('match') }
+
+      before do
+        FactoryGirl.create(:dataset, title: 'Match it')
+        FactoryGirl.create(:dataset, title: 'Second', description: 'Match me')
+        FactoryGirl.create(:dataset, title: 'Third', categories: ['Match this'])
+        Dataset.__elasticsearch__.refresh_index!
+      end
+
+      it 'returns results ordered based on their weights' do
+        expect(subject[0].title).to eq('Match it')
+        expect(subject[1].title).to eq('Second')
+        expect(subject[2].title).to eq('Third')
+      end
+    end
   end
 end

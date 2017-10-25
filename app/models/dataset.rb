@@ -60,7 +60,6 @@ class Dataset < ApplicationRecord
            bool: {
              must: {
                multi_match: {
-                 operator: 'and',
                  fields: [
                    'title^10',
                    'description^5',

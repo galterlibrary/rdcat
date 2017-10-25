@@ -25,6 +25,16 @@ RSpec.describe DatasetsController, type: :controller do
   # DatasetsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  describe 'GET search' do
+    it 'returns results for anonymous user' do
+      expect(Dataset).to receive(:search).with('the term', current_netid: nil) {
+        double('elasticsearch-results', records: [1,2,3])
+      }
+      get :search, params: {q: 'the term'}
+      expect(assigns(:datasets)).to eq([1,2,3])
+    end
+  end
+
   context 'with a logged in user' do 
     sign_in_user
 
@@ -41,6 +51,16 @@ RSpec.describe DatasetsController, type: :controller do
         dataset = Dataset.create! valid_attributes
         get :show, params: {id: dataset.to_param}, session: valid_session
         expect(assigns(:dataset)).to eq(dataset)
+      end
+    end
+
+    describe 'GET search' do
+      it 'returns results for authenticated user' do
+        expect(Dataset).to receive(:search).with(
+          'the term', current_netid: controller.current_user.username
+        ) { double('elasticsearch-results', records: [1,2,3]) }
+        get :search, params: {q: 'the term'}, session: valid_session
+        expect(assigns(:datasets)).to eq([1,2,3])
       end
     end
 
