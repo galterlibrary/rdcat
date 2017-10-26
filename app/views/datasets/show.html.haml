@@ -55,11 +55,19 @@
       - @dataset.distributions.each do |d|
         .distribution
           = link_to d.name, dataset_distribution_path(@dataset, d)
-          = link_to 'Download', download_dataset_distribution_path(@dataset, d) if d.artifact.current_path
-          = link_to 'Destroy', [@dataset, d], :method => :delete, :data => { :confirm => 'Are you sure?' }
+          - if d.artifact.current_path
+            %small
+              = link_to '(Download)',
+                        download_dataset_distribution_path(@dataset, d)
   %p
-    = link_to 'Add distribution', new_dataset_distribution_path(@dataset), class: 'button' if can_edit?(@dataset)
 
   .links
-    = link_to 'Edit', edit_dataset_path(@dataset), class: 'edit_link' if can_edit?(@dataset)
+    - if @dataset.distributions.present? && can_edit?(@dataset)
+      = link_to 'Add distribution', new_dataset_distribution_path(@dataset),
+                class: 'edit_link'
+      = link_to 'Edit', edit_dataset_path(@dataset), class: 'edit_link'
+      = link_to 'Destroy', [@dataset], :method => :delete,
+                :data => { :confirm => 'Are you sure?' },
+                :class => 'edit_link'
+
     = link_to 'Back', datasets_path
