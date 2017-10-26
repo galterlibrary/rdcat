@@ -17,4 +17,8 @@ class Organization < ApplicationRecord
   validates :abbreviation, presence: true, uniqueness: true
   validates :email, uniqueness: true, allow_nil: true
   validates :url, presence: true, uniqueness: true
+
+  after_save do
+    self.datasets.each {|ds| ds.__elasticsearch__.index_document }
+  end
 end

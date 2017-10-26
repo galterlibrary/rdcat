@@ -28,6 +28,10 @@ require 'shoulda'
 require 'factory_girl'
 require 'support/factory_girl'
 
+require 'elasticsearch/model'
+require 'elasticsearch/extensions/test/cluster'
+require 'elasticsearch/extensions/test/startup_shutdown'
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -85,4 +89,64 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Warden::Test::Helpers, type: :request
   config.include Warden::Test::Helpers, type: :feature
+  config.include Capybara::DSL
+
+  es_config = {
+    command: ENV['ELASTIC_SEARCH_EXEC']  || 'elasticsearch',
+    port: 9250,
+    number_of_nodes: 1,
+    timeout: 15,
+    network_host: 'localhost'
+  }
+  # Start an in-memory cluster for Elasticsearch as needed
+  #NOTE: This wasn't working with elasticsearch from package manager
+  #      on Linx. Tarball from the official page works just fine
+  #      but `command' has to be configured as needed.
+  config.before :all, elasticsearch: true do
+    WebMock.allow_net_connect!
+    unless Elasticsearch::Extensions::Test::Cluster.running?(es_config)
+      Elasticsearch::Extensions::Test::Cluster.start(es_config)
+    end
+    WebMock.disable_net_connect!
+  end
+
+  # Stop elasticsearch cluster after test run
+  config.after :suite do
+    WebMock.allow_net_connect!
+    if Elasticsearch::Extensions::Test::Cluster.running?(es_config)
+      Elasticsearch::Extensions::Test::Cluster.stop(es_config)
+    end
+    WebMock.disable_net_connect!
+  end
+
+  # Create indexes for all elastic searchable models
+  config.before :each, elasticsearch: true do
+    WebMock.allow_net_connect!
+    ActiveRecord::Base.descendants.each do |model|
+      if model.respond_to?(:__elasticsearch__)
+        begin
+          model.__elasticsearch__.create_index!
+          model.__elasticsearch__.refresh_index!
+        rescue => Elasticsearch::Transport::Transport::Errors::NotFound
+        rescue => e
+          STDERR.puts "There was an error creating the elasticsearch index for #{model.name}: #{e.inspect}"
+        end
+      end
+    end
+  end
+
+  # Delete indexes for all elastic searchable models to ensure clean state between tests
+  config.after :each, elasticsearch: true do
+    ActiveRecord::Base.descendants.each do |model|
+      if model.respond_to?(:__elasticsearch__)
+        begin
+          model.__elasticsearch__.delete_index!
+        rescue => Elasticsearch::Transport::Transport::Errors::NotFound
+        rescue => e
+          STDERR.puts "There was an error removing the elasticsearch index for #{model.name}: #{e.inspect}"
+        end
+      end
+    end
+    WebMock.disable_net_connect!
+  end
 end

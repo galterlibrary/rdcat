@@ -19,5 +19,18 @@ class Distribution < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :dataset, presence: true
 
+  after_save do
+    if self.dataset.present?
+      self.dataset.__elasticsearch__.index_document
+    end
+  end
+  around_destroy :update_dataset_index
+
+  def update_dataset_index
+    ds = self.dataset
+    yield
+    ds.__elasticsearch__.index_document
+  end
+
   mount_uploader :artifact, ArtifactUploader
 end
