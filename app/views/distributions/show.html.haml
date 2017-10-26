@@ -12,8 +12,8 @@
   - if @distribution.artifact.current_path
     %p
       %b Artifact:
-      = @distribution.artifact.current_path
-      = link_to @distribution.artifact.current_path, download_dataset_distribution_path(@dataset, @distribution) 
+      = @distribution.artifact_identifier
+      = link_to '(Download)', download_dataset_distribution_path(@dataset, @distribution) 
 
   - if @distribution.uri
     %p

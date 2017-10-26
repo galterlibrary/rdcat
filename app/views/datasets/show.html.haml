@@ -62,9 +62,9 @@
   %p
 
   .links
+    = link_to 'Add distribution', new_dataset_distribution_path(@dataset),
+              class: 'edit_link'
     - if @dataset.distributions.present? && can_edit?(@dataset)
-      = link_to 'Add distribution', new_dataset_distribution_path(@dataset),
-                class: 'edit_link'
       = link_to 'Edit', edit_dataset_path(@dataset), class: 'edit_link'
       = link_to 'Destroy', [@dataset], :method => :delete,
                 :data => { :confirm => 'Are you sure?' },
