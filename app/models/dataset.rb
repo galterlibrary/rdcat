@@ -28,6 +28,7 @@ class Dataset < ApplicationRecord
   belongs_to :organization
   belongs_to :author, class_name: 'User'
   belongs_to :maintainer, class_name: 'User'
+  belongs_to :characteristic
   has_many :distributions
 
   validates :title, presence: true, uniqueness: true

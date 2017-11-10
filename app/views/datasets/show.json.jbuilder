@@ -4,6 +4,10 @@ if @dataset.organization
   json.organization @dataset.organization.name
 end
 
+if @dataset.characteristic
+  json.characteristic @dataset.characteristic.name
+end
+
 if @dataset.author
   json.author @dataset.author.name
   json.author_email @dataset.author.email

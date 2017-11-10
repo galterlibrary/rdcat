@@ -23,6 +23,9 @@
     %b Organization:
     = @dataset.organization.try(:name)
   %p
+    %b Characteristic:
+    = @dataset.characteristic.try(:name)
+  %p
     %b Categories:
     = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
     

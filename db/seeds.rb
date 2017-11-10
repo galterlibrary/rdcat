@@ -17,11 +17,14 @@ orgs.each do |o|
   end
 end
 
-# Load categories
-seed_file = Rails.root.join('db', 'seeds', 'categories.yml')
-categories = YAML::load_file(seed_file)['categories']
-categories.each do |c|
-  Category.where(name: c['name']).first_or_create
+# Load characteristics
+seed_file = Rails.root.join('db', 'seeds', 'characteristics.yml')
+characteristics = YAML::load_file(seed_file)['characteristics']
+characteristics.each do |c|
+  Characteristic.where(
+    name: c['name'],
+    description: c['description']
+  ).first_or_create
 end
 
 License.create_records!
