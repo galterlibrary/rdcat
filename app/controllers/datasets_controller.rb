@@ -117,6 +117,7 @@ class DatasetsController < ApplicationController
                                         :description, 
                                         :license, 
                                         :organization_id,
+                                        :characteristic_id,
                                         :visibility, 
                                         :state,
                                         :source,

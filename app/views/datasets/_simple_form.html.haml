@@ -14,6 +14,7 @@
     %a{ href: 'http://www.feinberg.northwestern.edu/research/clinical-trials/' }
       http://www.feinberg.northwestern.edu/research/clinical-trials/
   = f.association :organization, collection: Organization.all.order(:name), prompt: 'Choose an Organization', input_html: { class: 'required' }, required: true
+  = f.association :characteristic, collection: Characteristic.all.order(:name), prompt: 'Choose a type'
   .input.select.optional.dataset_categories
     = f.label :categories
     = f.select :categories, @categories, {}, { multiple: true, class: 'chosen-select' }

@@ -10,15 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707185149) do
+ActiveRecord::Schema.define(version: 20171110152558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "categories", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "uniq_id"
+    t.text     "description"
+    t.string   "matchers",                 array: true
+    t.index ["matchers"], name: "index_categories_on_matchers", using: :gin
+  end
+
+  create_table "characteristics", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "datasets", force: :cascade do |t|
@@ -32,10 +43,12 @@ ActiveRecord::Schema.define(version: 20160707185149) do
     t.string   "version"
     t.integer  "author_id"
     t.integer  "maintainer_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.text     "categories",      default: [],              array: true
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.text     "categories",        default: [],              array: true
+    t.integer  "characteristic_id"
     t.index ["author_id"], name: "index_datasets_on_author_id", using: :btree
+    t.index ["characteristic_id"], name: "index_datasets_on_characteristic_id", using: :btree
     t.index ["maintainer_id"], name: "index_datasets_on_maintainer_id", using: :btree
     t.index ["organization_id"], name: "index_datasets_on_organization_id", using: :btree
   end
