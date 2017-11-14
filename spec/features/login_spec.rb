@@ -23,7 +23,7 @@ describe 'Logging in', type: :feature do
         visit '/'
 
         expect(page).to have_content('Login')
-        expect(page).to have_content('Dataset Indexing Project')
+        expect(page).to have_content('Galter DataCat')
       end
     end
 

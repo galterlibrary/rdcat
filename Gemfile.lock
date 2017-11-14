@@ -201,6 +201,9 @@ GEM
     faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
+    foundation-icons-sass-rails (3.0.0)
+      railties (>= 3.1.1)
+      sass-rails (>= 3.1.1)
     foundation-rails (6.4.1.2)
       railties (>= 3.1.0)
       sass (>= 3.3.0, < 3.5)
@@ -423,6 +426,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   fakeweb
+  foundation-icons-sass-rails
   foundation-rails
   haml
   haml-rails
@@ -461,4 +465,4 @@ DEPENDENCIES
   will_paginate
 
 BUNDLED WITH
-   1.16.0.pre.3
+   1.16.0
