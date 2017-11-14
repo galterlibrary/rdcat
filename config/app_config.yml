@@ -1,8 +1,8 @@
 ---
-application: rdcat
-repository: ssh://git@stash.nubic.northwestern.edu:7999/rdcat/rdcat.git
+application: datacat
+repository: git@github.com:galterlibrary/rdcat.git
 deployer: deploy
-contact_email: p-friedman@northwestern.edu
+contact_email: piotr.hebal@northwestern.edu
 development:
   server_name: rdcat.dev
 test:
@@ -18,3 +18,10 @@ production:
   app_host: vfsmnubicapps01.fsm.northwestern.edu
   server_name: rdcat.nubic.northwestern.edu
   server_alias: rdcat.nubic.northwestern.edu
+office:
+  app_host: galter-2310-1.fsm.northwestern.edu
+  server_name: galter-2310-1.fsm.northwestern.edu
+  server_alias: galter-2310-1.fsm.northwestern.edu
+  cert_file: /etc/pki/tls/certs/localhost.crt
+  #chain_file: /etc/pki/tls/certs/rdcat-staging_nubic_northwestern_edu_interm.cer
+  key_file: /etc/pki/tls/private/localhost.key

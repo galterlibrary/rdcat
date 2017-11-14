@@ -83,3 +83,9 @@ production:
   database: rdcat_production
   username: rdcat
   password: <%= ENV['rdcat_DATABASE_PASSWORD'] %>
+
+staging:
+  <<: *default
+  database: rdcat_staging
+  username: deploy
+  password: <%= ENV['rdcat_DATABASE_PASSWORD'] %>
