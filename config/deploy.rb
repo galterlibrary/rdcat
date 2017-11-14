@@ -50,7 +50,15 @@ namespace :deploy do
   task :db_seed do
     on roles(:web), in: :sequence, wait: 5 do
       within release_path do
-        execute :bundle, :exec, :rails, 'db:seed'
+        with rails_env: fetch(:rails_env) do
+          execute :bundle, :exec, :rails, 'db:seed'
+          if ENV['MESH_IMPORT'] == 'true'
+            execute :bundle, :exec, :rake, 'mesh:import_subjects'
+          else
+            puts "!!! Skipping mesh subject import (deploy:db_seed)"
+            puts "Run with MESH_IMPORT=true in the environment to enable"
+          end
+        end
       end
     end
   end
@@ -71,8 +79,6 @@ namespace :deploy do
       # end
     end
   end
-
-  after :finishing, 'deploy:cleanup'
 
   task :httpd_graceful do
     on roles(:web), in: :sequence, wait: 5 do
@@ -154,6 +160,7 @@ EOF
   end
 end
 
+after 'deploy:migrate', 'deploy:db_seed'
 after "deploy:updated", "deploy:cleanup"
 after "deploy:finished", "deploy_prepare:create_vhost"
 after "deploy_prepare:create_vhost", "deploy_prepare:passenger_mod"
