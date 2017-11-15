@@ -29,6 +29,7 @@ gem 'jbuilder'
 gem 'haml'
 gem 'haml-rails'
 gem 'foundation-rails'
+gem 'foundation-icons-sass-rails'
 gem "autoprefixer-rails"
 gem 'simple_form'
 gem 'chosen-rails'

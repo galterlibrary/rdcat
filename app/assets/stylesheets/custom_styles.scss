@@ -1,3 +1,5 @@
+@import 'custom_defaults';
+
 .btn {
   -moz-border-bottom-colors: none;
   -moz-border-left-colors: none;
@@ -112,3 +114,5 @@ label {
 .large-text {
   font-size: 1.5em !important;
 }
+
+.fi-home { color: $nu-primary; }
