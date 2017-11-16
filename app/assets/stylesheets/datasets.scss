@@ -52,9 +52,31 @@
 }
 
 #dataset_show {
+  dl {
+    width: 100%;
+  }
+
+  dt {
+    float:left;
+    clear: left;
+    width: 170px;
+  }
+
+  dd {
+    clear: left;
+    float: left;
+    margin-left: 170px;
+  }
+  dt + dd {
+    float: left;
+    clear: none;
+    margin-left: 0;
+  }
+
   .distributions {
     margin: 0 33px;
     font-size: 1.25em;
+    clear: both;
     .distribution {
       padding: 1rem;
     }

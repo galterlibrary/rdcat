@@ -1,52 +1,69 @@
 #dataset_show
-  %p
-    %b Title:
-    = @dataset.title
-  %p
-    %b Description:
-    = @dataset.description
+  %dl#dataset_show
+    %dt
+      Title
+    %dd
+      = @dataset.title
+    %dt
+      Description
+    %dd
+      = @dataset.description
+    %dt
+      Grants and Funding
+    %dd
+      = @dataset.grants_and_funding
+    %dt
+      Maintainer
+    %dd
+      = @dataset.maintainer.try(:name)
+    %dt
+      Maintainer Email
+    %dd
+      = @dataset.maintainer.try(:email)
+    %dt
+      Author
+    %dd
+      = @dataset.author.try(:name)
+    %dt
+      Author Email
+    %dd
+      = @dataset.author.try(:email)
 
-  %p
-    %b Maintainer:
-    = @dataset.maintainer.try(:name)
-  %p
-    %b Maintainer Email:
-    = @dataset.maintainer.try(:email)
-  %p
-    %b Author:
-    = @dataset.author.try(:name)
-  %p
-    %b Author Email:
-    = @dataset.author.try(:email)
+    %dt
+      Organization
+    %dd
+      = @dataset.organization.try(:name)
+    %dt
+      Characteristic
+    %dd
+      = @dataset.characteristic.try(:name)
+    %dt
+      Categories
+    %dd
+      = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
+      
+    %dt
+      Visibility
+    %dd
+      = @dataset.visibility
+    %dt
+      State
+    %dd
+      = @dataset.state
+    %dt
+      Source
+    %dd
+      = @dataset.source
 
-  %p
-    %b Organization:
-    = @dataset.organization.try(:name)
-  %p
-    %b Characteristic:
-    = @dataset.characteristic.try(:name)
-  %p
-    %b Categories:
-    = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
-    
-  %p
-    %b Visibility:
-    = @dataset.visibility
-  %p
-    %b State:
-    = @dataset.state
-  %p
-    %b Source:
-    = @dataset.source
+    %dt
+      License
+    %dd
+      = @dataset.license
 
-  %p
-    %b License:
-    = @dataset.license
-
-  %p
-    %b Version:
-    = @dataset.version
-
+    %dt
+      Version
+    %dd
+      = @dataset.version
 
   .distributions
     %b Distributions:
@@ -65,9 +82,9 @@
   %p
 
   .links
-    = link_to 'Add distribution', new_dataset_distribution_path(@dataset),
-              class: 'edit_link'
-    - if @dataset.distributions.present? && can_edit?(@dataset)
+    - if can_edit?(@dataset)
+      = link_to 'Add distribution', new_dataset_distribution_path(@dataset),
+                class: 'edit_link'
       = link_to 'Edit', edit_dataset_path(@dataset), class: 'edit_link'
       = link_to 'Destroy', [@dataset], :method => :delete,
                 :data => { :confirm => 'Are you sure?' },

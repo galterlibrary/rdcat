@@ -1,4 +1,7 @@
-json.extract! @dataset, :id, :title, :description, :license, :visibility, :state, :source, :version, :created_at, :updated_at
+json.extract!(
+  @dataset, :id, :title, :description, :grants_and_funding, :license,
+            :visibility, :state, :source, :version, :created_at, :updated_at
+)
 
 if @dataset.organization
   json.organization @dataset.organization.name
