@@ -13,11 +13,8 @@
 #  artifact    :string
 #
 require 'rails_helper'
-require 'carrierwave/test/matchers'
 
 RSpec.describe Distribution, :type => :model do
-  include CarrierWave::Test::Matchers
-
   before do
     stub_request(:put, /localhost:9250/)
   end

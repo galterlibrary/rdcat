@@ -32,6 +32,8 @@ require 'elasticsearch/model'
 require 'elasticsearch/extensions/test/cluster'
 require 'elasticsearch/extensions/test/startup_shutdown'
 
+require 'carrierwave/test/matchers'
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -90,6 +92,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :request
   config.include Warden::Test::Helpers, type: :feature
   config.include Capybara::DSL
+  config.include CarrierWave::Test::Matchers
 
   es_config = {
     command: ENV['ELASTIC_SEARCH_EXEC']  || 'elasticsearch',
