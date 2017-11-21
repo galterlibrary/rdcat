@@ -115,6 +115,7 @@ class DatasetsController < ApplicationController
     def dataset_params
       params.fetch(:dataset, {}).permit(:title, 
                                         :description, 
+                                        :grants_and_funding,
                                         :license, 
                                         :organization_id,
                                         :characteristic_id,

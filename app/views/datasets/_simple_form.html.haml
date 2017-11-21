@@ -1,6 +1,7 @@
 = simple_form_for @dataset do |f|
   = f.input :title, error: 'Title is required, please enter one', input_html: { class: 'required' }, required: true, inline_label: true
   = f.input :description, placeholder: 'e.g. Some useful notes about the data', inline_label: true
+  = f.input :grants_and_funding, placeholder: 'Grants and funding information', inline_label: true
 
   .field_note.text-right
     If a user does not appear in the list

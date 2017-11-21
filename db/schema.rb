@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171110152558) do
+ActiveRecord::Schema.define(version: 20171115191747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,10 +43,11 @@ ActiveRecord::Schema.define(version: 20171110152558) do
     t.string   "version"
     t.integer  "author_id"
     t.integer  "maintainer_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.text     "categories",        default: [],              array: true
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.text     "categories",         default: [],              array: true
     t.integer  "characteristic_id"
+    t.text     "grants_and_funding"
     t.index ["author_id"], name: "index_datasets_on_author_id", using: :btree
     t.index ["characteristic_id"], name: "index_datasets_on_characteristic_id", using: :btree
     t.index ["maintainer_id"], name: "index_datasets_on_maintainer_id", using: :btree
