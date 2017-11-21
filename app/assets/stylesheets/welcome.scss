@@ -2,15 +2,18 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .welcome {
+  margin-top: 5rem;
   .button {
     margin-top: 1rem;
-    a {
-      color: white;
-      font-size: 1.25rem;
-      font-weight: bold;
+    color: white;
+    font-size: .75rem;
+    font-weight: bold;
+    &:hover {
+      box-shadow: 0 3px 5px 0 rgba(0,0,0,0.26);
     }
   }
   .categories {
+    margin-top: 1rem;
     ul {
       margin: 0;
       li {
@@ -21,6 +24,13 @@
       li.first {
         margin-left: 0;
       }
+    }
+  }
+  
+  .special_input {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);
+    &:focus {
+      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2);
     }
   }
 }

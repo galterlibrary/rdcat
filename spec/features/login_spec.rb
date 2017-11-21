@@ -24,6 +24,7 @@ describe 'Logging in', type: :feature do
 
         expect(page).to have_content('Login')
         expect(page).to have_content('Galter DataCat')
+        expect(page).to have_selector("input[placeholder='Enter your search query here']")
       end
     end
 
