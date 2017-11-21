@@ -28,7 +28,6 @@
       Author Email
     %dd
       = @dataset.author.try(:email)
-
     %dt
       Organization
     %dd
@@ -41,7 +40,6 @@
       Categories
     %dd
       = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
-      
     %dt
       Visibility
     %dd
@@ -54,12 +52,10 @@
       Source
     %dd
       = @dataset.source
-
     %dt
       License
     %dd
       = @dataset.license
-
     %dt
       Version
     %dd
@@ -77,8 +73,12 @@
           = link_to d.name, dataset_distribution_path(@dataset, d)
           - if d.artifact.current_path
             %small
-              = link_to '(Download)',
+              |
+              = link_to 'Download',
                         download_dataset_distribution_path(@dataset, d)
+              |
+              %em
+                = "#{d.format} (#{d.artifact.content_type})"
   %p
 
   .links

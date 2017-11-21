@@ -79,6 +79,29 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
       Dataset.__elasticsearch__.refresh_index!
     end
 
+    context 'distributions info' do 
+      let(:dataset) { FactoryGirl.create(:dataset) }
+
+      context 'with artifact' do
+        let(:distribution) {
+          FactoryGirl.create(:distribution, dataset: dataset, format: nil)
+        }
+
+        before do
+          File.open('spec/fixtures/artifact1.txt') {|f|
+            distribution.artifact.store!(f)
+          }
+          distribution.save!
+          visit dataset_path(dataset)
+        end
+
+        it 'shows the MIME and descriptive file information' do
+          expect(page).to have_text('text/plain')
+          expect(page).to have_text('ASCII text')
+        end
+      end
+    end
+
     it 'can search' do
       visit datasets_path
       expect(page).to have_text('Hello')
