@@ -19,6 +19,7 @@ RSpec.describe "Distributions", type: :request, elasticsearch: true do
 
       it 'shows the MIME and descriptive file information' do
         pending("This should work after visibility is fixed")
+        expect(page).to have_text('5 Bytes')
         expect(page).to have_text('text/plain')
         expect(page).to have_text('ASCII text')
       end
