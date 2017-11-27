@@ -94,5 +94,5 @@ end
 gem 'elasticsearch-model', github: 'elastic/elasticsearch-rails', branch: '5.x'
 gem 'elasticsearch-rails', github: 'elastic/elasticsearch-rails', branch: '5.x'
 
-gem 'passenger', '5.1.11'
+gem 'passenger', '5.1.12'
 gem 'rubyzip'
