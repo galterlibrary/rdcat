@@ -1,18 +1,22 @@
-.welcome
+.welcome.text-center
   %h1
     Galter DataCat
-  %h3
+  %h4.subheader
     Feinberg School of Medicine Northwestern University Data Portal
+    
+  = form_tag('/datasets/search', id: 'dataset_search_form') do 
+    = search_field_tag 'q', params[:q], placeholder: 'Enter your search query here', class: 'special_input'
 
-  .button 
-    = link_to('Start Browsing', datasets_path)
+
+  = link_to(datasets_path) do
+    .button
+      Browse Datasets
 
   - unless @categories.blank?
     .categories
       %h3
-        Browse by Category
+        Explore Categories
       %ul
         - @categories.each_with_index do |c, i|
-          - c_class = i == 0 ? 'first category_item' : 'category_item'
-          %li{ class: c_class}
+          %li{ class: "category_item"}
             = link_to(c, datasets_path(category: c))
