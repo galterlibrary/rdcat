@@ -16,6 +16,8 @@ require 'capybara/rails'
 require 'capybara/rspec'
 require 'capybara/poltergeist'
 
+require "pundit/rspec"
+
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(
     app, js_errors: true, inspector: true, phantomjs: Phantomjs.path

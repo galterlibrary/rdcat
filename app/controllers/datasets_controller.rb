@@ -1,5 +1,5 @@
 class DatasetsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :search]
+  before_action :authenticate_user!, except: [:show, :index, :search]
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :set_categories, only: [:new, :edit]
   before_action :set_licenses, only: [:new, :edit]
