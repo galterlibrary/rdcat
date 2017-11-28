@@ -4,7 +4,7 @@ class DistributionPolicy < ApplicationPolicy
   end
 
   def show?
-    true
+    admin? || user_associated_with_record? || is_public?
   end
 
   def create?
