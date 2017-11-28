@@ -74,7 +74,7 @@
           - if d.artifact.current_path
             %small
               |
-              = link_to 'Download',
+              = link_to "Download (#{number_to_human_size(d.artifact.size.to_i)})",
                         download_dataset_distribution_path(@dataset, d)
               |
               %em
