@@ -428,6 +428,7 @@ DEPENDENCIES
   foundation-rails
   haml
   haml-rails
+  html2haml
   jbuilder
   jquery-rails
   launchy

@@ -1,0 +1,12 @@
+%h2 Log In
+= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+  .field
+    = f.label :username
+    %br/
+    = f.text_field :username, autofocus: true
+  .field
+    = f.label :password
+    %br/
+    = f.password_field :password, autocomplete: "off"
+  .actions
+    = f.submit "Log in", class: 'button'
