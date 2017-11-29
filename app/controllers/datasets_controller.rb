@@ -11,7 +11,7 @@ class DatasetsController < ApplicationController
   def index
     @categories = policy_scope(Dataset).chosen_categories
     @organizations = policy_scope(Dataset).known_organizations
-    @datasets = policy_scope(Dataset)
+    @datasets = policy_scope(Dataset).order('updated_at DESC')
 
     if params[:category] 
       # Book.where("subjects @> ?", '{finances}')

@@ -20,7 +20,7 @@
 
 FactoryGirl.define do
   factory :dataset do
-    title {|n| Faker::Hipster.word + "-#{n}" }
+    title { Faker::Hipster.unique.word }
     association :organization, factory: :organization
     association :maintainer, factory: :user
     visibility Dataset::PUBLIC

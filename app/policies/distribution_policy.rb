@@ -37,12 +37,12 @@ class DistributionPolicy < ApplicationPolicy
   private :user_associated_with_record?
 
   def is_public?
-    record.dataset.visibility == 'Public'
+    record.dataset.visibility == Dataset::PUBLIC
   end
   private :is_public?
 
   def is_private?
-    record.dataset.visibility == 'Private'
+    record.dataset.visibility == Dataset::PRIVATE
   end
   private :is_private?
 end

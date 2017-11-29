@@ -28,8 +28,11 @@ RSpec.describe DatasetsController, type: :controller do
     it 'uses Dataset policy scope' do
       expect(controller).to receive(:policy_scope)
                         .with(Dataset)
-                        .exactly(3).times
+                        .exactly(2).times
                         .and_call_original
+      ds = double(Dataset, order: [])
+      expect(controller).to receive(:policy_scope).with(Dataset) { ds }
+      expect(ds).to receive(:order).with('updated_at DESC')
       get :index, params: {}, session: valid_session
     end
   end

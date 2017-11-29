@@ -4,7 +4,7 @@ class DatasetPolicy < ApplicationPolicy
       if admin?
         scope.all
       else
-        scope.where(visibility: 'Public').or(
+        scope.where(visibility: Dataset::PUBLIC).or(
           scope.where(author: user).where.not(author: nil)
         ).or(
           scope.where(maintainer: user)
@@ -47,12 +47,12 @@ class DatasetPolicy < ApplicationPolicy
   private :user_associated_with_record?
 
   def is_public?
-    record.visibility == 'Public'
+    record.visibility == Dataset::PUBLIC
   end
   private :is_public?
 
   def is_private?
-    record.visibility == 'Private'
+    record.visibility == Dataset::PRIVATE
   end
   private :is_private?
 end
