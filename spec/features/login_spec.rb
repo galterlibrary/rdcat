@@ -35,7 +35,7 @@ describe 'Logging in', type: :feature do
 
         expect(page).to_not have_content('Logout')
         expect(page).to have_content('Login')
-        expect(page).to have_content('Datasets')
+        expect(page).to have_content('Galter DataCat')
       end
 
     end
@@ -52,12 +52,10 @@ describe 'Logging in', type: :feature do
 
           visit datasets_path
 
-          expect(page).to_not have_content(@dataset.description)
-          expect(page).to have_content(@dataset.title)
+          expect(page).to have_content(@dataset.description)
+          expect(page).to have_link("#{@dataset.title} - #{@dataset.author.name}")
           expect(page).to have_content(@dataset.organization.name)
           expect(page).to have_content(@dataset.maintainer.email)
-
-          expect(page).to have_link('Show')
         end
 
       end
@@ -97,7 +95,10 @@ describe 'Logging in', type: :feature do
 
           visit datasets_path
 
-          expect(page).to have_link('New Dataset')
+          within('.top-bar-right.no-bullet') do
+            expect(page).to have_css('a#plus_tip[href="/datasets/new"]')
+            expect(page).to have_css('i.fi-plus')
+          end
 
           expect(page).to_not have_link('Edit')
           expect(page).to_not have_link('Destroy')
@@ -119,7 +120,7 @@ describe 'Logging in', type: :feature do
           visit datasets_path
 
           expect(page).to have_link('Edit')
-          expect(page).to have_link('Destroy')
+          expect(page).to_not have_link('Destroy')
         end
 
       end

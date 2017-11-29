@@ -15,6 +15,14 @@ FactoryGirl.define do
   sequence :name do |n|
     "#{n}_#{Faker::Internet.name}"
   end
+  
+  sequence :first_name do |n|
+    "#{n}_#{Faker::Name.first_name}"
+  end
+  
+  sequence :last_name do |n|
+    "#{n}_#{Faker::Name.last_name}"
+  end
 
   sequence :abbreviation do |n|
     "#{n}#{Faker::Hacker.abbreviation}"

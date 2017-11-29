@@ -17,4 +17,4 @@
 //= require chosen-jquery
 //= require_tree .
 
-$(function(){ $(document).foundation(); });
+$(document).foundation();
