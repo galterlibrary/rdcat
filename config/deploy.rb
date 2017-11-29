@@ -5,6 +5,7 @@ APP_CONFIG = YAML.load(File.open('config/app_config.yml'))
 
 set :application,  APP_CONFIG['application']
 set :repo_url,     APP_CONFIG['repository']
+set :passenger_root, "/var/www/apps/rdcat/shared/bundle/ruby/#{APP_CONFIG['gem_ruby_version']}/gems/passenger-#{APP_CONFIG['passenger_version']}"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -25,7 +26,7 @@ set :deploy_via, :copy
 set :pty, true
 
 # Default value for :linked_files is []
-# set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
+set :linked_files, fetch(:linked_files, []).push('config/local_env.rb')
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
@@ -88,8 +89,15 @@ namespace :deploy do
 
 end
 
-
 namespace :deploy_prepare do
+  desc 'Linked secrets'
+  task :make_secrets do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :mkdir, '-p', "#{shared_path}/config"
+      execute :touch, "#{shared_path}/config/local_env.rb"
+    end
+  end
+
   desc 'Configure virtual host'
   task :passenger_mod do
     on roles(:web), in: :sequence, wait: 5 do
@@ -114,8 +122,8 @@ EOF
       common_httpd = <<-EOF
 <IfModule mod_passenger.c>
     PassengerAppEnv #{ fetch(:rails_env) }
-    PassengerRoot /var/www/apps/rdcat/shared/bundle/ruby/2.4.0/gems/passenger-5.1.11
-    PassengerDefaultRuby /home/deploy/.rvm/wrappers/ruby-2.4.2@rdcat/ruby
+    PassengerRoot #{ fetch(:passenger_root) }
+    PassengerDefaultRuby /home/deploy/.rvm/wrappers/ruby-#{ APP_CONFIG['ruby_version'] }@rdcat/ruby
     PassengerFriendlyErrorPages off
   </IfModule>
 
@@ -140,7 +148,7 @@ EOF
       vhost_config = <<-EOF
 ServerName #{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }
 
-LoadModule passenger_module /var/www/apps/rdcat/shared/bundle/ruby/2.4.0/gems/passenger-5.1.11/buildout/apache2/mod_passenger.so
+LoadModule passenger_module #{ fetch(:passenger_root) }/buildout/apache2/mod_passenger.so
 
 <VirtualHost *:80>
   #{ fetch(:stage).to_s == 'office' ? common_httpd : ssl_redirect }
@@ -160,8 +168,8 @@ EOF
   end
 end
 
+before :deploy, 'deploy_prepare:make_secrets'
 after 'deploy:migrate', 'deploy:db_seed'
-after "deploy:updated", "deploy:cleanup"
 after "deploy:finished", "deploy_prepare:create_vhost"
 after "deploy_prepare:create_vhost", "deploy_prepare:passenger_mod"
 after "deploy_prepare:passenger_mod", "deploy:httpd_graceful"

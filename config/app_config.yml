@@ -2,26 +2,31 @@
 application: datacat
 repository: git@github.com:galterlibrary/rdcat.git
 deployer: deploy
-contact_email: piotr.hebal@northwestern.edu
+ruby_version: 2.4.2
+gem_ruby_version: 2.4.0
+passenger_version: 5.1.12
+contact_email: galter-is@listserv.it.northwestern.edu
 development:
   server_name: rdcat.dev
 test:
   server_name: rdcat.dev
 staging:
-  app_host: vtfsmnubicapps01.fsm.northwestern.edu
-  server_name: rdcat-staging.nubic.northwestern.edu
-  server_alias: rdcat-staging.nubic.northwestern.edu
-  cert_file: /etc/pki/tls/certs/rdcat-staging_nubic_northwestern_edu_cert.cer
-  chain_file: /etc/pki/tls/certs/rdcat-staging_nubic_northwestern_edu_interm.cer
-  key_file: /etc/pki/tls/private/rdcat-staging.key
+  app_host: vtfsmghslapps03.fsm.northwestern.edu
+  server_name: datacat-staging.galter.northwestern.edu
+  server_alias: datacat-staging.galter.northwestern.edu
+  cert_file: /etc/pki/tls/certs/datacat-staging_galter_northwestern_edu_cert.cer
+  chain_file: /etc/pki/tls/certs/datacat-staging_galter_northwestern_edu_interm.cer
+  key_file: /etc/pki/tls/private/datacat-staging_galter_northwestern_edu.key
 production:
-  app_host: vfsmnubicapps01.fsm.northwestern.edu
-  server_name: rdcat.nubic.northwestern.edu
-  server_alias: rdcat.nubic.northwestern.edu
+  app_host: vfsmghslapps03.fsm.northwestern.edu
+  server_name: datacat.galter.northwestern.edu
+  server_alias: datacat.galter.northwestern.edu
+  cert_file: /etc/pki/tls/certs/datacat_galter_northwestern_edu_cert.cer
+  chain_file: /etc/pki/tls/certs/datacat_galter_northwestern_edu_interm.cer
+  key_file: /etc/pki/tls/private/datacat_galter_northwestern_edu.key
 office:
   app_host: galter-2310-1.fsm.northwestern.edu
   server_name: galter-2310-1.fsm.northwestern.edu
   server_alias: galter-2310-1.fsm.northwestern.edu
   cert_file: /etc/pki/tls/certs/localhost.crt
-  #chain_file: /etc/pki/tls/certs/rdcat-staging_nubic_northwestern_edu_interm.cer
   key_file: /etc/pki/tls/private/localhost.key
