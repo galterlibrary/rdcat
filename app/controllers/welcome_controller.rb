@@ -1,5 +1,7 @@
 class WelcomeController < ApplicationController
   def index
-    @categories = Dataset.chosen_categories.shuffle
+    @categories = DatasetPolicy::Scope.new(
+      current_user, Dataset
+    ).resolve.chosen_categories.shuffle
   end
 end

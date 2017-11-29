@@ -7,6 +7,10 @@ class DistributionPolicy < ApplicationPolicy
     admin? || user_associated_with_record? || is_public?
   end
 
+  def download?
+    admin? || user_associated_with_record? || is_public?
+  end
+
   def create?
     true
   end

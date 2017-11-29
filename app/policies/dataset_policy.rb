@@ -1,4 +1,18 @@
 class DatasetPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      if admin?
+        scope.all
+      else
+        scope.where(visibility: 'Public').or(
+          scope.where(author: user).where.not(author: nil)
+        ).or(
+          scope.where(maintainer: user)
+        )
+      end
+    end
+  end
+
   def index?
     true
   end

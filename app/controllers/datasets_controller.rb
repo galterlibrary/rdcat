@@ -9,11 +9,9 @@ class DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @categories = Dataset.chosen_categories
-    @organizations = Dataset.known_organizations
-
-    visibility = user_signed_in? ? Dataset::VISIBILITY_OPTIONS : Dataset::PUBLIC
-    @datasets = Dataset.where(visibility: visibility)
+    @categories = policy_scope(Dataset).chosen_categories
+    @organizations = policy_scope(Dataset).known_organizations
+    @datasets = policy_scope(Dataset)
 
     if params[:category] 
       # Book.where("subjects @> ?", '{finances}')

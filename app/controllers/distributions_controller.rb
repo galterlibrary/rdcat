@@ -1,5 +1,5 @@
 class DistributionsController < ApplicationController
-  before_action :authenticate_user!, except: [:show]
+  before_action :authenticate_user!, except: [:show, :download]
   before_action :set_dataset
   before_action :set_distribution, only: [:show, :edit, :update, :destroy]
 

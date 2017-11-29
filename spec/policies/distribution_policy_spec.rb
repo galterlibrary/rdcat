@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 describe DistributionPolicy do
+  let(:owner) { User.new(admin: false, username: 'abc123') }
+  let(:stranger) { User.new(admin: false, username: 'abc123') }
+  let(:admin) { User.new(admin: true) }
+  let(:anonymous) { nil }
   subject { described_class }
 
-  permissions :show? do
+  permissions :show?, :download? do
     let(:record) { FactoryGirl.build(:distribution, dataset: ds) }
-    let(:owner) { User.new(admin: false, username: 'abc123') }
-    let(:stranger) { User.new(admin: false, username: 'abc123') }
-    let(:admin) { User.new(admin: true) }
-    let(:anonymous) { nil }
 
     context 'Private visibility' do
       let(:ds) {

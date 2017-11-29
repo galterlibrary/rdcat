@@ -1,14 +1,83 @@
 require 'rails_helper'
 
 describe DatasetPolicy do
+  let(:owner) { FactoryGirl.create(:user, admin: false, username: 'abc123') }
+  let(:owner2) { FactoryGirl.create(:user, admin: false, username: 'abc124') }
+  let(:stranger) { FactoryGirl.create(:user, admin: false, username: 'abc125') }
+  let(:admin) { FactoryGirl.create(:user, admin: true) }
+  let(:anonymous) { nil }
+
   subject { described_class }
 
-  permissions :show? do
-    let(:owner) { User.new(admin: false, username: 'abc123') }
-    let(:stranger) { User.new(admin: false, username: 'abc123') }
-    let(:admin) { User.new(admin: true) }
-    let(:anonymous) { nil }
+  before { stub_request(:any, /localhost:9250/) }
 
+  context 'scope' do
+    let!(:priv_ds_auth) {
+      FactoryGirl.create_list(
+        :dataset, 3, author: owner, visibility: 'Private'
+      )
+    }
+    let!(:priv_ds_maint) {
+      FactoryGirl.create_list(
+        :dataset, 3, maintainer: owner2, visibility: 'Private'
+      )
+    }
+    let!(:public_ds) {
+      FactoryGirl.create_list(:dataset, 3, visibility: 'Public')
+    }
+
+    describe 'by athor' do
+      subject {
+          DatasetPolicy::Scope.new(owner, Dataset).resolve
+      }
+
+      it "returns author's and public Datasets" do
+        expect(subject).to match_array(priv_ds_auth + public_ds)
+      end
+    end
+
+    describe 'by maintainer' do
+      subject {
+          DatasetPolicy::Scope.new(owner2, Dataset).resolve
+      }
+
+      it "returns maintainer's and public Datasets" do
+        expect(subject).to match_array(priv_ds_maint + public_ds)
+      end
+    end
+
+    describe 'by admin' do
+      subject {
+          DatasetPolicy::Scope.new(admin, Dataset).resolve
+      }
+
+      it "returns all Datasets" do
+        expect(subject).to match_array(priv_ds_maint + priv_ds_auth + public_ds)
+      end
+    end
+
+    describe 'by anonymous' do
+      subject {
+          DatasetPolicy::Scope.new(anonymous, Dataset).resolve
+      }
+
+      it "returns public Datasets" do
+        expect(subject).to match_array(public_ds)
+      end
+    end
+
+    describe 'by stranger' do
+      subject {
+          DatasetPolicy::Scope.new(stranger, Dataset).resolve
+      }
+
+      it "returns public Datasets" do
+        expect(subject).to match_array(public_ds)
+      end
+    end
+  end
+
+  permissions :show? do
     context 'Private visibility' do
       let(:record) {
         Dataset.new(visibility: 'Private', author: owner, maintainer: owner)
