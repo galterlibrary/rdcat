@@ -4,7 +4,11 @@ class DistributionPolicy < ApplicationPolicy
   end
 
   def show?
-    true
+    admin? || user_associated_with_record? || is_public?
+  end
+
+  def download?
+    admin? || user_associated_with_record? || is_public?
   end
 
   def create?
@@ -31,4 +35,14 @@ class DistributionPolicy < ApplicationPolicy
     record.dataset.author == user || record.dataset.maintainer == user 
   end
   private :user_associated_with_record?
+
+  def is_public?
+    record.dataset.visibility == Dataset::PUBLIC
+  end
+  private :is_public?
+
+  def is_private?
+    record.dataset.visibility == Dataset::PRIVATE
+  end
+  private :is_private?
 end

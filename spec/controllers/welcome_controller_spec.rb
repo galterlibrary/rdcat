@@ -1,11 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe WelcomeController, type: :controller do
+  describe 'GET index' do 
+    it 'uses Dataset policy scope' do
+      expect(DatasetPolicy::Scope).to receive(:new).with(
+        nil, Dataset
+      ).and_call_original
+      get :index
+      expect(response).to render_template('index')
+    end
+  end
+
   context 'with a logged in user' do 
     sign_in_user
 
     describe 'GET index' do 
-      it 'renders the page upon requst' do 
+      it 'uses Dataset policy scope' do
+        expect(DatasetPolicy::Scope).to receive(:new).with(
+          controller.current_user, Dataset
+        ).and_call_original
         get :index
         expect(response).to render_template('index')
       end

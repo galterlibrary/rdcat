@@ -1,5 +1,5 @@
 class DatasetsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :search]
+  before_action :authenticate_user!, except: [:show, :index, :search]
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :set_categories, only: [:new, :edit]
   before_action :set_licenses, only: [:new, :edit]
@@ -9,11 +9,9 @@ class DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @categories = Dataset.chosen_categories
-    @organizations = Dataset.known_organizations
-
-    visibility = user_signed_in? ? Dataset::VISIBILITY_OPTIONS : Dataset::PUBLIC
-    @datasets = Dataset.where(visibility: visibility)
+    @categories = policy_scope(Dataset).chosen_categories
+    @organizations = policy_scope(Dataset).known_organizations
+    @datasets = policy_scope(Dataset).order('updated_at DESC')
 
     if params[:category] 
       # Book.where("subjects @> ?", '{finances}')

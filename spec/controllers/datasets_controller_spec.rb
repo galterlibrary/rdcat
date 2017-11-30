@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe DatasetsController, type: :controller do
   before do
-    #FIXME
     stub_request(:any, /localhost:9250/)
   end
 
@@ -24,6 +23,19 @@ RSpec.describe DatasetsController, type: :controller do
   # in order to pass any filters (e.g. authentication) defined in
   # DatasetsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
+
+  describe 'GET index' do
+    it 'uses Dataset policy scope' do
+      expect(controller).to receive(:policy_scope)
+                        .with(Dataset)
+                        .exactly(2).times
+                        .and_call_original
+      ds = double(Dataset, order: [])
+      expect(controller).to receive(:policy_scope).with(Dataset) { ds }
+      expect(ds).to receive(:order).with('updated_at DESC')
+      get :index, params: {}, session: valid_session
+    end
+  end
 
   describe 'GET search' do
     it 'returns results for anonymous user' do

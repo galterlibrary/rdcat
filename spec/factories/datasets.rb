@@ -20,7 +20,7 @@
 
 FactoryGirl.define do
   factory :dataset do
-    title Faker::Hipster.word
+    title { Faker::Hipster.unique.word }
     association :organization, factory: :organization
     association :maintainer, factory: :user
     visibility Dataset::PUBLIC
