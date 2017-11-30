@@ -190,6 +190,8 @@ GEM
       actionmailer (>= 4.0, < 6)
       activesupport (>= 4.0, < 6)
     execjs (2.7.0)
+    ezid-client (1.7.1)
+      hashie (~> 3.4, >= 3.4.3)
     factory_girl (4.8.1)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.8.0)
@@ -421,6 +423,7 @@ DEPENDENCIES
   elasticsearch-model!
   elasticsearch-rails!
   exception_notification
+  ezid-client
   factory_girl_rails
   faker
   fakeweb
