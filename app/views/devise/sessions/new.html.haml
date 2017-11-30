@@ -6,8 +6,10 @@
       %p.subheader with your NetID
     = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
       .field
-        = f.text_field :username, autofocus: true, label: :username, placeholder: 'Username (NetID)'
+        = f.label :username, class: "show-for-sr"
+        = f.text_field :username, autofocus: true, placeholder: 'Username (NetID)'
       .field
-        = f.password_field :password, autocomplete: "off", label: :password, placeholder: 'Password'
+        = f.label :password, class: "show-for-sr"
+        = f.password_field :password, autocomplete: "off", placeholder: 'Password'
       .actions
         = f.submit "Log in", class: 'button'
