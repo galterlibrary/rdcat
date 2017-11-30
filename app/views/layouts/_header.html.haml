@@ -4,11 +4,10 @@
       .top-bar
         .top-bar-left.no-bullet
           %ul.menu
-            %li.title.menu-text
-              %a{ href: root_path }
-                %i.fi-home.large
             %li
-              = link_to 'Datasets', datasets_path
+              = link_to 'About', "#"
+            %li
+              = link_to 'Giving', '#'
             - if user_signed_in? && current_user.admin?
               %li
                 %a{ href: '#' }
@@ -20,4 +19,13 @@
                     = link_to 'Organizations', organizations_path
         .top-bar-right.no-bullet
           %ul.menu
+            - if can_create?(Dataset)
+              %li
+                %a#plus_tip.has-tip{"aria-haspopup" => true, |
+                  "data-disable-hover" => false, |
+                  "data-tooltip" => "", |
+                  :tabindex => "1", |
+                  :title => "New Dataset", |
+                  href: new_dataset_path } |
+                  %i.fi-plus.medium
             = render 'devise/menu/login_items'

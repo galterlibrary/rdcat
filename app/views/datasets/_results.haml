@@ -1,0 +1,25 @@
+- if @datasets.blank?
+  .small-9.columns
+    - if params[:category].nil? && params[:organization_id].nil?
+      No datasets currently exist
+    - else
+      No dataset matches criteria
+
+- else
+  .small-9.columns
+    %table.unstriped.datasets
+      %thead
+        %tr
+          %th
+            = "#{@datasets.count} Result#{@datasets.count == 1 ? '' : 's'}"
+          %th
+      %tbody
+        - @datasets.each do |dataset|
+          %tr
+            %td
+              .title_result= link_to "#{truncate(dataset.title, length: 50)} - #{dataset.author.name}", dataset
+              .org_result= "Organization - #{dataset.organization.name}"
+              .maint_result= "Maintainer - #{dataset.maintainer.name}, #{dataset.maintainer.email}"
+              .desc_result= truncate(dataset.description, length: 300)
+              .cat_result= "CATEGORIES: #{dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')}"
+            %td= link_to 'Edit', edit_dataset_path(dataset) if can_edit?(dataset)

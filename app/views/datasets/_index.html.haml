@@ -1,12 +1,11 @@
 .row.dataset_header_row
   .small-3.columns
-    %h1 Datasets
-  .small-7.columns
+    .home
+      = link_to "Galter DataCat", root_path
+  .small-9.columns
     = form_tag('/datasets/search', id: 'dataset_search_form') do 
       = search_field_tag 'q', params[:q], placeholder: 'Enter your search query here', class: 'special_input'
-      = submit_tag 'Search', class: 'button'
-  .small-2.columns.links.text-right
-    = link_to 'New Dataset', new_dataset_path, class: 'button' if can_create?(Dataset)
+      = submit_tag "Search", type: 'submit', class: 'button'
 .row
   .small-3.columns
     - unless @categories.blank?
@@ -39,35 +38,4 @@
                 - path = selected ? datasets_path(category: params[:category]) : datasets_path(organization_id: o.id, category: params[:category])
                 = link_to(o.name, path)
 
-  - if @datasets.blank?
-    .small-9.columns
-      - if params[:category].nil? && params[:organization_id].nil?
-        No datasets currently exist
-      - else
-        No dataset matches criteria
-
-  - else
-    .small-9.columns
-      %table{ class: 'datasets' }
-        %thead
-          %tr
-            %th
-              Title
-            %th
-              Organization
-            %th
-              Maintainer
-            %th
-            %th
-            %th
-
-        %tbody
-          - @datasets.each do |dataset|
-            %tr
-              %td= dataset.title
-              %td= dataset.organization.name
-              %td= "#{dataset.maintainer.name} #{dataset.maintainer.email}"
-              %td= link_to 'Show', dataset if can_show?(dataset)
-              %td= link_to 'Edit', edit_dataset_path(dataset) if can_edit?(dataset)
-              %td= link_to 'Destroy', dataset, :method => :delete, :data => { :confirm => 'Are you sure?' } if can_destroy?(dataset)
-
+  = render 'results'

@@ -1,5 +1,18 @@
 @import 'custom_defaults';
 
+a {
+  font-weight: bold;
+}
+
+.heading {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+#plus_tip {
+  padding: 0.5rem .8rem;
+}
+
 .btn {
   -moz-border-bottom-colors: none;
   -moz-border-left-colors: none;
@@ -55,7 +68,7 @@ table {
     background-color: inherit;
   }
   li {
-    font-size: initial;
+    font-size: 0.9rem;
     align-self: center;
   }
   .title {
@@ -116,3 +129,4 @@ label {
 }
 
 .fi-home { color: $nu-primary; }
+.fi-plus { color: $nu-primary; }

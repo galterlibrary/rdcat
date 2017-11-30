@@ -1,3 +1,5 @@
+@import 'custom_defaults';
+
 // Place all the styles related to the datasets controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
@@ -99,8 +101,11 @@ table.organizations {
 }
 
 .dataset_header_row {
-  h1 {
-    margin-top: -1rem;
+  .home {
+    font-size: 2rem;
+    a {
+      color: $nu-grey-75tint;
+    }
   }
   .button {
     margin: 0;
@@ -110,8 +115,51 @@ table.organizations {
 #dataset_search_form {
   input {
     display: inline-block;
+    vertical-align: middle;
+    margin: auto;
   }
   #q {
     width: 30rem;
+  }
+  .button {
+    color: $nu-grey;
+    font-weight: bold;
+    margin-left: -5px;
+    padding: 0.8em 1em;
+    background-color: $nu-primary-30tint;
+    &:hover {
+      box-shadow: 1px 1px 1px $nu-grey;
+    }
+  }
+}
+
+// _results.haml
+table.datasets {
+  line-height: initial;
+  border-collapse: initial;
+  
+  td {
+    padding-top: 1.5rem;
+  }
+  
+  .title_result {
+    a {
+      font-size: 1.2rem;
+    }
+  }
+  
+  .org_result,
+  .maint_result {
+    font-size: .9rem;
+    color: $nu-green;
+  }
+  
+  .desc_result {
+    width: 80%;
+    padding-left: 10px;
+  }
+  
+  .cat_result {
+    color: $nu-yellow;
   }
 }
