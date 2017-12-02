@@ -1,6 +1,6 @@
 module Devise
   module Strategies
-    class Development < Authenticatable
+    class Fake < Authenticatable
       def authenticate!
         resource = mapping.to.find_by(
           username: authentication_hash[:username])

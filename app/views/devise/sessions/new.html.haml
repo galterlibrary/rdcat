@@ -1,0 +1,15 @@
+.grid-x.login
+  .card
+    .card-divider
+      %h4.subheader Galter DataCat
+      %h2 Log In
+      %p.subheader with your NetID
+    = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      .field
+        = f.label :username, class: "show-for-sr"
+        = f.text_field :username, autofocus: true, placeholder: 'Username (NetID)'
+      .field
+        = f.label :password, class: "show-for-sr"
+        = f.password_field :password, autocomplete: "off", placeholder: 'Password'
+      .actions
+        = f.submit "Log in", class: 'button'

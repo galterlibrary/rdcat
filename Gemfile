@@ -28,6 +28,7 @@ gem 'jbuilder'
 
 gem 'haml'
 gem 'haml-rails'
+gem 'html2haml'
 gem 'foundation-rails'
 gem 'foundation-icons-sass-rails'
 gem "autoprefixer-rails"

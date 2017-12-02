@@ -1,8 +1,62 @@
+@import 'custom_defaults';
+
 ul.hmenu {
   list-style: none;
   margin: 0 0 2em;
   padding: 0;
   li {
     display: inline;
+  }
+}
+
+// log in
+.login {
+  @media only screen and (min-width: 600px) {
+    width: 80%
+  }
+  @media only screen and (min-width: 768px) {
+    width: 40%
+  }
+  width: 100%;
+  margin: 10% auto;
+  box-shadow: 0px 4px 8px $nu-grey;
+  
+  .card {
+    background: none;
+    height: 500px;
+    
+    .card-divider {
+      h2, h3 {
+        margin: 0px;
+      }
+      margin-bottom: 15%;
+      background: none;
+      display: block;
+    }
+    
+    form {
+      padding: 10% 5%;
+      .field input {
+        width: 100% !important;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);
+        &:focus {
+          box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2);
+        }
+      }
+      .actions {
+        display: flex;
+        flex-direction: row-reverse;
+        .button {
+          margin-top: 1rem;
+          color: white;
+          font-size: .75rem !important;
+          font-weight: bold;
+          width: 25% !important;
+          &:hover {
+            box-shadow: 0 3px 5px 0 rgba(0,0,0,0.26);
+          }
+        }
+      }
+    }
   }
 }

@@ -15,6 +15,18 @@ describe 'Logging in', type: :feature do
   before do
     WebMock.disable_net_connect!(:allow_localhost => true)
   end
+  
+  describe 'signing in' do
+    let(:user) { FactoryGirl.create(:user) }
+    
+    it 'should sign in user' do
+      visit new_user_session_path
+      fill_in 'Username', with: user.username
+      fill_in 'Password', with: user.password
+      click_button 'Log in'
+      expect(page).to have_content "Signed in successfully"
+    end
+  end
 
   context 'without having logged in', js: true do
 

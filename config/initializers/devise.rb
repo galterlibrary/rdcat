@@ -1,4 +1,4 @@
-require  File.expand_path('./lib/devise/strategies/development.rb')
+require  File.expand_path('./lib/devise/strategies/fake.rb')
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -261,9 +261,9 @@ Devise.setup do |config|
   # change the failure app, you can configure them inside the config.warden block.
   #
   config.warden do |manager|
-    if Rails.env.development? && ENV['BYPASS_LDAP'] == 'true'
-      manager.strategies.add(:development,Devise::Strategies::Development)
-      manager.default_strategies(:scope => :user).unshift :development
+    if (Rails.env.development? && ENV['BYPASS_LDAP'] == 'true') || Rails.env.test?
+      manager.strategies.add(:fake, Devise::Strategies::Fake)
+      manager.default_strategies(:scope => :user).unshift :fake
     end
   end
 
