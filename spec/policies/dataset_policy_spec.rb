@@ -77,6 +77,66 @@ describe DatasetPolicy do
     end
   end
 
+  permissions :index?, :search?, :new?, :create? do
+    context 'Private visibility' do
+      let(:record) {
+        Dataset.new(visibility: 'Private', author: owner, maintainer: owner)
+      }
+
+      it 'grants access to anyone' do
+        expect(subject).to permit(stranger, record)
+      end
+    end
+
+    context 'Public visibility' do
+      let(:record) {
+        Dataset.new(visibility: 'Public', author: owner, maintainer: owner)
+      }
+
+      it 'grants access to anyone' do
+        expect(subject).to permit(stranger, record)
+      end
+    end
+  end
+
+  permissions :update?, :edit?, :destroy?, :mint_doi? do
+    context 'Private visibility' do
+      let(:record) {
+        Dataset.new(visibility: 'Private', author: owner, maintainer: owner)
+      }
+
+      it 'grants access to admins' do
+        expect(subject).to permit(admin, record)
+      end
+
+      it 'grants access to owner' do
+        expect(subject).to permit(owner, record)
+      end
+
+      it 'denies access to stranger' do
+        expect(subject).not_to permit(stranger, record)
+      end
+
+      it 'denies access to anonymous' do
+        expect(subject).not_to permit(anonymous, record)
+      end
+    end
+
+    context 'Public visibility' do
+      let(:record) {
+        Dataset.new(visibility: 'Public', author: owner, maintainer: owner)
+      }
+
+      it 'denies access to strangers' do
+        expect(subject).not_to permit(stranger, record)
+      end
+
+      it 'denies access to anonymous' do
+        expect(subject).not_to permit(anonymous, record)
+      end
+    end
+  end
+
   permissions :show? do
     context 'Private visibility' do
       let(:record) {

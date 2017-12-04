@@ -18,7 +18,7 @@ module EzidGenerator
   def update_doi_metadata_message(identifier, new_status)
     self.doi_message = 'DOI metadata was updated.'
     if new_status == 'unavailable' && identifier.status != new_status
-      self.doi_status = :warn
+      self.doi_status = :alert
       self.doi_message += " Because your document lacks permission for public viewing, the DOI has been deactivated. Please modify the file's visibility to 'Public' for the DOI to be activated."
     end
   end
@@ -46,7 +46,7 @@ module EzidGenerator
     self.update_attributes(doi: identifier.id)
     self.doi_message = 'DOI was generated.'
     if identifier.status == 'reserved'
-      self.doi_status = :warn
+      self.doi_status = :alert
       self.doi_message +=  " Because your document lacks permission for public viewing, the DOI is inactive. Please modify the file's visibility to 'Public' for the DOI to be activated."
     end
   end
@@ -65,12 +65,23 @@ module EzidGenerator
   private :can_get_doi?
 
   def update_or_create_doi
-    self.doi_status = :success
+    self.doi_status = :notice
     return unless can_get_doi?
     if self.doi.present?
       update_doi_metadata
     else
       create_doi
+    end
+  end
+
+  def deactivate_or_remove_doi
+    return if self.doi.blank?
+    identifier = Ezid::Identifier.find(self.doi)
+    if identifier.status == 'reserved'
+      identifier.delete
+    else
+      identifier.status = 'unavailable'
+      identifier.save
     end
   end
 end

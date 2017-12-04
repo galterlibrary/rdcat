@@ -70,7 +70,7 @@ RSpec.describe Dataset, :type => :model do
         let(:identifier) { double(Ezid, status: 'unavailable') }
 
         it "doesn't warn" do
-          expect(subject.doi_status).not_to eq(:warn)
+          expect(subject.doi_status).not_to eq(:alert)
         end
       end
 
@@ -78,7 +78,7 @@ RSpec.describe Dataset, :type => :model do
         let(:identifier) { double(Ezid, status: 'public') }
 
         it "doesn't warn" do
-          expect(subject.doi_status).to eq(:warn)
+          expect(subject.doi_status).to eq(:alert)
         end
       end
     end
@@ -88,7 +88,7 @@ RSpec.describe Dataset, :type => :model do
       let(:identifier) { double(Ezid, status: 'unavailable') }
 
       it "doesn't warn" do
-        expect(subject.doi_status).not_to eq(:warn)
+        expect(subject.doi_status).not_to eq(:alert)
       end
     end
   end
@@ -181,7 +181,7 @@ RSpec.describe Dataset, :type => :model do
           identifier
         }
         expect(ds).to receive(:update_attributes).with(doi: 'ABC123')
-        expect(subject.doi_status).to eq(:warn)
+        expect(subject.doi_status).to eq(:alert)
         expect(subject.doi_message).to include(
           'DOI was generated. Because your document lacks permission'
         )
@@ -237,6 +237,7 @@ RSpec.describe Dataset, :type => :model do
           expect(ds).not_to receive(:update_doi_metadata)
           expect(ds).to receive(:create_doi)
           subject
+          expect(ds.doi_status).to eq(:notice)
         end
       end
 
@@ -246,6 +247,51 @@ RSpec.describe Dataset, :type => :model do
         specify do
           expect(ds).to receive(:update_doi_metadata)
           expect(ds).not_to receive(:create_doi)
+          subject
+          expect(ds.doi_status).to eq(:notice)
+        end
+      end
+    end
+  end
+
+  describe '#deactivate_or_remove_doi' do
+    let(:ds) { Dataset.new }
+    subject { ds.send(:deactivate_or_remove_doi) }
+
+    context "no doi associated with the record" do
+      specify do
+        expect(Ezid::Identifier).not_to receive(:find)
+        subject
+      end
+    end
+
+    context "has DOI" do
+      let(:ds) { Dataset.new(doi: 'ABC') }
+
+      context 'dois is reserved' do
+        let(:identifier) {
+          double(Ezid::Identifier, status: 'reserved', delete: true)
+        }
+
+        specify do
+          expect(Ezid::Identifier).to receive(:find).with('ABC') { identifier }
+          expect(identifier).to receive(:delete)
+          subject
+        end
+      end
+
+      context 'dois is unavailable' do
+        let(:identifier) { double(
+          Ezid::Identifier,
+          :status => 'unavailable',
+          :save => true,
+          :status= => true
+        ) }
+
+        specify do
+          expect(Ezid::Identifier).to receive(:find).with('ABC') { identifier }
+          expect(identifier).to receive(:status=).with('unavailable')
+          expect(identifier).to receive(:save)
           subject
         end
       end

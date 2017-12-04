@@ -4,6 +4,14 @@ Rails.application.routes.draw do
   
   resources :organizations
   resources :datasets do 
+    member do 
+      post 'mint_doi'
+    end
+
+    collection do
+      post 'search'
+    end
+
     resources :distributions do
       member do 
         get 'download'
@@ -21,7 +29,6 @@ Rails.application.routes.draw do
   #   get 'products/:id' => 'catalog#view'
   get 'welcome/index' => 'welcome#index'
   post 'user_lookup/ldap' => 'user_lookup#ldap'
-  post 'datasets/search' => 'datasets#search'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase

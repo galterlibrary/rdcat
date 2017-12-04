@@ -1,10 +1,13 @@
 class DatasetsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index, :search]
-  before_action :set_dataset, only: [:show, :edit, :update, :destroy]
+  before_action :set_dataset, only: [:show, :edit, :update, :destroy, :mint_doi]
   before_action :set_categories, only: [:new, :edit]
   before_action :set_licenses, only: [:new, :edit]
 
   before_action :clean_select_multiple_params, only: [:create, :update]
+
+  after_action :update_doi, only: [:update]
+  after_action :remove_doi, only: [:destroy]
 
   # GET /datasets
   # GET /datasets.json
@@ -35,6 +38,7 @@ class DatasetsController < ApplicationController
   # GET /datasets/1
   # GET /datasets/1.json
   def show
+    authorize @dataset
     redirect_to datasets_path if params[:id] == 'search' 
   end
 
@@ -75,11 +79,16 @@ class DatasetsController < ApplicationController
 
         write_json_to_file(@dataset)
 
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully updated.' }
+        format.html {
+          redirect_to @dataset,
+                      notice: 'Dataset was successfully updated.'
+        }
         format.json { render :show, status: :ok, location: @dataset }
       else
         format.html { render :edit }
-        format.json { render json: @dataset.errors, status: :unprocessable_entity }
+        format.json {
+          render json: @dataset.errors, status: :unprocessable_entity
+        }
       end
     end
   end
@@ -93,6 +102,17 @@ class DatasetsController < ApplicationController
       format.html { redirect_to datasets_url, notice: 'Dataset was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def mint_doi
+    authorize @dataset
+    if @dataset.doi.blank?
+      @dataset.update_or_create_doi
+      flash[@dataset.doi_status] = @dataset.doi_message
+    else
+      flash[:alert] = 'DOI already exists for the dataset.'
+    end
+    redirect_to @dataset
   end
 
   private
@@ -138,7 +158,9 @@ class DatasetsController < ApplicationController
 
     def write_json_to_file(dataset)
       without_html_escaping_in_json do 
-        json_str = render_to_string( template: 'datasets/show.json.jbuilder', locals: { dataset: dataset })
+        json_str = render_to_string(
+          template: 'datasets/show.json.jbuilder', locals: { dataset: dataset }
+        )
         filename = "output/datasets/#{dataset.id}.json"
         File.open(filename, 'w') { |file| file.write(json_str) }
       end
@@ -149,5 +171,22 @@ class DatasetsController < ApplicationController
       result = yield
       ActiveSupport.escape_html_entities_in_json = true
       result
+    end
+
+    def update_doi
+      if @dataset.doi.present? && @dataset.errors.blank?
+        @dataset.reload.update_or_create_doi
+        if flash[@dataset.doi_status].blank?
+          flash[@dataset.doi_status] = @dataset.doi_message
+        else
+          flash[@dataset.doi_status] += " #{@dataset.doi_message}"
+        end
+      end
+    end
+
+    def remove_doi
+      if @dataset.doi.present?
+        @dataset.deactivate_or_remove_doi
+      end
     end
 end

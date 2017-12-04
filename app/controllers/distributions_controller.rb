@@ -1,7 +1,9 @@
 class DistributionsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :download]
   before_action :set_dataset
-  before_action :set_distribution, only: [:show, :edit, :update, :destroy]
+  before_action :set_distribution, only: [
+    :show, :edit, :update, :destroy, :download
+  ]
 
   # GET /datasets/:dataset_id/distributions
   # GET /datasets/:dataset_id/distributions.json
@@ -12,11 +14,13 @@ class DistributionsController < ApplicationController
   # GET /datasets/:dataset_id/distributions/1
   # GET /datasets/:dataset_id/distributions/1.json
   def show
+    authorize @distribution
   end
 
   # GET /datasets/:dataset_id/distributions/new
   def new
-    @distribution = Distribution.new
+    @distribution = Distribution.new(dataset: @dataset)
+    authorize @distribution
   end
 
   # GET /datasets/:dataset_id/distributions/1/edit
@@ -29,6 +33,7 @@ class DistributionsController < ApplicationController
   def create
     @distribution = Distribution.new(distribution_params)
     @distribution.dataset = @dataset
+    authorize @distribution
 
     respond_to do |format|
       if @distribution.save
@@ -47,7 +52,10 @@ class DistributionsController < ApplicationController
     authorize @distribution
     respond_to do |format|
       if @distribution.update(distribution_params)
-        format.html { redirect_to @dataset, notice: 'Distribution was successfully updated.' }
+        format.html {
+          redirect_to @dataset,
+          notice: 'Distribution was successfully updated.'
+        }
         format.json { render :show, status: :ok, location: @distribution }
       else
         format.html { render :edit }
@@ -69,8 +77,8 @@ class DistributionsController < ApplicationController
 
   # GET /datasets/:dataset_id/distributions/:id/download
   def download
-    @document = Dataset.find(params[:dataset_id]).distributions.find(params[:id])
-    send_file @document.artifact.current_path
+    authorize @distribution
+    send_file @distribution.artifact.current_path
   end
 
   private

@@ -1,6 +1,6 @@
 class DistributionPolicy < ApplicationPolicy
   def index?
-    true
+    admin? || user_associated_with_record? || is_public?
   end
 
   def show?
@@ -12,11 +12,11 @@ class DistributionPolicy < ApplicationPolicy
   end
 
   def create?
-    true
+    admin? || user_associated_with_record?
   end
 
   def new?
-    true
+    admin? || user_associated_with_record?
   end
 
   def update?

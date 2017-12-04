@@ -1,5 +1,5 @@
 json.extract!(
-  @dataset, :id, :title, :description, :grants_and_funding, :license,
+  @dataset, :id, :title, :description, :grants_and_funding, :license, :doi,
             :visibility, :state, :source, :version, :created_at, :updated_at
 )
 

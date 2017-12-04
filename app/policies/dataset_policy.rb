@@ -17,6 +17,10 @@ class DatasetPolicy < ApplicationPolicy
     true
   end
 
+  def search?
+    true
+  end
+
   def show?
     admin? || user_associated_with_record? || is_public?
   end
@@ -38,6 +42,10 @@ class DatasetPolicy < ApplicationPolicy
   end
 
   def destroy?
+    admin? || user_associated_with_record?
+  end
+
+  def mint_doi?
     admin? || user_associated_with_record?
   end
 
