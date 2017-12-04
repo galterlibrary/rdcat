@@ -1,1 +1,51 @@
-show.html.haml
+.user_show
+  .grid-x.header
+    .medium-2.large-3.cell
+    .medium-8.large-6.cell.text-center
+      %h1
+        = link_to "Galter DataCat", root_path
+      %h4.subheader
+        Discover more data from our catalog
+    .medium-2.large-3.cell
+  .grid-x.profile
+    .medium-2.large-2.cell
+    .medium-8.large-7.cell.card.user_name
+      = image_tag("nu_poly_profile.png", alt: "profile background", class: "profile_bg")
+      .card-section
+        %h3
+          %strong= "#{@user.name}"
+    .medium-2.large-2.cell
+  .grid-x.grid-margin-x.info
+    .medium-2.large-2.cell
+    .medium-4.large-3.cell.card.user_about
+      .card-divider
+        %h4
+          About
+      .card-section
+        .user_org
+          Organization: 
+          .info= "user org"
+        .user_title
+          Title: 
+          .info= "user title"
+        .user_email
+          Email:
+          .info= @user.email
+    .medium-4.large-3.cell.card.user_dataset
+      .card-divider
+        %h4
+          Datasets
+      .card-section
+        - @user_datasets.each do |ds|
+          .ds_info
+            .ds_title= link_to truncate(ds.title, length: 30) + " - " + ds.author.name, ds
+            .ds_org
+              Organization: 
+              .info= ds.organization.name
+            .ds_maintainer 
+              Maintained by: 
+              .info= link_to ds.maintainer.name, ds.maintainer
+            .ds_version
+              Version: 
+              .info= ds.version
+    .medium-2.large-2.cell
