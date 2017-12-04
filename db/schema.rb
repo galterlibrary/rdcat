@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171129205904) do
+ActiveRecord::Schema.define(version: 20171204184917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,13 @@ ActiveRecord::Schema.define(version: 20171129205904) do
     t.datetime "updated_at",  null: false
     t.string   "artifact"
     t.index ["dataset_id"], name: "index_distributions_on_dataset_id", using: :btree
+  end
+
+  create_table "fast_subjects", force: :cascade do |t|
+    t.string "label"
+    t.string "identifier"
+    t.index ["identifier"], name: "index_fast_subjects_on_identifier", unique: true, using: :btree
+    t.index ["label"], name: "index_fast_subjects_on_label", using: :btree
   end
 
   create_table "licenses", force: :cascade do |t|
