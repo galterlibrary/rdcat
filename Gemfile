@@ -97,3 +97,5 @@ gem 'elasticsearch-rails', github: 'elastic/elasticsearch-rails', branch: '5.x'
 
 gem 'passenger', '5.1.12'
 gem 'rubyzip'
+
+gem 'ezid-client'

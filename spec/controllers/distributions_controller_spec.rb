@@ -27,6 +27,9 @@ RSpec.describe DistributionsController, type: :controller do
 
   context 'with a logged in user' do 
     sign_in_user
+    let(:dataset) {
+      FactoryGirl.create(:dataset, maintainer: controller.current_user)
+    }
 
     before do 
       # TODO: test when user is not associated with the dataset
@@ -79,9 +82,7 @@ RSpec.describe DistributionsController, type: :controller do
       }
 
       before do
-        expect(Dataset).to receive(:find) {
-          double(Dataset, distributions: double(ActiveRecord, find: distr))
-        }.twice
+        expect(Distribution).to receive(:find) { distr }
         expect(distr).to receive(:artifact) {
           double('Uploader', current_path: 'spec/fixtures/artifact1.txt')
         }
@@ -96,7 +97,9 @@ RSpec.describe DistributionsController, type: :controller do
       describe 'with valid params' do
         it 'creates a new Distribution' do
           expect {
-            post :create, params: { dataset_id: dataset.id, distribution: valid_attributes }, session: valid_session
+            post :create, params: {
+              dataset_id: dataset.id, distribution: valid_attributes
+            }, session: valid_session
           }.to change(Distribution, :count).by(1)
         end
 

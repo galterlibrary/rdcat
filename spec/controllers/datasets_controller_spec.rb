@@ -11,13 +11,16 @@ RSpec.describe DatasetsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Dataset. As you add validations to Dataset, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
-    { title: 'DS Title', description: 'description', organization_id: org.id, author_id: usr.id, maintainer_id: usr.id, visibility: Dataset::PUBLIC, state: Dataset::ACTIVE }
-  }
+  let(:valid_attributes) { {
+    title: 'DS Title', description: 'description', organization_id: org.id,
+    author_id: usr.id, maintainer_id: usr.id, visibility: Dataset::PUBLIC,
+    state: Dataset::ACTIVE
+  } }
 
-  let(:invalid_attributes) {
-    { title: nil, description: 'description', organization_id: org.id, author_id: usr.id, maintainer_id: usr.id }
-  }
+  let(:invalid_attributes) { {
+    title: nil, description: 'description', organization_id: org.id,
+    author_id: usr.id, maintainer_id: usr.id
+  } }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -136,53 +139,157 @@ RSpec.describe DatasetsController, type: :controller do
             maintainer_id: controller.current_user.id }
         }
 
-        it 'updates the requested dataset' do
-          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
-          put :update, params: {id: dataset.to_param, dataset: new_attributes}, session: valid_session
+        it 'updates the requested dataset and redirects' do
+          dataset = FactoryGirl.create(
+            :dataset, maintainer: controller.current_user
+          )
+          expect_any_instance_of(Dataset).not_to receive(:update_or_create_doi)
+          put :update,
+              :params => {id: dataset.to_param, dataset: new_attributes},
+              :session => valid_session
           dataset.reload
           expect(dataset.title).to eq(updated_title)
-        end
-
-        it 'assigns the requested dataset as @dataset' do
-          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
-          put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
           expect(assigns(:dataset)).to eq(dataset)
+          expect(response).to redirect_to([dataset])
         end
 
-        it 'redirects to the datasets index' do
-          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
-          put :update, params: {id: dataset.to_param, dataset: valid_attributes}, session: valid_session
-          expect(response).to redirect_to(dataset_path(dataset))
+        context 'with a DOI, returning :notice' do
+          let(:dataset) {
+            FactoryGirl.create(
+              :dataset, maintainer: controller.current_user, doi: 'ABC'
+            )
+          }
+
+          before do
+            expect(controller).to receive(:set_dataset) {
+              controller.instance_variable_set(:@dataset, dataset)
+            }
+          end
+
+          it 'updates the DOI and appends to :notice' do
+            expect(dataset).to receive(:update_or_create_doi) {
+              dataset.doi_status = :notice
+              dataset.doi_message = "Hello world"
+            }
+
+            put :update,
+                :params => {id: dataset.to_param, dataset: new_attributes},
+                :session => valid_session
+            expect(flash[:notice]).to eq(
+              'Dataset was successfully updated. Hello world'
+            )
+          end
+        end
+
+        context 'with a DOI, returning something other then :notice' do
+          let(:dataset) {
+            FactoryGirl.create(
+              :dataset, maintainer: controller.current_user, doi: 'ABC'
+            )
+          }
+
+          before do
+            expect(controller).to receive(:set_dataset) {
+              controller.instance_variable_set(:@dataset, dataset)
+            }
+          end
+
+          it 'updates the DOI and flashes' do
+            expect(dataset).to receive(:update_or_create_doi) {
+              dataset.doi_status = :alert
+              dataset.doi_message = "Hello world"
+            }
+
+            put :update,
+                :params => {id: dataset.to_param, dataset: new_attributes},
+                :session => valid_session
+            expect(flash[:notice]).to eq('Dataset was successfully updated.')
+            expect(flash[:alert]).to eq('Hello world')
+          end
         end
       end
 
       describe 'with invalid params' do
-        it 'assigns the dataset as @dataset' do
-          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
-          put :update, params: {id: dataset.to_param, dataset: invalid_attributes}, session: valid_session
+        it 'assigns the dataset as @dataset and renders edit' do
+          dataset = FactoryGirl.create(
+            :dataset, maintainer: controller.current_user
+          )
+          expect_any_instance_of(Dataset).not_to receive(:update_or_create_doi)
+          put :update,
+              :params => {id: dataset.to_param, dataset: invalid_attributes},
+              :session => valid_session
           expect(assigns(:dataset)).to eq(dataset)
+          expect(response).to render_template('edit')
+        end
+      end
+    end
+
+    describe 'POST mint_doi' do
+      subject {
+        post :mint_doi, params: {id: dataset.to_param}, session: valid_session
+      }
+
+      describe 'when DOI already exists' do
+        let(:dataset) { FactoryGirl.create(
+          :dataset, doi: 'ABC', maintainer: controller.current_user
+        ) }
+
+        it 'redirects back without minting' do
+          expect(subject).to redirect_to(dataset_path(dataset))
+          expect(flash[:alert]).to include('DOI already exists')
+        end
+      end
+
+      describe 'when DOI does not exist' do
+        let(:dataset) { FactoryGirl.create(
+          :dataset, doi: nil, maintainer: controller.current_user
+        ) }
+
+        before do
+          expect(controller).to receive(:set_dataset) {
+            controller.instance_variable_set(:@dataset, dataset)
+          }
         end
 
-        it "re-renders the 'edit' template" do
-          dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
-          put :update, params: {id: dataset.to_param, dataset: invalid_attributes}, session: valid_session
-          expect(response).to render_template('edit')
+        it 'mints a DOI and redirects' do
+          expect(dataset).to receive(:update_or_create_doi) {
+            dataset.doi_status = :notice
+            dataset.doi_message = 'hello pollo'
+            nil
+          }
+          expect(subject).to redirect_to(dataset_path(dataset))
+          expect(flash[:notice]).to include('hello pollo')
         end
       end
     end
 
     describe 'DELETE destroy' do
       it 'destroys the requested dataset' do
-        dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
+        dataset = FactoryGirl.create(
+          :dataset, maintainer: controller.current_user
+        )
+        expect_any_instance_of(Dataset).not_to receive(:deactivate_or_remove_doi)
         expect {
-          delete :destroy, params: {id: dataset.to_param}, session: valid_session
+          delete :destroy,
+                 :params => {id: dataset.to_param},
+                 :session => valid_session
         }.to change(Dataset, :count).by(-1)
+        expect(response).to redirect_to(datasets_url)
       end
 
-      it 'redirects to the datasets list' do
-        dataset = FactoryGirl.create(:dataset, maintainer: controller.current_user)
-        delete :destroy, params: {id: dataset.to_param}, session: valid_session
-        expect(response).to redirect_to(datasets_url)
+      context 'with a DOI' do
+        it 'handles DOI removal' do
+          dataset = FactoryGirl.create(
+            :dataset, maintainer: controller.current_user, doi: 'SOMETHING'
+          )
+          expect_any_instance_of(Dataset).to receive(:deactivate_or_remove_doi)
+          expect {
+            delete :destroy,
+                   :params => {id: dataset.to_param},
+                   :session => valid_session
+          }.to change(Dataset, :count).by(-1)
+          expect(response).to redirect_to(datasets_url)
+        end
       end
     end
   end

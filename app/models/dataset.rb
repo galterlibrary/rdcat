@@ -2,25 +2,29 @@
 #
 # Table name: datasets
 #
-#  id              :integer          not null, primary key
-#  title           :string
-#  description     :text
-#  license         :string
-#  organization_id :integer
-#  visibility      :string
-#  state           :string
-#  source          :string
-#  version         :string
-#  author_id       :integer
-#  maintainer_id   :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  categories      :text             default([]), is an Array
+#  id                 :integer          not null, primary key
+#  title              :string
+#  description        :text
+#  license            :string
+#  organization_id    :integer
+#  visibility         :string
+#  state              :string
+#  source             :string
+#  version            :string
+#  author_id          :integer
+#  maintainer_id      :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  categories         :text             default([]), is an Array
+#  characteristic_id  :integer
+#  grants_and_funding :text
+#  doi                :string
 #
 
 class Dataset < ApplicationRecord
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
+  include EzidGenerator
 
   index_name Rails.application.class.parent_name.underscore
   document_type self.name.downcase
@@ -49,7 +53,10 @@ class Dataset < ApplicationRecord
   validates :state, inclusion: { in: STATE_OPTIONS }
 
   def self.reindex!
-    __elasticsearch__.delete_index!
+    begin
+      __elasticsearch__.delete_index!
+    rescue Elasticsearch::Transport::Transport::Errors::NotFound
+    end
     __elasticsearch__.create_index!
     import
   end
@@ -63,6 +70,7 @@ class Dataset < ApplicationRecord
                multi_match: {
                  fields: [
                    'title^10',
+                   'doi^10',
                    'description^5',
                    'categories^3',
                    'license',
@@ -95,6 +103,7 @@ class Dataset < ApplicationRecord
       indexes :license, analyzer: 'english'
       indexes :categories, analyzer: 'english'
       indexes :source, analyzer: 'english'
+      indexes :doi
       indexes :organization do
         indexes :name, analyzer: 'english'
       end
@@ -117,7 +126,7 @@ class Dataset < ApplicationRecord
 
   def as_indexed_json(options={})
     self.as_json(
-      only: [:title, :description, :license, :categories, :source],
+      only: [:title, :description, :license, :categories, :source, :doi],
       include: {
         organization: { only: :name },
         author: { only: [:email], methods: [:name] },
@@ -145,5 +154,9 @@ class Dataset < ApplicationRecord
 
   def self.known_organizations
     Organization.order(:name).where(id: pluck(:organization_id)).distinct.to_a
+  end
+
+  def public?
+    self.visibility == self.class::PUBLIC
   end
 end
