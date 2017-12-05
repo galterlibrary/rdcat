@@ -1,6 +1,5 @@
-// Place all the styles related to the users controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+@import "custom_defaults";
+
 #new_user, #edit_user {
   label {
     font-size: 1.25em;
@@ -19,5 +18,54 @@
   .button {
     font-size: 1.5em;
     width: 12.5em;
+  }
+}
+
+// users show
+.user_show {
+  .grid-x {
+    // will have to remove this when updating from legacy grid to grid-x
+    display: flex;
+    
+    .card {
+      box-shadow: 1px 1px 1px 1px $nu-grey;
+      border-radius: 2px;
+    }
+  }
+  
+  .header a {
+    color: black;
+    font-weight: normal;
+  }
+  
+  .user_about, .user_dataset {
+    .info {
+      font-weight: normal;
+      display: inline;
+    }
+  }
+  
+  .user_about {
+    margin-right: 5px;
+    height: 1%;
+    
+    .user_org, .user_title, .user_email {
+      font-weight: bold;
+    }
+  }
+  
+  .user_dataset {
+    margin-left: 5px;
+    
+    .ds_info {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid $nu-grey-30tint;
+    }
+    
+    .ds_org, .ds_maintainer, .ds_version {
+      font-size: 0.9em;
+      font-weight: bold;
+    }
   }
 }

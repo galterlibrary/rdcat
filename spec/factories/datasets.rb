@@ -23,7 +23,7 @@
 
 FactoryGirl.define do
   factory :dataset do
-    title { Faker::Hipster.unique.word }
+    title { Faker::Hipster.unique.words(4).join(" ") }
     association :organization, factory: :organization
     association :maintainer, factory: :user
     association :author, factory: :user

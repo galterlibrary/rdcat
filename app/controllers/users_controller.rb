@@ -11,6 +11,13 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @user = User.find(params[:id])
+    datasets = DatasetPolicy::Scope.new(
+      current_user, Dataset
+    ).resolve
+    @user_datasets = datasets.where(author: @user).or(
+      datasets.where(maintainer: @user)
+    )
   end
 
   # GET /users/new

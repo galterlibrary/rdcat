@@ -17,7 +17,7 @@
         - @datasets.each do |dataset|
           %tr
             %td
-              .title_result= link_to "#{truncate(dataset.title, length: 50)} - #{dataset.author.name}", dataset
+              .title_result= link_to truncate(dataset.title, length: 50) + " - " + dataset.author.name, dataset
               .org_result= "Organization - #{dataset.organization.name}"
               .maint_result= "Maintainer - #{dataset.maintainer.name}, #{dataset.maintainer.email}"
               .desc_result= truncate(dataset.description, length: 300)
