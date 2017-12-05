@@ -87,23 +87,23 @@ RSpec.describe 'Users', type: :request do
           
           within('.user_dataset') do
             expect(page).to have_content("Datasets")
-            expect(page).to have_link(dataset_1.title, href: dataset_path(dataset_1))
+            expect(page).to have_link(dataset_1.title.truncate(30), href: dataset_path(dataset_1))
             expect(page).to have_content("Organization: #{dataset_1.organization.name}")
             expect(page).to have_content("Maintained by: ")
             expect(page).to have_link(dataset_1.maintainer.name, href: user_path(dataset_1.maintainer))
             expect(page).to have_content("Version: #{dataset_1.version}")
             
-            expect(page).to have_link(dataset_2.title, href: dataset_path(dataset_2))
+            expect(page).to have_link(dataset_2.title.truncate(30), href: dataset_path(dataset_2))
             expect(page).to have_content("Organization: #{dataset_2.organization.name}")
             expect(page).to have_link(dataset_2.maintainer.name, href: user_path(dataset_2.maintainer))
             expect(page).to have_content("Version: #{dataset_2.version}")
             
-            expect(page).to have_link(dataset_3.title, href: dataset_path(dataset_3))
+            expect(page).to have_link(dataset_3.title.truncate(30), href: dataset_path(dataset_3))
             expect(page).to have_content("Organization: #{dataset_3.organization.name}")
             expect(page).to have_link(dataset_3.maintainer.name, href: user_path(dataset_3.maintainer))
             expect(page).to have_content("Version: #{dataset_3.version}")
             
-            expect(page).to_not have_link(dataset_4.title, href: dataset_path(dataset_4))
+            expect(page).to_not have_link(dataset_4.title.truncate(30), href: dataset_path(dataset_4))
             
             expect(page).to_not have_link(dataset_zero.title, href: dataset_path(dataset_zero))
             expect(page).to_not have_link(dataset_zero.maintainer.name, href: user_path(dataset_zero.maintainer))
