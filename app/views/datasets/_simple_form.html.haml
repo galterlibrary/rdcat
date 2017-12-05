@@ -19,6 +19,10 @@
   .input.select.optional.dataset_categories
     = f.label :categories
     = f.select :categories, @categories, {}, { multiple: true, class: 'chosen-select' }
+
+  .input.select.optional.dataset_categories
+    =# f.label 'FAST categories'
+    =# f.select :fast_categories, @fast_categories, {}, { multiple: true, class: 'chosen-select' }
   
   = f.input :visibility, collection: Dataset::VISIBILITY_OPTIONS, selected: Dataset::PUBLIC
   = f.input :state, collection: Dataset::STATE_OPTIONS, selected: Dataset::ACTIVE

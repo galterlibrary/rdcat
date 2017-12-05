@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171204184917) do
+ActiveRecord::Schema.define(version: 20171204210817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20171204184917) do
     t.integer  "characteristic_id"
     t.text     "grants_and_funding"
     t.string   "doi"
+    t.text     "fast_categories",    default: [],              array: true
     t.index ["author_id"], name: "index_datasets_on_author_id", using: :btree
     t.index ["characteristic_id"], name: "index_datasets_on_characteristic_id", using: :btree
     t.index ["maintainer_id"], name: "index_datasets_on_maintainer_id", using: :btree

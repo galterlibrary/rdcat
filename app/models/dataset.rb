@@ -73,6 +73,7 @@ class Dataset < ApplicationRecord
                    'doi^10',
                    'description^5',
                    'categories^3',
+                   'fast_categories^3',
                    'license',
                    'source',
                    'organization.name',
@@ -102,6 +103,7 @@ class Dataset < ApplicationRecord
       indexes :description, analyzer: 'english'
       indexes :license, analyzer: 'english'
       indexes :categories, analyzer: 'english'
+      indexes :fast_categories, analyzer: 'english'
       indexes :source, analyzer: 'english'
       indexes :doi
       indexes :organization do
@@ -126,7 +128,10 @@ class Dataset < ApplicationRecord
 
   def as_indexed_json(options={})
     self.as_json(
-      only: [:title, :description, :license, :categories, :source, :doi],
+      only: [
+        :title, :description, :license, :fast_categories, :categories, :source,
+        :doi
+      ],
       include: {
         organization: { only: :name },
         author: { only: [:email], methods: [:name] },
@@ -148,8 +153,8 @@ class Dataset < ApplicationRecord
     end
   end
 
-  def self.chosen_categories
-    pluck('categories').flatten.select{ |c| !c.blank? }.uniq.sort
+  def self.chosen_categories(ctype='categories')
+    pluck(ctype).flatten.select{ |c| !c.blank? }.uniq.sort
   end
 
   def self.known_organizations

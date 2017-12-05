@@ -13,6 +13,7 @@ class DatasetsController < ApplicationController
   # GET /datasets.json
   def index
     @categories = policy_scope(Dataset).chosen_categories
+    @fast_categories = policy_scope(Dataset).chosen_categories('fast_categories')
     @organizations = policy_scope(Dataset).known_organizations
     @datasets = policy_scope(Dataset).order('updated_at DESC')
 
@@ -28,6 +29,7 @@ class DatasetsController < ApplicationController
 
   def search
     @categories = Dataset.chosen_categories
+    @fast_categories = policy_scope(Dataset).chosen_categories('fast_categories')
     @organizations = Dataset.known_organizations
     @datasets = Dataset.search(
       params[:q],
@@ -123,6 +125,7 @@ class DatasetsController < ApplicationController
 
     def set_categories
       @categories = Category.pluck(:name).sort
+      @fast_categories = FastSubject.pluck(:label).sort
     end
 
     def set_licenses
