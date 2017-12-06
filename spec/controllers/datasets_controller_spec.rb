@@ -114,18 +114,16 @@ RSpec.describe DatasetsController, type: :controller do
         end
       end
 
-      # TODO: FIXME: invalid params spec fails due to ActionController::UnknownFormat
-      # describe 'with invalid params' do
-      #   it 'assigns a newly created but unsaved dataset as @dataset' do
-      #     post :create, params: {dataset: invalid_attributes}, session: valid_session
-      #     expect(assigns(:dataset)).to be_a_new(Dataset)
-      #   end
-
-      #   it "re-renders the 'new' template" do
-      #     post :create, params: {dataset: invalid_attributes}, session: valid_session
-      #     expect(response).to render_template('new')
-      #   end
-      # end
+      describe 'with invalid params' do
+        specify do
+          expect(controller).to receive(:set_categories).and_call_original
+          expect(controller).to receive(:set_licenses).and_call_original
+          post :create, params: {dataset: invalid_attributes},
+                        session: valid_session
+          expect(assigns(:dataset)).to be_a_new(Dataset)
+          expect(response).to render_template('new')
+        end
+      end
     end
 
     describe 'PUT update' do
@@ -215,6 +213,8 @@ RSpec.describe DatasetsController, type: :controller do
             :dataset, maintainer: controller.current_user
           )
           expect_any_instance_of(Dataset).not_to receive(:update_or_create_doi)
+          expect(controller).to receive(:set_categories).and_call_original
+          expect(controller).to receive(:set_licenses).and_call_original
           put :update,
               :params => {id: dataset.to_param, dataset: invalid_attributes},
               :session => valid_session
