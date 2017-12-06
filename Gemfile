@@ -90,6 +90,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
+  gem 'pry-rails'
 end
 
 gem 'elasticsearch-model', github: 'elastic/elasticsearch-rails', branch: '5.x'
@@ -99,3 +100,5 @@ gem 'passenger', '5.1.12'
 gem 'rubyzip'
 
 gem 'ezid-client'
+
+gem 'twitter-typeahead-rails'
