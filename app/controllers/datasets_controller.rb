@@ -62,10 +62,17 @@ class DatasetsController < ApplicationController
 
         write_json_to_file(@dataset)
         
-        format.html { redirect_to @dataset, notice: 'Dataset was successfully created.' }
+        format.html {
+          redirect_to @dataset, notice: 'Dataset was successfully created.'
+        }
         format.json { render :show, status: :created, location: @dataset }
       else
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
+        format.html {
+          set_categories
+          set_licenses
+          render :new
+        }
       end
     end
   end
@@ -76,16 +83,18 @@ class DatasetsController < ApplicationController
     authorize @dataset
     respond_to do |format|
       if @dataset.update(dataset_params)
-
         write_json_to_file(@dataset)
-
         format.html {
           redirect_to @dataset,
                       notice: 'Dataset was successfully updated.'
         }
         format.json { render :show, status: :ok, location: @dataset }
       else
-        format.html { render :edit }
+        format.html {
+          set_categories
+          set_licenses
+          render :edit
+        }
         format.json {
           render json: @dataset.errors, status: :unprocessable_entity
         }
