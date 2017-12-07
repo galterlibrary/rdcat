@@ -24,9 +24,6 @@
 // users show
 .user_show {
   .grid-x {
-    // will have to remove this when updating from legacy grid to grid-x
-    display: flex;
-    
     .card {
       box-shadow: 1px 1px 1px 1px $nu-grey;
       border-radius: 2px;

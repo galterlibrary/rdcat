@@ -1,12 +1,12 @@
 - if @datasets.blank?
-  .small-9.columns
+  .small-9.cell
     - if params[:category].nil? && params[:organization_id].nil?
       No datasets currently exist
     - else
       No dataset matches criteria
 
 - else
-  .small-9.columns
+  .small-9.cell
     %table.unstriped.datasets
       %thead
         %tr

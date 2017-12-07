@@ -34,6 +34,9 @@ describe 'Logging in', type: :feature do
       it 'describes the application' do 
         visit '/'
 
+        expect(page).to have_link('Home', href: '/')
+        expect(page).to have_link('About', href: '#')
+        expect(page).to have_link('Giving', href: '#')
         expect(page).to have_content('Login')
         expect(page).to have_content('Galter DataCat')
         expect(page).to have_selector("input[placeholder='Enter your search query here']")
@@ -90,7 +93,8 @@ describe 'Logging in', type: :feature do
 
         visit datasets_path
 
-        expect(page).to have_content('Logout')
+        expect(page).to have_link('Logout')
+        expect(page).to have_link(@user.name, href: "/users/#{@user.id}")
         expect(page).to_not have_content('Login')
       end
 

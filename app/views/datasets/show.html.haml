@@ -1,107 +1,59 @@
-#dataset_show
-  %dl#dataset_show
-    %dt
-      Title
-    %dd
-      = @dataset.title
-    %dt
-      Description
-    %dd
-      = @dataset.description
-    %dt
-      Grants and Funding
-    %dd
-      = @dataset.grants_and_funding
-    %dt
-      Maintainer
-    %dd
-      = @dataset.maintainer.try(:name)
-    %dt
-      Maintainer Email
-    %dd
-      = @dataset.maintainer.try(:email)
-    %dt
-      Author
-    %dd
-      = @dataset.author.try(:name)
-    %dt
-      Author Email
-    %dd
-      = @dataset.author.try(:email)
-    %dt
-      Organization
-    %dd
-      = @dataset.organization.try(:name)
-    %dt
-      Characteristic
-    %dd
-      = @dataset.characteristic.try(:name)
-    %dt
-      MESH Categories
-    %dd
-      = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
-    %dt
-      FAST Categories
-    %dd
-      = @dataset.fast_categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
-    %dt
-      Visibility
-    %dd
-      = @dataset.visibility
-    %dt
-      State
-    %dd
-      = @dataset.state
-    %dt
-      Source
-    %dd
-      = @dataset.source
-    %dt
-      License
-    %dd
-      = @dataset.license
-    %dt
-      Version
-    %dd
-      = @dataset.version
-    - if @dataset.doi
-      %dt
-        DOI
-      %dd
-        = link_to @dataset.doi, "https://dx.doi.org/#{@dataset.doi}"
-
-  .distributions
-    %b Distributions:
-    - if @dataset.distributions.blank?
-      %p
-        %b
-          No distributions exist for dataset.
-    - else
-      - @dataset.distributions.each do |d|
-        .distribution
-          = link_to d.name, dataset_distribution_path(@dataset, d)
-          - if d.artifact.current_path
-            %small
-              |
-              = link_to "Download (#{number_to_human_size(d.artifact.size.to_i)})",
-                        download_dataset_distribution_path(@dataset, d)
-              |
-              %em
-                = "#{d.format} (#{d.artifact.content_type})"
-  %p
-
-  .links
-    - if can_edit?(@dataset)
-      = link_to 'Add distribution', new_dataset_distribution_path(@dataset),
-                class: 'edit_link'
-      = link_to 'Edit', edit_dataset_path(@dataset), class: 'edit_link'
-      = link_to 'Destroy', [@dataset], :method => :delete,
-                :data => { :confirm => 'Are you sure?' },
-                :class => 'edit_link'
-      - if @dataset.doi.blank?
-        = link_to 'Mint DOI', mint_doi_dataset_path(@dataset),
-                  :method => :post,
-                  :class => 'edit_link',
-                  :data => { disable_with: true }
-
-    = link_to 'Back', datasets_path
+.dataset_show
+  .grid-x.header
+    .medium-2.large-3.cell
+    .medium-8.large-6.cell.text-center
+      %h1
+        = link_to "Galter DataCat", root_path
+    .medium-2.learge-3.cell
+  .grid-x.ds_title
+    .small-1.cell
+    .small-7.cell.author_title
+      = link_to 'Back', :back
+      \/
+      = link_to @dataset.author.name, user_path(@dataset.author)
+      \/
+      = link_to @dataset.title, dataset_path(@dataset)
+      = @dataset.public? ? "" : "(Private)"
+    .small-3.cell.version.text-right
+      = "Version #{@dataset.version}"
+    .medium-1.cell
+  .grid-x.ds_categories
+    .medium-2.cell
+    .grid-x.grid-padding-x.align-spaced.medium-8.cell.categories
+      - @dataset.categories.reject { |c| c.empty? }.each do |c|
+        = link_to c, datasets_path(category: c), class: "mesh button tiny"
+      - @dataset.fast_categories.reject { |c| c.empty? }.each do |c|
+        = link_to c, datasets_path(category: c), class: "fast button tiny"
+    .medium-2.cell
+  .grid-x.ds_maintainer
+    .medium-1.cell
+    .grid-x.medium-10.cell.maint_info
+      .ds_maintd_by.auto.cell
+        Maintained by:
+        = link_to @dataset.maintainer.name, user_path(@dataset.maintainer)
+      .ds_doi.text-center.auto.cell
+        - if @dataset.doi
+          DOI:
+          = link_to @dataset.doi, "https://dx.doi.org/#{@dataset.doi}"
+        - elsif can_edit?(@dataset) && @dataset.doi.blank?
+          = link_to 'Mint DOI', mint_doi_dataset_path(@dataset),
+                    :method => :post,
+                    :data => { disable_with: true },
+                    :class => "button tiny success"
+      .ds_dist_count.text-right.auto.cell
+        Distributions:
+        = @dataset.distributions.count
+    .medium-1.cell
+  .grid-x.ds_distributions
+    = render 'distributions'
+  - if can_edit?(@dataset)
+    .grid-x.edit_destroy
+      .medium-1.cell
+      .grid-x.align-center.medium-10.cell
+        = link_to 'Edit', edit_dataset_path(@dataset), class: 'button warning'
+        = link_to 'Destroy', [@dataset], :method => :delete,
+                  :data => { :confirm => 'Are you sure?' },
+                  :class => 'button alert'
+      .medium-1.cell
+  .grid-x.ds_about
+    = render 'about'

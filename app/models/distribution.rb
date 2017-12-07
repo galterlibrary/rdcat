@@ -44,6 +44,10 @@ class Distribution < ApplicationRecord
     yield
     ds.__elasticsearch__.index_document
   end
+  
+  def pretty_date
+    self.updated_at.strftime("%b %d, %Y")
+  end
 
   mount_uploader :artifact, ArtifactUploader
 end

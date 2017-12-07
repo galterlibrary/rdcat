@@ -6,8 +6,8 @@
     
   = form_tag('/datasets/search', id: 'dataset_search_form') do 
     = search_field_tag 'q', params[:q], placeholder: 'Enter your search query here', class: 'special_input'
-
-
+  -# using form attribute outside of the actual form can still bind it to the form. for modern browsers
+  %input{type: "submit", value: "Search Datasets", form: "dataset_search_form", class: "button"}
   = link_to(datasets_path) do
     .button
       Browse Datasets

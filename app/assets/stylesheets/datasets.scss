@@ -53,34 +53,72 @@
   }
 }
 
-#dataset_show {
-  dl {
-    width: 100%;
+.dataset_show {
+  .header {
+    margin: 2rem;
   }
-
-  dt {
-    float:left;
-    clear: left;
-    width: 170px;
+  
+  .ds_title {
+    font-weight: bold;
+    color: $nu-primary;
+    padding-bottom: 0.25rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0px 2px 1px $nu-grey;
   }
-
-  dd {
-    clear: left;
-    float: left;
-    margin-left: 170px;
+  
+  .ds_categories {
+    margin-bottom: 1rem;
+    .button { 
+      margin-right: 1rem; 
+      margin-bottom: 0.25rem;
+      border-radius: 2px;
+    }
+    .mesh {
+      color: $nu-primary;
+      background-color: #dbdeff;
+      &:hover {
+        background-color: $nu-secondary-30tint;
+      }
+    }
+    .fast {
+      color: $nu-orange;
+      background-color: #f7c66c;
+      &:hover {
+        background-color: $nu-yellow;
+      }
+    }
   }
-  dt + dd {
-    float: left;
-    clear: none;
-    margin-left: 0;
+  
+  .ds_maintainer {
+    margin-bottom: 1rem;
+    
+    .maint_info {
+      border: 1px solid $nu-grey-30tint;
+      border-radius: 3px;
+      padding: 0.25rem 1rem;
+      .button {
+        margin: 0;
+      }
+    }
   }
-
-  .distributions {
-    margin: 0 33px;
-    font-size: 1.25em;
-    clear: both;
-    .distribution {
-      padding: 1rem;
+  
+  .ds_distributions {
+    thead {
+      background-color: $nu-grey-30tint;
+    }
+  }
+  
+  .ds_about {
+    .card .card-divider {
+      background-color: $nu-grey-30tint;
+    }
+    .card {
+      border-radius: 3px;
+    }
+    .dd {
+      padding: 0 2rem;
     }
   }
 }

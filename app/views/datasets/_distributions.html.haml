@@ -1,0 +1,40 @@
+.medium-1.cell
+.medium-10.cell
+  %table.unstriped
+    %thead
+      %tr
+        %th 
+          Distributions
+        %th 
+          / Description
+        %th 
+          / download
+        %th.text-right
+          - if can_edit?(@dataset)
+            %a.has-tip{"aria-haspopup" => true, |
+              "data-disable-hover" => false, |
+              "data-tooltip" => "", |
+              :tabindex => "1", |
+              :title => "Add Distribution", |
+              href: new_dataset_distribution_path(@dataset) } |
+              %i.fi-plus.medium
+    %tbody
+      - if @dataset.distributions.blank?
+        %tr
+          %td
+            No distributions exist for dataset.
+      - else 
+        - @dataset.distributions.each do |d|
+          %tr
+            %td
+              = link_to d.name, dataset_distribution_path(@dataset, d)
+              = "(#{d.artifact.content_type})"
+            %td 
+              = d.description ? d.description.truncate(30) : ""
+            %td 
+              - if d.artifact.current_path
+                = link_to "Download (#{number_to_human_size(d.artifact.size.to_i)})",
+                          download_dataset_distribution_path(@dataset, d)
+            %td.text-right
+              = d.pretty_date
+.medium-1.cell
