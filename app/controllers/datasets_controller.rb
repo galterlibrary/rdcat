@@ -143,7 +143,7 @@ class DatasetsController < ApplicationController
                                         :version,
                                         :author_id,
                                         :maintainer_id,
-                                        { categories: [] })
+                                        { categories: [], fast_categories: [] })
     end
 
     # Used to strip blank first values from array-type params.

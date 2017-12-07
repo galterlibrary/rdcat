@@ -35,8 +35,6 @@ RSpec.describe FastSubject, :type => :model do
   end
 
   describe 'elasticsearch integration', elasticsearch: true do
-    subject { Dataset.search('Blood') }
-
     before do
       FactoryGirl.create(:fast_subject, label: 'nomatch1')
       FactoryGirl.create(:fast_subject, label: 'nomatch2')

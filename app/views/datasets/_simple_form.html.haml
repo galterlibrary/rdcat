@@ -15,14 +15,18 @@
     %a{ href: 'http://www.feinberg.northwestern.edu/research/clinical-trials/' }
       http://www.feinberg.northwestern.edu/research/clinical-trials/
   = f.association :organization, collection: Organization.all.order(:name), prompt: 'Choose an Organization', input_html: { class: 'required' }, required: true
+
   = f.association :characteristic, collection: Characteristic.all.order(:name), prompt: 'Choose a type'
   .input.select.optional.dataset_categories
     = f.label :categories
     = f.select :categories, @categories, {}, { multiple: true, class: 'chosen-select' }
 
-  .input.select.optional.dataset_categories
-    =# f.label 'FAST categories'
-    =# f.select :fast_categories, @fast_categories, {}, { multiple: true, class: 'chosen-select' }
+  .input.select.optional.dataset_fast_categories
+    = f.label :fast_categories
+    = f.select :fast_categories,
+      options_for_select(@dataset.fast_categories.reject(&:blank?).map {|o| [o,o] },
+        @dataset.fast_categories.reject(&:blank?)),
+      {}, { multiple: true, class: 'select2' }
   
   = f.input :visibility, collection: Dataset::VISIBILITY_OPTIONS, selected: Dataset::PUBLIC
   = f.input :state, collection: Dataset::STATE_OPTIONS, selected: Dataset::ACTIVE
@@ -37,3 +41,30 @@
   = f.input :version, placeholder: '1.0'
 
   = f.button :submit
+
+:javascript
+    $('#dataset_fast_categories').select2({
+      theme: "foundation",
+      minimumInputLength: 1,
+      ajax: {
+        url: '/fast_subjects/suggestions',
+        data: function (params) {
+          var query = {
+            query: params.term
+          }
+
+          return query;
+        },
+        processResults: function (data) {
+          return {
+            //FIXME We shoul link fast subjects to the actual table by id
+            results: data.map(function(obj) {
+              return {
+                text: obj.text,
+                id: obj.text
+              }
+            })
+          }
+        }
+      }
+    });

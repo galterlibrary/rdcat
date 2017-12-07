@@ -70,11 +70,8 @@ group :test do
   gem 'faker'
   gem 'webmock', require: false
   gem 'rack-test'
-
   gem 'launchy'
-  
   gem 'rails-controller-testing'
-
   gem 'elasticsearch-extensions'
 end
 
@@ -101,4 +98,5 @@ gem 'rubyzip'
 
 gem 'ezid-client'
 
-gem 'twitter-typeahead-rails'
+gem "select2-rails"
+gem 'select2-foundation', git: 'https://github.com/zflat/select2-foundation.git'

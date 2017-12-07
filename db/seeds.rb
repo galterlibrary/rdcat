@@ -4,15 +4,13 @@ puts 'Starting FAST subjects import. This will take a while...'
 if ENV['FAST_IMPORT'] == 'true'
   zip_file = Zip::File.open('db/seeds/fast_subjects.zip')
   entry = zip_file.glob('*.yml').first
-  ActiveRecord::Base.transaction do
-    fasts = YAML::load(entry.get_input_stream.read)['fast_subjects']
-    fasts.each do |f|
-      fname =  f['name'].strip
-      fid = f['id'].strip
-      fast = FastSubject.where(label: fname, identifier: fid).first
-      if fast.blank?
-        fast = FastSubject.create!(label: fname, identifier: fid)
-      end
+  fasts = YAML::load(entry.get_input_stream.read)['fast_subjects']
+  fasts.each do |f|
+    fname =  f['name'].strip
+    fid = f['id'].strip
+    fast = FastSubject.where(label: fname, identifier: fid).first
+    if fast.blank?
+      fast = FastSubject.create!(label: fname, identifier: fid)
     end
   end
   puts "Done, imported #{ FastSubject.count } fast subjects"
