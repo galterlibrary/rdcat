@@ -1,13 +1,13 @@
-.row.dataset_header_row
-  .small-3.columns
+.grid-x.dataset_header_row
+  .small-3.cell
     .home
       = link_to "Galter DataCat", root_path
-  .small-9.columns
+  .small-9.cell
     = form_tag('/datasets/search', id: 'dataset_search_form') do 
       = search_field_tag 'q', params[:q], placeholder: 'Enter your search query here', class: 'special_input'
       = submit_tag "Search", type: 'submit', class: 'button'
-.row
-  .small-3.columns
+.grid-x
+  .small-3.cell
     - unless @categories.blank?
       %table{ class: 'categories' }
         %thead

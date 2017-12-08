@@ -24,7 +24,7 @@ RSpec.describe 'Users', type: :request do
       it 'displays list of users' do
         get '/users'
         expect(response).to render_template(:index)
-        expect(assigns(:users)).to eq([user_a, user_b])
+        expect(assigns(:users)).to contain_exactly(user_a, user_b)
       end
       
       it 'displays appropriate info' do
@@ -69,9 +69,7 @@ RSpec.describe 'Users', type: :request do
           
           expect(response).to render_template(:show)
           expect(assigns(:user)).to eq(user_a)
-          expect(assigns(:user_datasets)).to eq([dataset_1, dataset_2, dataset_3])
-          expect(assigns(:user_datasets).include?(dataset_4)).to be_falsey
-          expect(assigns(:user_datasets).include?(dataset_zero)).to be_falsey
+          expect(assigns(:user_datasets)).to contain_exactly(dataset_1, dataset_2, dataset_3)
         end
         
         it 'displays appropriate info' do

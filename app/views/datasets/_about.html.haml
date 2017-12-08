@@ -1,0 +1,37 @@
+.medium-1.cell
+.medium-10.cell
+  .card
+    .card-divider.grid-x.grid-padding-x.align-justify.align-bottom
+      %h3.cell.text-left.small-4 About
+      %h5.cell.text-right.small-4= @dataset.state
+    .card-section
+      .dl
+        .dt
+          %h2.text-center= @dataset.title
+        - if @dataset.description
+          .dd= @dataset.description
+        %hr
+        - if @dataset.grants_and_funding?
+          .dt
+            %h3 Grants and Funding
+          .dd= @dataset.grants_and_funding
+          %hr
+        .dt
+          %h3 Organization
+        .dd= @dataset.organization.try(:name)
+        - if @dataset.characteristic.try(:name)
+          %hr
+          .dt
+            %h3 Characteristic
+          .dd= @dataset.characteristic.try(:name)
+          %hr
+        - if @dataset.source?
+          .dt
+            %h3 Source
+          .dd= @dataset.source
+          %hr
+        - if @dataset.license?
+          .dt
+            %h3 License
+          .dd= @dataset.license
+.medium-1.cell

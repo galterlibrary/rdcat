@@ -10,6 +10,12 @@ RSpec.describe "welcome/index.html.haml", type: :view do
       expect(rendered).to have_content("Explore Categories")
     end
     
+    it 'has search form' do
+      render 
+      expect(rendered).to have_field('q')
+      expect(rendered).to have_selector("input[type=submit][value='Search Datasets']")
+    end
+    
     it 'has links to browse datasets and categories' do
       assign(:categories, ["Arm", "Leg"])
       render

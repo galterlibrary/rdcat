@@ -1,11 +1,11 @@
-.row 
-  .small-10.columns
+.grid-x 
+  .small-10.cell
     %h1 Organizations
-  .small-2.columns.links.text-right
+  .small-2.cell.links.text-right
     = link_to 'New Organization', new_organization_path, class: 'button' if can_create?(Organization)
 
-.row
-  .column
+.grid-x
+  .cell
     %table
       %thead
         %tr
@@ -29,7 +29,6 @@
             %td= link_to 'Edit', edit_organization_path(organization)
             %td= link_to 'Destroy', organization, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
-.row
-  .column
+.grid-x
+  .cell
     = will_paginate @organizations
-

@@ -8,15 +8,15 @@
     = javascript_include_tag 'application', 'data-turbolinks-track': false
     = csrf_meta_tag
   %body
-    .row
-      .columns.heading
+    .grid-x
+      .cell.heading
         = render 'layouts/header'
-    %main
-      .row
-        .columns
+    %main.grid-container
+      .grid-x
+        .cell
           = render 'layouts/messages'
 
-      .row.content
-        .columns
+      .grid-x.grid-padding-x.content
+        .cell
           = yield
     = javascript_include_tag 'application', 'data-turbolinks-track': false

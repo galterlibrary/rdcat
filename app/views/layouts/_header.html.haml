@@ -1,9 +1,11 @@
 %header
-  .row
-    .columns
+  .grid-x
+    .cell
       .top-bar
         .top-bar-left.no-bullet
           %ul.menu
+            %li
+              = link_to 'Home', root_path
             %li
               = link_to 'About', "#"
             %li

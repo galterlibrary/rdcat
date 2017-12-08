@@ -23,6 +23,13 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
       visit edit_dataset_path(ds1)
       expect(page).to have_text('You need to sign in')
     end
+    
+    it 'does not show doi, edit, destroy links' do
+      visit dataset_path(ds1)
+      expect(page).to_not have_link('Mint DOI')
+      expect(page).to_not have_link('Edit')
+      expect(page).to_not have_link('Destroy')
+    end
   end
 
   context 'logged in' do
@@ -31,6 +38,7 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
       FactoryGirl.create(:user, first_name: 'Boo', last_name: 'Hoo')
       FactoryGirl.create(:characteristic, name: 'Wet')
       FactoryGirl.create(:license, title: 'Brutal')
+      FactoryGirl.create(:category)
       Dataset.__elasticsearch__.refresh_index!
     end
 
@@ -48,20 +56,35 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
         fill_in 'Source', with: 'computerz'
         select 'Brutal', from: 'License'
         fill_in 'Version', with: 'R2D2'
+        select 'MyString', from: 'Categories'
       end
       click_button 'Update Dataset'
       
       # Updated values on show page
+      expect(page).to have_text('Dataset was successfully updated')
+      
+      expect(page).to have_link('Boo Hoo')
+      expect(page).to have_text('Version R2D2')
+      expect(page).to have_link('MyString', href: '/datasets?category=MyString')
+      expect(page).to have_text('Deleted')
+      
       expect(page).to have_text('Numbers and such')
       expect(page).to have_text('Normal things 123')
+      
+      expect(page).to have_text('Grants and Funding')
       expect(page).to have_text('$5 million monies')
-      expect(page).to have_text('Dataset was successfully updated')
+      
+      expect(page).to have_text('Characteristic')
       expect(page).to have_text('Wet')
-      expect(page).to have_text('Boo Hoo')
-      expect(page).to have_text('Deleted')
+      
+      expect(page).to have_text('Source')
       expect(page).to have_text('computerz')
+      
+      expect(page).to have_text('License')
       expect(page).to have_text('Brutal')
-      expect(page).to have_text('R2D2')
+      
+      expect(page).to have_text('Distributions: 0')
+      expect(page).to have_text('No distributions exist for dataset.')
       
       # DOI minting
       allow_any_instance_of(Dataset).to receive(:update_or_create_doi) {
@@ -89,6 +112,12 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
       login_as FactoryGirl.create(:user)
       visit dataset_path(ds1)
       expect(current_path).to eq('/')
+      expect(page).to have_text('You cannot perform this action')
+      
+      # anonymous can't view 
+      logout user
+      visit dataset_path(ds1)
+      expect(current_path).to eq("/")
       expect(page).to have_text('You cannot perform this action')
     end
 
@@ -131,11 +160,11 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
   end
 
   context 'distributions info' do 
-    let(:dataset) { FactoryGirl.create(:dataset) }
+    let(:dataset) { FactoryGirl.create(:dataset, author: user) }
 
     context 'with artifact' do
       let(:distribution) {
-        FactoryGirl.create(:distribution, dataset: dataset, format: nil)
+        FactoryGirl.create(:distribution, dataset: dataset, format: nil, name: 'Distro')
       }
 
       before do
@@ -143,13 +172,28 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
           distribution.artifact.store!(f)
         }
         distribution.save!
-        visit dataset_path(dataset)
       end
 
-      it 'shows the MIME and descriptive file information' do
-        expect(page).to have_link('Download (5 Bytes)')
-        expect(page).to have_text('text/plain')
-        expect(page).to have_text('ASCII text')
+      context 'as anonymous' do
+        it 'shows descriptive file information' do
+          visit dataset_path(dataset)
+          expect(page).to have_text('Distributions: 1')
+          expect(page).to have_link(
+            'Distro', href: "/datasets/#{dataset.id}/distributions/#{distribution.id}"
+          )
+          expect(page).to have_link('Download (5 Bytes)')
+          expect(page).to have_text('text/plain')
+          expect(page).to_not have_text('ASCII text')
+          expect(page).to_not have_link(href: "/datasets/#{dataset.id}/distributions/new")
+        end
+      end
+      
+      context 'as author' do
+        it 'shows link for new dataset' do
+          login_as user
+          visit dataset_path(dataset)
+          expect(page).to have_link(href: "/datasets/#{dataset.id}/distributions/new")
+        end
       end
     end
   end
