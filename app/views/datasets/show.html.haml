@@ -37,9 +37,13 @@
     %dd
       = @dataset.characteristic.try(:name)
     %dt
-      Categories
+      MESH Categories
     %dd
       = @dataset.categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
+    %dt
+      FAST Categories
+    %dd
+      = @dataset.fast_categories.reject { |c| c.empty? }.to_sentence(two_words_connector: ' & ', last_word_connector: ' & ')
     %dt
       Visibility
     %dd

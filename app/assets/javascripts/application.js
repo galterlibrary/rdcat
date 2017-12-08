@@ -15,6 +15,7 @@
 //= require foundation
 // require turbolinks
 //= require chosen-jquery
+//= require select2-full
 //= require_tree .
 
 $(document).foundation();

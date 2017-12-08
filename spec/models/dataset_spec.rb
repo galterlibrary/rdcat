@@ -80,6 +80,39 @@ RSpec.describe Dataset, :type => :model do
       end
     end
 
+    context 'doi' do
+      before do
+        FactoryGirl.create(:dataset, doi: "Blood Meridian's Dataset")
+        Dataset.__elasticsearch__.refresh_index!
+      end
+
+      context 'search for a single word' do
+        subject { Dataset.search('Blood') }
+
+        it 'ignores case, and punctuation' do
+          expect(subject.count).to eq(1)
+          expect(subject.first.doi).to eq("Blood Meridian's Dataset")
+        end
+      end
+
+      context 'search for an exact pharase' do
+        subject { Dataset.search("Blood Meridian's Dataset") }
+
+        it 'matches' do
+          expect(subject.count).to eq(1)
+          expect(subject.first.doi).to eq("Blood Meridian's Dataset")
+        end
+      end
+
+      context 'search an invalid word' do
+        subject { Dataset.search("will not match") }
+
+        it 'will not match' do
+          expect(subject.count).to eq(0)
+        end
+      end
+    end
+
     context 'description' do
       before do
         FactoryGirl.create(
@@ -146,6 +179,39 @@ RSpec.describe Dataset, :type => :model do
         it 'matches' do
           expect(subject.count).to eq(1)
           expect(subject.first.categories).to include("Cat1")
+        end
+      end
+    end
+
+    context 'fast_categories' do
+      before do
+        FactoryGirl.create(:dataset, :fast_categories => ['Cat1', 'Asdf, fdas'])
+        Dataset.__elasticsearch__.refresh_index!
+      end
+
+      context 'search an invalid word' do
+        subject { Dataset.search("will not match") }
+
+        it 'will not match' do
+          expect(subject.count).to eq(0)
+        end
+      end
+
+      context 'search for a single word' do
+        subject { Dataset.search('asdf') }
+
+        it 'ignores case, and punctuation' do
+          expect(subject.count).to eq(1)
+          expect(subject.first.fast_categories).to include("Cat1")
+        end
+      end
+
+      context 'search for an exact pharase' do
+        subject { Dataset.search('Cat1') }
+
+        it 'matches' do
+          expect(subject.count).to eq(1)
+          expect(subject.first.fast_categories).to include("Cat1")
         end
       end
     end

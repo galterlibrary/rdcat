@@ -163,3 +163,10 @@ table.datasets {
     color: $nu-yellow;
   }
 }
+
+.dataset_fast_categories {
+  span.select2 {
+    margin-left: -5px;
+    margin-bottom: 10px;
+  }
+}

@@ -70,11 +70,8 @@ group :test do
   gem 'faker'
   gem 'webmock', require: false
   gem 'rack-test'
-
   gem 'launchy'
-  
   gem 'rails-controller-testing'
-
   gem 'elasticsearch-extensions'
 end
 
@@ -90,6 +87,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
+  gem 'pry-rails'
 end
 
 gem 'elasticsearch-model', github: 'elastic/elasticsearch-rails', branch: '5.x'
@@ -99,3 +97,6 @@ gem 'passenger', '5.1.12'
 gem 'rubyzip'
 
 gem 'ezid-client'
+
+gem "select2-rails"
+gem 'select2-foundation', git: 'https://github.com/zflat/select2-foundation.git'

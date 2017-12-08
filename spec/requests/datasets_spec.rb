@@ -91,6 +91,43 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
       expect(current_path).to eq('/')
       expect(page).to have_text('You cannot perform this action')
     end
+
+    describe 'FAST subjects', js: true do
+      before do
+        FactoryGirl.create(:fast_subject, label: 'test1')
+        FactoryGirl.create(:fast_subject, label: 'Testing FAST')
+        #FIXME something strnge going on with this index
+        FastSubject.__elasticsearch__.delete_index!
+        FastSubject.__elasticsearch__.create_index!
+        FastSubject.import
+        #FIXME the above three lines shouldn't be needed
+        FastSubject.__elasticsearch__.refresh_index!
+      end
+
+      specify do
+        visit dataset_path(ds1)
+        click_link 'Edit'
+        expect(page).not_to have_text('Testing FAST')
+        # Completion triggering
+        within('.dataset_fast_categories') do
+          search_field = '.select2-search input.select2-search__field'
+          find(:xpath, "//body").find(search_field).set('te')
+          page.execute_script("$('#{search_field}').keyup();")
+        end
+        expect(page).to have_text('Testing FAST')
+        expect(page).to have_text('test1')
+
+        # Lading of exising subjects
+        visit edit_dataset_path(ds1)
+        expect(page).not_to have_text('Testing FAST')
+        ds1.fast_categories = ['Testing FAST']
+        ds1.save!
+        visit dataset_path(ds1)
+        expect(page).to have_text('Testing FAST')
+        click_link 'Edit'
+        expect(page).to have_text('Testing FAST')
+      end
+    end
   end
 
   context 'distributions info' do 
