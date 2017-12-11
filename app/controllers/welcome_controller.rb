@@ -4,4 +4,7 @@ class WelcomeController < ApplicationController
       current_user, Dataset
     ).resolve.chosen_categories.shuffle
   end
+  
+  def about
+  end
 end

@@ -10,6 +10,13 @@ RSpec.describe WelcomeController, type: :controller do
       expect(response).to render_template('index')
     end
   end
+  
+  describe 'GET about' do
+    it 'renders about' do
+      get :about
+      expect(response).to render_template('about')
+    end
+  end
 
   context 'with a logged in user' do 
     sign_in_user
