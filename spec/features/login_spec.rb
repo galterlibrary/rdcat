@@ -19,12 +19,14 @@ describe 'Logging in', type: :feature do
   describe 'signing in' do
     let(:user) { FactoryGirl.create(:user) }
     
-    it 'should sign in user' do
+    it 'should sign in user', js: true do
       visit new_user_session_path
       fill_in 'Username', with: user.username
       fill_in 'Password', with: user.password
       click_button 'Log in'
       expect(page).to have_content "Signed in successfully"
+      click_button 'flash_close'
+      expect(page).to_not have_content "Signed in successfully"
     end
   end
 

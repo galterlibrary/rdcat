@@ -13,6 +13,7 @@ RSpec.describe 'Users', type: :request do
       it 'redirects to sign in' do
         get '/users'
         expect(response).to redirect_to("/users/sign_in")
+        expect(flash[:alert]).to be_present
       end
     end
     
@@ -49,6 +50,7 @@ RSpec.describe 'Users', type: :request do
       it 'redirects to sign in when not logged in' do
         get '/users/1'
         expect(response).to redirect_to('/users/sign_in')
+        expect(flash[:alert]).to be_present
       end
     end
     
