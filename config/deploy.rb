@@ -30,7 +30,7 @@ set :linked_files, fetch(:linked_files, []).push('config/local_env.rb')
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
-set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets public/system}
+set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets public/system public/uploads}
 
 # capistrano bundler properties
 set :bundle_gemfile, -> { release_path.join('Gemfile') }
