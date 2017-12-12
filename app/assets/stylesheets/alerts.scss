@@ -1,38 +1,6 @@
-.custom-alert-box {
-  border: 1px solid transparent;
-  border-radius: 0;
-  color: #fefefe;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 0.9rem;
-  line-height: 1;
-  margin: 0 0 1rem;
-  padding: 0.85em 1em;
-  text-align: center;
-  transition: background-color 0.25s ease-out 0s, color 0.25s ease-out 0s;
-  vertical-align: middle;
-  font-size: 1.5em;
-  a.close {
-    font-weight: bold;
-    color: white;
-    padding: 0 0.25em;
-  }
-}
-
-.custom-alert-box.standard {
-  background-color: crimson;
-  a.close:hover {
-    background-color: pink;
-    color: red;
-  }
-}
-
-.custom-alert-box.success {
-  background-color: forestgreen;
-  a.close:hover {
-    background-color: limegreen;
-    color: darkgreen;
-  }
+.callout p {
+  font-weight: bold;
+  margin: auto;
 }
 
 small.error {

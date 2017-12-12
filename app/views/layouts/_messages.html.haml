@@ -1,6 +1,13 @@
-- flashes = {notice: 'success', alert: 'standard', error: 'alert', secondary: 'secondary'}
-- flashes.each do |key, value|
-  - if flash[key]
-    .alert-box.custom-alert-box{class: "#{value}", data: { alert: '' } }
-      = flash[key]
-      = link_to '&times;'.html_safe, '#', class: 'close'
+.grid-x.grid-margin-x.flash_msg
+  .medium-4.cell
+  .medium-4.cell.text-center
+    - flashes = {notice: 'success', alert: 'alert', error: 'alert', secondary: 'secondary'}
+    - flashes.each do |key, value|
+      - if flash[key]
+        .callout{"class" => "#{value}", "data-closable" => ""}
+          %p= flash[key]
+          %button.close-button{ "aria-label" => "Dismiss alert", |
+                                "data-close" => "", "id" => "flash_close", |
+                                :type => "button" } |
+            %span{"aria-hidden" => "true"} ×
+  .medium-4.cell
