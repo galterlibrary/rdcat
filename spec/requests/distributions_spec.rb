@@ -14,11 +14,10 @@ RSpec.describe "Distributions", type: :request, elasticsearch: true do
           distribution.artifact.store!(f)
         }
         distribution.save!
-        visit dataset_distributions_path(distribution.dataset, distribution)
+        visit "/datasets/#{dataset.id}/distributions/#{distribution.id}"
       end
 
       it 'shows the MIME and descriptive file information' do
-        pending("This should work after visibility is fixed")
         expect(page).to have_text('5 Bytes')
         expect(page).to have_text('text/plain')
         expect(page).to have_text('ASCII text')

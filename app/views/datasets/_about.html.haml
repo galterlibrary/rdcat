@@ -22,7 +22,7 @@
         - if @dataset.characteristic.try(:name)
           %hr
           .dt
-            %h3 Characteristic
+            %h3 Library of Congress Subject Heading (LCSH)
           .dd= @dataset.characteristic.try(:name)
           %hr
         - if @dataset.source?
