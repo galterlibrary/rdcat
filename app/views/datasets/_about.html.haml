@@ -8,28 +8,47 @@
       .dl
         .dt
           %h3.text-center= @dataset.title
+
         - if @dataset.description
           .dd= @dataset.description
         %hr
+
         - if @dataset.grants_and_funding?
           .dt
             %h4 Grants and Funding
           .dd= @dataset.grants_and_funding
           %hr
-        .dt
-          %h4 Organization
-        .dd= @dataset.organization.try(:name)
-        - if @dataset.characteristic.try(:name)
-          %hr
+
+        - if @dataset.orgs(:department).present?
           .dt
-            %h4 Library of Congress Subject Heading (LCSH)
+            %h4 Departments
+          .dd= safe_org_br(@dataset.orgs(:department).pluck(:name))
+          %hr
+
+        - if @dataset.orgs(:research_core).present?
+          .dt
+            %h4 Research Cores
+          .dd= safe_org_br(@dataset.orgs(:research_core).pluck(:name))
+          %hr
+
+        - if @dataset.orgs(:institute_or_center).present?
+          .dt
+            %h4 Institutes and Centers
+          .dd= safe_org_br(@dataset.orgs(:institute_or_center).pluck(:name))
+          %hr
+
+        - if @dataset.characteristic.try(:name)
+          .dt
+            %h4 Resource Type 
           .dd= @dataset.characteristic.try(:name)
           %hr
+
         - if @dataset.source?
           .dt
             %h4 Source
           .dd= @dataset.source
           %hr
+
         - if @dataset.license?
           .dt
             %h4 License

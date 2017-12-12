@@ -22,7 +22,9 @@ class DatasetsController < ApplicationController
     end
 
     if params[:organization_id]
-      @datasets = @datasets.where(organization_id: params[:organization_id])
+      @datasets = @datasets.joins(:dataset_organizations).where(
+        'dataset_organizations.organization_id = ?', params[:organization_id]
+      )
     end
     
     if params[:fast_category]
@@ -87,6 +89,7 @@ class DatasetsController < ApplicationController
     authorize @dataset
     respond_to do |format|
       if @dataset.update(dataset_params)
+        update_orgs
         write_json_to_file(@dataset)
         format.html {
           redirect_to @dataset,
@@ -103,6 +106,21 @@ class DatasetsController < ApplicationController
           render json: @dataset.errors, status: :unprocessable_entity
         }
       end
+    end
+  end
+
+  def update_orgs
+    return if params[:dataset][:dataset_organizations].blank?
+    new_oids = params[:dataset][:dataset_organizations].to_unsafe_h
+                                                       .values
+                                                       .flatten
+                                                       .reject(&:blank?)
+    current_oids = @dataset.dataset_organizations.pluck(:organization_id)
+    (current_oids - new_oids).each do |oid|
+      @dataset.dataset_organizations.find_by(organization_id: oid).delete
+    end
+    (new_oids - current_oids).each do |oid|
+      @dataset.dataset_organizations.create(organization_id: oid)
     end
   end
 
@@ -148,7 +166,6 @@ class DatasetsController < ApplicationController
                                         :description, 
                                         :grants_and_funding,
                                         :license, 
-                                        :organization_id,
                                         :characteristic_id,
                                         :visibility, 
                                         :state,

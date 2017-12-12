@@ -51,7 +51,7 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
         fill_in 'Description', with: 'Normal things 123'
         fill_in 'Grants and funding', with: '$5 million monies'
         select 'Boo Hoo', from: 'Author'
-        select 'Wet', from: 'LCSH Subject'
+        select 'Wet', from: 'Resource Types'
         select 'Deleted', from: 'State'
         fill_in 'Source', with: 'computerz'
         select 'Brutal', from: 'License'
@@ -74,7 +74,7 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
       expect(page).to have_text('Grants and Funding')
       expect(page).to have_text('$5 million monies')
       
-      expect(page).to have_text('Library of Congress Subject Heading (LCSH)')
+      expect(page).to have_text('Resource Type')
       expect(page).to have_text('Wet')
       
       expect(page).to have_text('Source')

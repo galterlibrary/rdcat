@@ -6,7 +6,6 @@
 #  title              :string
 #  description        :text
 #  license            :string
-#  organization_id    :integer
 #  visibility         :string
 #  state              :string
 #  source             :string
@@ -19,6 +18,7 @@
 #  characteristic_id  :integer
 #  grants_and_funding :text
 #  doi                :string
+#  fast_categories    :text             default([]), is an Array
 #
 
 class Dataset < ApplicationRecord
@@ -29,14 +29,29 @@ class Dataset < ApplicationRecord
   index_name Rails.application.class.parent_name.underscore
   document_type self.name.downcase
 
-  belongs_to :organization
   belongs_to :author, class_name: 'User'
   belongs_to :maintainer, class_name: 'User'
   belongs_to :characteristic
   has_many :distributions
+  has_many :dataset_organizations
+  has_many :organizations, :through => :dataset_organizations
+  scope :departments, -> {
+    joins(:dataset_organizations).joins(:organizations).where(
+      'organizations.org_type = ?', Organization.org_types['department']
+    )
+  }
+  scope :research_cores, -> {
+    joins(:dataset_organizations).joins(:organizations).where(
+      'organizations.org_type = ?', Organization.org_types['research_core']
+    )
+  }
+  scope :institutes_and_centers, -> {
+    joins(:dataset_organizations).joins(:organizations).where(
+      'organizations.org_type = ?', Organization.org_types['institute_or_center']
+    )
+  }
 
   validates :title, presence: true, uniqueness: true
-  validates :organization, presence: true
   validates :maintainer, presence: true
 
   # Visibility
@@ -76,7 +91,6 @@ class Dataset < ApplicationRecord
                    'fast_categories^3',
                    'license',
                    'source',
-                   'organization.name',
                    'author.*',
                    'maintainer.*',
                    'distributions.name^5',
@@ -106,9 +120,6 @@ class Dataset < ApplicationRecord
       indexes :fast_categories, analyzer: 'english'
       indexes :source, analyzer: 'english'
       indexes :doi
-      indexes :organization do
-        indexes :name, analyzer: 'english'
-      end
       indexes :author do
         indexes :name, analyzer: 'english'
         indexes :email, analyzer: 'english'
@@ -133,7 +144,6 @@ class Dataset < ApplicationRecord
         :doi
       ],
       include: {
-        organization: { only: :name },
         author: { only: [:email], methods: [:name] },
         maintainer: { only: [:email], methods: [:name] },
         distributions: { only: [:name, :description, :format] }
@@ -158,10 +168,16 @@ class Dataset < ApplicationRecord
   end
 
   def self.known_organizations
-    Organization.order(:name).where(id: pluck(:organization_id)).distinct.to_a
+    Organization.order(:name).where(
+      id: DatasetOrganization.pluck(:organization_id)
+    ).distinct.to_a
   end
 
   def public?
     self.visibility == self.class::PUBLIC
+  end
+
+  def orgs(otype)
+    organizations.where(org_type: Organization.org_types[otype])
   end
 end

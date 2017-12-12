@@ -57,7 +57,7 @@ RSpec.describe WelcomeController, type: :controller do
     let(:usr) { FactoryGirl.create(:user) }
     let(:valid_attributes) {
       { title: 'DS Title', description: 'description', 
-        organization_id: org.id, author_id: usr.id, maintainer_id: usr.id, 
+        author_id: usr.id, maintainer_id: usr.id, 
         visibility: Dataset::PUBLIC, state: Dataset::ACTIVE, categories: [Faker::Name.name]
       }
     }

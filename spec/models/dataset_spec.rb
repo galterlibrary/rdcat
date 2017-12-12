@@ -6,7 +6,6 @@
 #  title              :string
 #  description        :text
 #  license            :string
-#  organization_id    :integer
 #  visibility         :string
 #  state              :string
 #  source             :string
@@ -19,6 +18,7 @@
 #  characteristic_id  :integer
 #  grants_and_funding :text
 #  doi                :string
+#  fast_categories    :text             default([]), is an Array
 #
 
 require 'rails_helper'
@@ -31,13 +31,12 @@ RSpec.describe Dataset, :type => :model do
 
     specify do
       expect(subject).to have_many(:distributions)
-      expect(subject).to belong_to(:organization)
+      expect(subject).to have_many(:organizations)
       expect(subject).to belong_to(:author)
       expect(subject).to belong_to(:maintainer)
 
       expect(subject).to validate_uniqueness_of(:title)
       expect(subject).to validate_presence_of(:title)
-      expect(subject).to validate_presence_of(:organization)
       expect(subject).to validate_presence_of(:maintainer)
     end
   end
@@ -270,48 +269,6 @@ RSpec.describe Dataset, :type => :model do
         it 'matches' do
           expect(subject.count).to eq(1)
           expect(subject.first.source).to eq("Blood Meridian's Source")
-        end
-      end
-
-      context 'search an invalid word' do
-        subject { Dataset.search("will not match") }
-
-        it 'will not match' do
-          expect(subject.count).to eq(0)
-        end
-      end
-    end
-
-    context 'organization' do
-      before do
-        FactoryGirl.create(
-          :dataset,
-          :organization => FactoryGirl.create(
-            :organization, name: "Blood Meridian's Org"
-          )
-        )
-        Dataset.__elasticsearch__.refresh_index!
-      end
-
-      context 'search for a single word' do
-        subject { Dataset.search('Blood') }
-
-        it 'ignores case, and punctuation' do
-          expect(subject.count).to eq(1)
-          expect(
-            subject.first.organization['name']
-          ).to eq("Blood Meridian's Org")
-        end
-      end
-
-      context 'search for an exact pharase' do
-        subject { Dataset.search("Blood Meridian's Org") }
-
-        it 'matches' do
-          expect(subject.count).to eq(1)
-          expect(
-            subject.first.organization['name']
-          ).to eq("Blood Meridian's Org")
         end
       end
 

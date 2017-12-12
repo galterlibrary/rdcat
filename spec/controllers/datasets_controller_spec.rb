@@ -12,13 +12,13 @@ RSpec.describe DatasetsController, type: :controller do
   # Dataset. As you add validations to Dataset, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) { {
-    title: 'DS Title', description: 'description', organization_id: org.id,
+    title: 'DS Title', description: 'description',
     author_id: usr.id, maintainer_id: usr.id, visibility: Dataset::PUBLIC,
     state: Dataset::ACTIVE
   } }
 
   let(:invalid_attributes) { {
-    title: nil, description: 'description', organization_id: org.id,
+    title: nil, description: 'description',
     author_id: usr.id, maintainer_id: usr.id
   } }
 
@@ -132,7 +132,6 @@ RSpec.describe DatasetsController, type: :controller do
         let(:new_attributes) {
           { title: updated_title, 
             description: 'Updated description', 
-            organization_id: org.id, 
             author_id: usr.id, 
             maintainer_id: controller.current_user.id }
         }

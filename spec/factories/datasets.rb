@@ -6,7 +6,6 @@
 #  title              :string
 #  description        :text
 #  license            :string
-#  organization_id    :integer
 #  visibility         :string
 #  state              :string
 #  source             :string
@@ -19,12 +18,12 @@
 #  characteristic_id  :integer
 #  grants_and_funding :text
 #  doi                :string
+#  fast_categories    :text             default([]), is an Array
 #
 
 FactoryGirl.define do
   factory :dataset do
     title { Faker::Hipster.unique.words(4).join(" ") }
-    association :organization, factory: :organization
     association :maintainer, factory: :user
     association :author, factory: :user
     visibility Dataset::PUBLIC

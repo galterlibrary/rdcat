@@ -35,16 +35,29 @@
     %a{ href: 'http://www.feinberg.northwestern.edu/research/clinical-trials/' }
       http://www.feinberg.northwestern.edu/research/clinical-trials/
 
-  = f.association :organization,
-    collection: Organization.all.order(:name),
-    prompt: 'Choose an Organization',
-    input_html: { class: 'required' },
-    required: true
+  = f.fields_for :dataset_organizations do |df|
+    = df.label :departments, 'Departments', { class: 'select required' }
+    = df.select :departments,
+      options_for_select(Organization.department.order(:name).pluck(:name, :id),
+        @dataset.orgs(:department).pluck(:id)),
+      {}, { multiple: true, class: 'chosen-select' }
+
+    = df.label :research_cores, 'Research Cores'
+    = df.select :research_cores,
+      options_for_select(Organization.research_core.order(:name).pluck(:name, :id),
+        @dataset.orgs(:research_core).pluck(:id)),
+      {}, { multiple: true, class: 'chosen-select' }
+
+    = df.label :institutes_and_centers, 'Institutes and Centers'
+    = df.select :institutes_and_centers,
+      options_for_select(Organization.institute_or_center.order(:name).pluck(:name, :id),
+        @dataset.orgs(:institute_or_center).pluck(:id)),
+      {}, { multiple: true, class: 'chosen-select' }
 
   = f.association :characteristic,
     collection: Characteristic.all.order(:name),
-    prompt: 'Choose a Library of Congress Subject Heading',
-    label: 'LCSH Subject'
+    prompt: 'Choose a Resource Type',
+    label: 'Resource Types'
 
   .input.select.optional.dataset_categories
     = f.label :categories, 'MeSH Categories'

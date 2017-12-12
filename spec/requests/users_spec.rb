@@ -60,8 +60,23 @@ RSpec.describe 'Users', type: :request do
       let!(:dataset_3) { FactoryGirl.create(:dataset, author: user_b, maintainer: user_a) }
       let!(:dataset_4) { FactoryGirl.create(:dataset, author: user_b, maintainer: user_b) }
       let!(:dataset_zero) { FactoryGirl.create(:dataset) }
+      let(:department) {
+        FactoryGirl.create(:organization, org_type: Organization.org_types[:department])
+      }
       
       before do
+        FactoryGirl.create(
+          :dataset_organization, organization: department, dataset: dataset_1
+        )
+        FactoryGirl.create(
+          :dataset_organization, organization: department, dataset: dataset_2
+        )
+        FactoryGirl.create(
+          :dataset_organization, organization: department, dataset: dataset_3
+        )
+        dataset_1.reload
+        dataset_2.reload
+        dataset_3.reload
         login_as user_a
       end
       
@@ -80,7 +95,6 @@ RSpec.describe 'Users', type: :request do
           expect(page).to have_content(user_a.name)
           within('.user_about') do
             expect(page).to have_content("About")
-            expect(page).to have_content("Organization: ")
             expect(page).to have_content("Title: ")
             expect(page).to have_content("Email: #{user_a.email}")
           end
@@ -88,18 +102,18 @@ RSpec.describe 'Users', type: :request do
           within('.user_dataset') do
             expect(page).to have_content("Datasets")
             expect(page).to have_link(dataset_1.title.truncate(30), href: dataset_path(dataset_1))
-            expect(page).to have_content("Organization: #{dataset_1.organization.name}")
+            expect(page).to have_content("Departments: #{dataset_1.organizations.first.name}")
             expect(page).to have_content("Maintained by: ")
             expect(page).to have_link(dataset_1.maintainer.name, href: user_path(dataset_1.maintainer))
             expect(page).to have_content("Version: #{dataset_1.version}")
             
             expect(page).to have_link(dataset_2.title.truncate(30), href: dataset_path(dataset_2))
-            expect(page).to have_content("Organization: #{dataset_2.organization.name}")
+            expect(page).to have_content("Departments: #{dataset_2.organizations.first.name}")
             expect(page).to have_link(dataset_2.maintainer.name, href: user_path(dataset_2.maintainer))
             expect(page).to have_content("Version: #{dataset_2.version}")
             
             expect(page).to have_link(dataset_3.title.truncate(30), href: dataset_path(dataset_3))
-            expect(page).to have_content("Organization: #{dataset_3.organization.name}")
+            expect(page).to have_content("Departments: #{dataset_3.organizations.first.name}")
             expect(page).to have_link(dataset_3.maintainer.name, href: user_path(dataset_3.maintainer))
             expect(page).to have_content("Version: #{dataset_3.version}")
             
