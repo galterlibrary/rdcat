@@ -37,7 +37,7 @@ describe 'Logging in', type: :feature do
         visit '/'
 
         expect(page).to have_link('Home', href: '/')
-        expect(page).to have_link('About', href: '#')
+        expect(page).to have_link('About', href: '/about')
         expect(page).to have_link('Giving', href: '#')
         expect(page).to have_content('Login')
         expect(page).to have_content('Galter DataCat')

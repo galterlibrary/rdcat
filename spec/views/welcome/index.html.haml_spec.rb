@@ -6,7 +6,7 @@ RSpec.describe "welcome/index.html.haml", type: :view do
       assign(:categories, ["Something"])
       render
       expect(rendered).to have_content("Galter DataCat")
-      expect(rendered).to have_content("Feinberg School of Medicine Northwestern University")
+      expect(rendered).to have_content("Northwestern University Feinberg School of Medicine Data Portal")
       expect(rendered).to have_content("Explore Categories")
     end
     

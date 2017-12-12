@@ -1,6 +1,5 @@
-// Place all the styles related to the welcome controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+@import 'custom_defaults';
+
 .welcome {
   margin-top: 5rem;
   .button {
@@ -33,5 +32,22 @@
     &:focus {
       box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2);
     }
+  }
+}
+
+.about {
+  margin-top: 5rem;
+  
+  h3 {
+    color: $nu-primary;
+  }
+  .heading {
+    margin-bottom: 2rem;
+  }
+  hr {
+    width: 70%;
+  }
+  .grid-x {
+    padding: 2rem;
   }
 }

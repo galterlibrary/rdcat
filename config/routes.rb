@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
   get 'welcome/index' => 'welcome#index'
+  get '/about' => 'welcome#about', as: 'about'
   post 'user_lookup/ldap' => 'user_lookup#ldap'
 
   get 'fast_subjects/suggestions' => 'fast_subjects#suggestions'
