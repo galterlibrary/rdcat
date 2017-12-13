@@ -23,7 +23,7 @@
       - @dataset.categories.reject { |c| c.empty? }.each do |c|
         = link_to c, datasets_path(category: c), class: "mesh button tiny"
       - @dataset.fast_categories.reject { |c| c.empty? }.each do |c|
-        = link_to c, datasets_path(category: c), class: "fast button tiny"
+        = link_to c, datasets_path(fast_category: c), class: "fast button tiny"
     .medium-2.cell
   .grid-x.ds_maintainer
     .medium-1.cell

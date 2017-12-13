@@ -24,6 +24,10 @@ class DatasetsController < ApplicationController
     if params[:organization_id]
       @datasets = @datasets.where(organization_id: params[:organization_id])
     end
+    
+    if params[:fast_category]
+      @datasets = @datasets.where("'#{params[:fast_category]}' = ANY (fast_categories)")
+    end
   end
 
   def search
