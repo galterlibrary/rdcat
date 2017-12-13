@@ -52,8 +52,7 @@
 
     = df.label :institutes_and_centers, 'Institutes and Centers'
     = df.select :institutes_and_centers,
-      options_for_select(Organization.institute_or_center.order(:name).pluck(:name, :id),
-        @dataset.orgs(:institute_or_center).pluck(:id)),
+      institutes_and_centers_select_options,
       {}, { multiple: true, class: 'chosen-select' }
 
   = f.association :characteristic,
