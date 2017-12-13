@@ -38,6 +38,7 @@ RSpec.describe Dataset, :type => :model do
       expect(subject).to validate_uniqueness_of(:title)
       expect(subject).to validate_presence_of(:title)
       expect(subject).to validate_presence_of(:maintainer)
+      expect(subject).to validate_presence_of(:author)
     end
   end
 

@@ -11,10 +11,10 @@ RSpec.describe Dataset, :type => :model do
 
     subject { ds.send(:ezid_metadata, 'some status') }
 
-    context 'no author' do
+    context 'maintainer as author' do
       let(:ds) {
         FactoryGirl.create(
-          :dataset, maintainer: maintainer, author: nil
+          :dataset, maintainer: maintainer, author: maintainer
         )
       }
 

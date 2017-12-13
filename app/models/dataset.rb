@@ -53,6 +53,7 @@ class Dataset < ApplicationRecord
 
   validates :title, presence: true, uniqueness: true
   validates :maintainer, presence: true
+  validates :author, presence: true
 
   # Visibility
   PUBLIC   = 'Public'

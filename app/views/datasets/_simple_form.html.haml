@@ -28,7 +28,9 @@
   = f.association :author,
     label_method: :name,
     collection: User.all.order(:last_name),
-    prompt: 'Choose an Author'
+    prompt: 'Choose an Author',
+    input_html: { class: 'required' },
+    required: true
 
   .field_note.text-right
     Organization and categories pulled from 
