@@ -32,11 +32,6 @@
     input_html: { class: 'required' },
     required: true
 
-  .field_note.text-right
-    Organization and categories pulled from 
-    %a{ href: 'http://www.feinberg.northwestern.edu/research/clinical-trials/' }
-      http://www.feinberg.northwestern.edu/research/clinical-trials/
-
   = f.fields_for :dataset_organizations do |df|
     = df.label :departments, 'Departments', { class: 'select required' }
     = df.select :departments,
@@ -71,8 +66,14 @@
         @dataset.fast_categories.reject(&:blank?)),
       {}, { multiple: true, class: 'select2' }
   
-  = f.input :visibility, collection: Dataset::VISIBILITY_OPTIONS, selected: Dataset::PUBLIC
-  = f.input :state, collection: Dataset::STATE_OPTIONS, selected: Dataset::ACTIVE
+  = f.input :visibility,
+    collection: Dataset::VISIBILITY_OPTIONS,
+    selected: (@dataset.visibility || Dataset::PUBLIC)
+
+  = f.input :state,
+    collection: Dataset::STATE_OPTIONS,
+    selected: (@dataset.state || Dataset::ACTIVE)
+
   = f.input :source, placeholder: 'http://example.edu/dataset.json'
 
   .field_note.text-right
