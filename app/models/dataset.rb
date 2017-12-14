@@ -98,6 +98,7 @@ class Dataset < ApplicationRecord
                    'distributions.description^3',
                    'distributions.format'
                  ],
+                 operator: 'and',
                  query: query
                }
              },
