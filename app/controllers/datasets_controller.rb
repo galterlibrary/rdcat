@@ -17,8 +17,7 @@ class DatasetsController < ApplicationController
     @datasets = policy_scope(Dataset).order('updated_at DESC')
 
     if params[:category] 
-      # Book.where("subjects @> ?", '{finances}')
-      @datasets = @datasets.where("'#{params[:category]}' = ANY (categories)")
+      @datasets = @datasets.where("? = ANY (categories)", params[:category])
     end
 
     if params[:organization_id]
@@ -28,7 +27,9 @@ class DatasetsController < ApplicationController
     end
     
     if params[:fast_category]
-      @datasets = @datasets.where("'#{params[:fast_category]}' = ANY (fast_categories)")
+      @datasets = @datasets.where(
+        "? = ANY (fast_categories)", params[:fast_category]
+      )
     end
   end
 
