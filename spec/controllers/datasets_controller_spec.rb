@@ -96,6 +96,10 @@ RSpec.describe DatasetsController, type: :controller do
 
     describe 'POST create' do
       describe 'with valid params' do
+        before do
+          expect(controller).to receive(:update_orgs).and_call_original
+        end
+
         it 'creates a new Dataset' do
           expect {
             post :create, params: {dataset: valid_attributes}, session: valid_session
@@ -202,6 +206,108 @@ RSpec.describe DatasetsController, type: :controller do
                 :session => valid_session
             expect(flash[:notice]).to eq('Dataset was successfully updated.')
             expect(flash[:alert]).to eq('Hello world')
+          end
+        end
+
+        context 'organizations management' do
+          let(:departments) {
+            FactoryGirl.create_list(:organization, 3, org_type: 'department')
+          }
+          let(:departments) {
+            FactoryGirl.create_list(:organization, 3, org_type: 'department')
+          }
+          let(:cores) {
+            FactoryGirl.create_list(:organization, 2, org_type: 'research_core')
+          }
+          let(:institutes) {
+            FactoryGirl.create_list(:organization, 4, org_type: 'institute_or_center')
+          }
+          let(:dataset) { FactoryGirl.create(
+            :dataset, maintainer: controller.current_user
+          ) }
+          let(:attributes_with_org) {
+            new_attributes.merge({ dataset_organizations: orgs })
+          }
+
+          before do
+            allow_any_instance_of(Dataset).to receive(:update_or_create_doi)
+          end
+
+          describe 'dataset with no orgs' do
+            let(:orgs) { {
+              departments: departments.pluck(:id),
+              research_cores: cores.pluck(:id),
+              institutes_and_centers: institutes.pluck(:id)
+            } }
+
+            it 'updates the organizations' do
+              expect {
+                put :update,
+                    :params => { id: dataset.to_param, dataset: attributes_with_org },
+                    :session => valid_session
+              }.to change { DatasetOrganization.count }.by(9)
+              dataset.reload
+              expect(dataset.organizations.count).to eq(9)
+              expect(dataset.organizations).to match_array(
+                departments + cores + institutes
+              )
+            end
+          end
+
+          describe 'replacing some orgs in dataset with exising orgs' do
+            let(:orgs) { {
+              departments: departments.pluck(:id),
+              research_cores: cores.pluck(:id),
+              institutes_and_centers: institutes.pluck(:id)
+            } }
+
+            let!(:existing_departments) {
+              FactoryGirl.create_list(:dataset_organization, 4, dataset: dataset)
+            }
+
+            it 'updates the organizations' do
+              expect {
+                put :update,
+                    :params => { id: dataset.to_param, dataset: attributes_with_org },
+                    :session => valid_session
+              }.to change { DatasetOrganization.count }.by(5)
+              dataset.reload
+              expect(dataset.organizations.count).to eq(9)
+              expect(dataset.organizations).to match_array(
+                departments + cores + institutes
+              )
+            end
+          end
+
+          describe 'adding new orgs to dataset with exising orgs' do
+            let(:orgs) { {
+              departments: departments.pluck(:id) + [existing_department.id],
+              research_cores: cores.pluck(:id),
+              institutes_and_centers: institutes.pluck(:id)
+            } }
+            let(:existing_department) {
+              FactoryGirl.create(:organization, org_type: 'department')
+            }
+            let!(:existing_do) {
+              FactoryGirl.create(
+                :dataset_organization,
+                dataset: dataset,
+                organization: existing_department
+              )
+            }
+
+            it 'updates the organizations' do
+              expect {
+                put :update,
+                    :params => { id: dataset.to_param, dataset: attributes_with_org },
+                    :session => valid_session
+              }.to change { DatasetOrganization.count }.by(9)
+              dataset.reload
+              expect(dataset.organizations.count).to eq(10)
+              expect(dataset.organizations).to match_array(
+                [existing_department] + departments + cores + institutes
+              )
+            end
           end
         end
       end

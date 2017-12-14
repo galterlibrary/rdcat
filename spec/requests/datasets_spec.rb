@@ -140,7 +140,7 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
         # Completion triggering
         within('.dataset_fast_categories') do
           search_field = '.select2-search input.select2-search__field'
-          find(:xpath, "//body").find(search_field).set('te')
+          find(search_field).set('te')
           page.execute_script("$('#{search_field}').keyup();")
         end
         expect(page).to have_text('Testing FAST')

@@ -202,7 +202,12 @@ table.datasets {
   }
 }
 
-.dataset_fast_categories {
+.dataset_fast_categories,
+.dataset_categories,
+.dataset_organizations_departments,
+.dataset_organizations_research_cores,
+.dataset_organizations_institutes_and_centers
+{
   span.select2 {
     margin-left: -5px;
     margin-bottom: 10px;

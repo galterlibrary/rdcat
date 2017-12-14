@@ -33,22 +33,25 @@
     required: true
 
   = f.fields_for :dataset_organizations do |df|
-    = df.label :departments, 'Departments', { class: 'select required' }
-    = df.select :departments,
-      options_for_select(Organization.department.order(:name).pluck(:name, :id),
-        @dataset.orgs(:department).pluck(:id)),
-      {}, { multiple: true, class: 'chosen-select' }
+    .input.select.required.dataset_organizations_departments
+      = df.label :departments, 'Departments', { class: 'select required' }
+      = df.select :departments,
+        options_for_select(Organization.department.order(:name).pluck(:name, :id),
+          @dataset.orgs(:department).pluck(:id)),
+        {}, { multiple: true, class: 'select2-orgs select2 required', required: 'required' }
 
-    = df.label :research_cores, 'Research Cores'
-    = df.select :research_cores,
-      options_for_select(Organization.research_core.order(:name).pluck(:name, :id),
-        @dataset.orgs(:research_core).pluck(:id)),
-      {}, { multiple: true, class: 'chosen-select' }
+    .input.select.optional.dataset_organizations_research_cores
+      = df.label :research_cores, 'Research Cores'
+      = df.select :research_cores,
+        options_for_select(Organization.research_core.order(:name).pluck(:name, :id),
+          @dataset.orgs(:research_core).pluck(:id)),
+        {}, { multiple: true, class: 'select2-orgs select2' }
 
-    = df.label :institutes_and_centers, 'Institutes and Centers'
-    = df.select :institutes_and_centers,
-      institutes_and_centers_select_options,
-      {}, { multiple: true, class: 'chosen-select' }
+    .input.select.optional.dataset_organizations_institutes_and_centers
+      = df.label :institutes_and_centers, 'Institutes and Centers'
+      = df.select :institutes_and_centers,
+        institutes_and_centers_select_options,
+        {}, { multiple: true, class: 'select2-orgs select2' }
 
   = f.association :characteristic,
     collection: Characteristic.all.order(:name),
@@ -57,7 +60,8 @@
 
   .input.select.optional.dataset_categories
     = f.label :categories, 'MeSH Categories'
-    = f.select :categories, @categories, {}, { multiple: true, class: 'chosen-select' }
+    = f.select :categories, @categories, {},
+      { multiple: true, class: 'select2-mesh select2' }
 
   .input.select.optional.dataset_fast_categories
     = f.label :fast_categories, 'FAST Categories'
@@ -87,6 +91,12 @@
   = f.button :submit
 
 :javascript
+    $('.select2-orgs').select2({
+      theme: "foundation",
+    });
+    $('.select2-mesh').select2({
+      theme: "foundation",
+    });
     $('#dataset_fast_categories').select2({
       theme: "foundation",
       minimumInputLength: 1,

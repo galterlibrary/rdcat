@@ -14,7 +14,6 @@
 FactoryGirl.define do
   factory :organization do
     name
-    url
     org_type :department
   end
 end

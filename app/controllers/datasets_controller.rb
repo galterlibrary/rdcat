@@ -65,7 +65,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-
+        update_orgs
         write_json_to_file(@dataset)
         
         format.html {
@@ -109,21 +109,6 @@ class DatasetsController < ApplicationController
     end
   end
 
-  def update_orgs
-    return if params[:dataset][:dataset_organizations].blank?
-    new_oids = params[:dataset][:dataset_organizations].to_unsafe_h
-                                                       .values
-                                                       .flatten
-                                                       .reject(&:blank?)
-    current_oids = @dataset.dataset_organizations.pluck(:organization_id)
-    (current_oids - new_oids).each do |oid|
-      @dataset.dataset_organizations.find_by(organization_id: oid).delete
-    end
-    (new_oids - current_oids).each do |oid|
-      @dataset.dataset_organizations.create(organization_id: oid)
-    end
-  end
-
   # DELETE /datasets/1
   # DELETE /datasets/1.json
   def destroy
@@ -147,6 +132,21 @@ class DatasetsController < ApplicationController
   end
 
   private
+    def update_orgs
+      return if params[:dataset][:dataset_organizations].blank?
+      new_oids = params[:dataset][:dataset_organizations].to_unsafe_h
+                                                         .values
+                                                         .flatten
+                                                         .reject(&:blank?)
+      current_oids = @dataset.dataset_organizations.pluck(:organization_id)
+      (current_oids - new_oids).each do |oid|
+        @dataset.dataset_organizations.find_by(organization_id: oid).delete
+      end
+      (new_oids - current_oids).each do |oid|
+        @dataset.dataset_organizations.create(organization_id: oid)
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_dataset
       @dataset = Dataset.find(params[:id]) unless params[:id] == 'search'
