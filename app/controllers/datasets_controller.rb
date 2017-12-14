@@ -33,6 +33,8 @@ class DatasetsController < ApplicationController
   end
 
   def search
+    return redirect_to datasets_path if params[:q].blank?
+
     @categories = Dataset.chosen_categories
     @organizations = Dataset.known_organizations
     @datasets = Dataset.search(

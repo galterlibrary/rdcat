@@ -48,6 +48,15 @@ RSpec.describe DatasetsController, type: :controller do
       get :search, params: {q: 'the term'}
       expect(assigns(:datasets)).to eq([1,2,3])
     end
+
+    context 'with an empty :q param' do
+      it 'redirects to dataset index' do
+        expect(Dataset).not_to receive(:search)
+        expect(
+          get :search, params: {q: ''}
+        ).to redirect_to('/datasets')
+      end
+    end
   end
 
   context 'with a logged in user' do 
