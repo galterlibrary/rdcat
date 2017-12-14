@@ -62,6 +62,8 @@ describe 'Logging in', type: :feature do
       let(:description) { Faker::Hipster.sentence }
       before do
         @dataset = FactoryGirl.create(:dataset, description: description)
+        FactoryGirl.create(:dataset_organization, dataset: @dataset)
+        @dataset.reload
       end
 
       describe 'visiting the dataset index page' do
@@ -72,7 +74,7 @@ describe 'Logging in', type: :feature do
 
           expect(page).to have_content(@dataset.description)
           expect(page).to have_link("#{@dataset.title} - #{@dataset.author.name}")
-          expect(page).to have_content(@dataset.organization.name)
+          expect(page).to have_content(@dataset.organizations.first.name)
           expect(page).to have_content(@dataset.maintainer.email)
         end
 

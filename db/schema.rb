@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171204210817) do
+ActiveRecord::Schema.define(version: 20171211170517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,11 +32,19 @@ ActiveRecord::Schema.define(version: 20171204210817) do
     t.datetime "updated_at",  null: false
   end
 
+  create_table "dataset_organizations", force: :cascade do |t|
+    t.integer  "dataset_id",      null: false
+    t.integer  "organization_id", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["dataset_id"], name: "index_dataset_organizations_on_dataset_id", using: :btree
+    t.index ["organization_id"], name: "index_dataset_organizations_on_organization_id", using: :btree
+  end
+
   create_table "datasets", force: :cascade do |t|
     t.string   "title"
     t.text     "description"
     t.string   "license"
-    t.integer  "organization_id"
     t.string   "visibility"
     t.string   "state"
     t.string   "source"
@@ -53,7 +61,6 @@ ActiveRecord::Schema.define(version: 20171204210817) do
     t.index ["author_id"], name: "index_datasets_on_author_id", using: :btree
     t.index ["characteristic_id"], name: "index_datasets_on_characteristic_id", using: :btree
     t.index ["maintainer_id"], name: "index_datasets_on_maintainer_id", using: :btree
-    t.index ["organization_id"], name: "index_datasets_on_organization_id", using: :btree
   end
 
   create_table "distributions", force: :cascade do |t|
@@ -93,11 +100,11 @@ ActiveRecord::Schema.define(version: 20171204210817) do
 
   create_table "organizations", force: :cascade do |t|
     t.string   "name"
-    t.string   "abbreviation"
-    t.string   "email"
     t.string   "url"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "org_type",   null: false
+    t.string   "group_name"
   end
 
   create_table "users", force: :cascade do |t|
@@ -122,4 +129,6 @@ ActiveRecord::Schema.define(version: 20171204210817) do
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 
+  add_foreign_key "dataset_organizations", "datasets"
+  add_foreign_key "dataset_organizations", "organizations"
 end

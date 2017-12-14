@@ -1,8 +1,8 @@
 # == Schema Information
 #
-# Table name: categories
+# Table name: fast_subjects
 #
-#  id          :integer          not null, primary key
+#  id         :integer          not null, primary key
 #  label      :string
 #  identifier :string
 #

@@ -3,8 +3,8 @@ json.extract!(
             :visibility, :state, :source, :version, :created_at, :updated_at
 )
 
-if @dataset.organization
-  json.organization @dataset.organization.name
+if @dataset.organizations
+  #json.organization @dataset.organization.name
 end
 
 if @dataset.characteristic

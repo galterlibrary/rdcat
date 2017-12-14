@@ -40,8 +40,8 @@
           .ds_info
             .ds_title= link_to truncate(ds.title, length: 30) + " - " + ds.author.name, ds
             .ds_org
-              Organization: 
-              .info= ds.organization.name
+              Departments: 
+              .info= ds.orgs(:department).pluck(:name).join(', ')
             .ds_maintainer 
               Maintained by: 
               .info= link_to ds.maintainer.name, ds.maintainer

@@ -25,7 +25,6 @@ class License < ApplicationRecord
 
   def self.create_records!
     build_records.each do |r| 
-      p "Creating license #{r.inspect}"
       r.save!
     end
   end
