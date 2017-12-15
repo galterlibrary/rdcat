@@ -1,7 +1,6 @@
 class DatasetsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index, :search]
   before_action :set_dataset, only: [:show, :edit, :update, :destroy, :mint_doi]
-  before_action :set_categories, only: [:new, :edit]
   before_action :set_licenses, only: [:new, :edit]
 
   before_action :clean_select_multiple_params, only: [:create, :update]
@@ -78,7 +77,6 @@ class DatasetsController < ApplicationController
       else
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
         format.html {
-          set_categories
           set_licenses
           render :new
         }
@@ -101,7 +99,6 @@ class DatasetsController < ApplicationController
         format.json { render :show, status: :ok, location: @dataset }
       else
         format.html {
-          set_categories
           set_licenses
           render :edit
         }
@@ -153,10 +150,6 @@ class DatasetsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_dataset
       @dataset = Dataset.find(params[:id]) unless params[:id] == 'search'
-    end
-
-    def set_categories
-      @categories = Category.pluck(:name).sort
     end
 
     def set_licenses

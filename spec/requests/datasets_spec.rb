@@ -56,7 +56,6 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
         fill_in 'Source', with: 'computerz'
         select 'Brutal', from: 'License'
         fill_in 'Version', with: 'R2D2'
-        select 'MyString', from: 'MeSH Categories'
       end
       click_button 'Update Dataset'
       
@@ -65,7 +64,6 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
       
       expect(page).to have_link('Boo Hoo')
       expect(page).to have_text('Version R2D2')
-      expect(page).to have_link('MyString', href: '/datasets?category=MyString')
       expect(page).to have_text('Deleted')
       
       expect(page).to have_text('Numbers and such')
@@ -126,10 +124,8 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
         FactoryGirl.create(:fast_subject, label: 'test1')
         FactoryGirl.create(:fast_subject, label: 'Testing FAST')
         #FIXME something strnge going on with this index
-        FastSubject.__elasticsearch__.delete_index!
-        FastSubject.__elasticsearch__.create_index!
-        FastSubject.import
-        #FIXME the above three lines shouldn't be needed
+        FastSubject.reindex!
+        #FIXME the above line shouldn't be needed
         FastSubject.__elasticsearch__.refresh_index!
       end
 
@@ -155,6 +151,41 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
         expect(page).to have_text('Testing FAST')
         click_link 'Edit'
         expect(page).to have_text('Testing FAST')
+      end
+    end
+
+    describe 'MeSH subjects', js: true do
+      before do
+        FactoryGirl.create(:category, name: 'test1')
+        FactoryGirl.create(:category, name: 'Testing MeSH')
+        #FIXME something strnge going on with this index
+        Category.reindex!
+        #FIXME the above line shouldn't be needed
+        Category.__elasticsearch__.refresh_index!
+      end
+
+      specify do
+        visit dataset_path(ds1)
+        click_link 'Edit'
+        expect(page).not_to have_text('Testing MeSH')
+        # Completion triggering
+        within('.dataset_categories') do
+          search_field = '.select2-search input.select2-search__field'
+          find(search_field).set('te')
+          page.execute_script("$('#{search_field}').keyup();")
+        end
+        expect(page).to have_text('Testing MeSH')
+        expect(page).to have_text('test1')
+
+        # Lading of exising subjects
+        visit edit_dataset_path(ds1)
+        expect(page).not_to have_text('Testing MeSH')
+        ds1.categories = ['Testing MeSH']
+        ds1.save!
+        visit dataset_path(ds1)
+        expect(page).to have_text('Testing MeSH')
+        click_link 'Edit'
+        expect(page).to have_text('Testing MeSH')
       end
     end
   end
