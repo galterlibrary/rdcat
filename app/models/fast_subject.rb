@@ -39,7 +39,8 @@ class FastSubject < ApplicationRecord
       {
         text: sug['text'],
         fast_id: sug['_source']['fast_id'],
-        id: sug['_source']['id']
+        id: sug['_source']['id'],
+        prefix: prefix
       }
     end
   end

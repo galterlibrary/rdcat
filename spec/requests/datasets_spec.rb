@@ -139,6 +139,7 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
           find(search_field).set('te')
           page.execute_script("$('#{search_field}').keyup();")
         end
+        expect(page).to have_xpath("//mark[contains(.,'te')]")
         expect(page).to have_text('Testing FAST')
         expect(page).to have_text('test1')
 
@@ -175,6 +176,7 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
           page.execute_script("$('#{search_field}').keyup();")
         end
         expect(page).to have_text('Testing MeSH')
+        expect(page).to have_xpath("//mark[contains(.,'te')]")
         expect(page).to have_text('test1')
 
         # Lading of exising subjects
@@ -186,6 +188,38 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
         expect(page).to have_text('Testing MeSH')
         click_link 'Edit'
         expect(page).to have_text('Testing MeSH')
+      end
+
+      context 'with matchers' do
+        before do
+          FactoryGirl.create(
+            :category, name: 'No name match', matchers: ['hello go', 'toe'],
+            :description => 'Something something'
+          )
+          #FIXME something strnge going on with this index
+          Category.reindex!
+          #FIXME the above line shouldn't be needed
+          Category.__elasticsearch__.refresh_index!
+          Category.reindex!
+          Category.__elasticsearch__.refresh_index!
+        end
+
+        specify do
+          visit dataset_path(ds1)
+          click_link 'Edit'
+          expect(page).not_to have_text('No name match')
+          # Completion triggering
+          within('.dataset_categories') do
+            search_field = '.select2-search input.select2-search__field'
+            find(search_field).set('hell')
+            page.execute_script("$('#{search_field}').keyup();")
+          end
+          expect(page).to have_text('No name match')
+          expect(page).to have_xpath("//mark[contains(.,'hell')]")
+          expect(page).to have_text('hello go')
+          expect(page).not_to have_text('Testing MeSH')
+          expect(page).not_to have_text('test1')
+        end
       end
     end
   end

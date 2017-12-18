@@ -75,7 +75,8 @@ RSpec.describe FastSubject, :type => :model do
           {
             text: 'test',
             fast_id: @test.identifier,
-            id: @test.id
+            id: @test.id,
+            prefix: 'te'
           }
         )
       end

@@ -101,7 +101,10 @@ RSpec.describe Category, type: :model do
             text: 'testus',
             description: @test.description,
             mesh_id: @test.uniq_id,
-            id: @test.id
+            matchers: @test.matchers,
+            id: @test.id,
+            matched: 'testus',
+            prefix: 'testu'
           }
         )
       end
@@ -122,8 +125,11 @@ RSpec.describe Category, type: :model do
             {
               text: 'not-name match',
               description: @test.description,
+              matchers: @test.matchers,
               mesh_id: @test.uniq_id,
-              id: @test.id
+              id: @test.id,
+              matched: 'testingus',
+              prefix: 'testi'
             }
           )
         end

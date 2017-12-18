@@ -41,19 +41,27 @@ class Category < ApplicationRecord
       name: name,
       description: description,
       mesh_id: uniq_id,
+      matchers: matchers,
       id: id
     }
   end
 
   def self.formatted_suggestions(prefix, size=10)
-    elastic_suggest(
+    suggest = elastic_suggest(
       prefix, 'mesh-suggest', size
-    ).suggestions['mesh-suggest'].first['options'].map do |sug|
+    ).suggestions['mesh-suggest']
+
+    return [] if suggest.blank?
+
+    suggest.first['options'].map do |sug|
       {
         text: sug['_source']['name'],
         description: sug['_source']['description'],
         mesh_id: sug['_source']['mesh_id'],
-        id: sug['_source']['id']
+        matchers: sug['_source']['matchers'],
+        id: sug['_source']['id'],
+        matched: sug['text'],
+        prefix: prefix
       }
     end
   end

@@ -93,7 +93,55 @@
   = f.button :submit
 
 :javascript
-  function select_2_ajax(suggest_url) {
+  function mark_term(term, prefix) {
+    var marked = term.slice(0, prefix.length);
+    var not_marked = term.slice(prefix.length);
+    return '<mark>' + marked + '</mark>' + not_marked;
+  }
+
+  function fast_template(state) {
+    if (state.prefix === undefined) return;
+
+    return $('<span>' + mark_term(state.text, state.prefix) + '</span>');
+  }
+
+  function mesh_template(state) {
+    if (state.prefix === undefined) return;
+
+    var text = state.text
+    var matcher = '';
+    if (state.text.match(new RegExp(state.prefix, 'i'))) {
+      text = mark_term(state.text, state.prefix);
+    } else {
+      matcher = ' <span>(' + mark_term(state.matched, state.prefix) + ')</span>';
+    }
+    return $(
+      '<span>' + text + '</span>' + matcher +
+      '<br /><blockquote>' + state.description + '</blockquote>'
+    );
+  }
+
+  function process_fast(obj) {
+    return {
+      text: obj.text,
+      id: obj.text,
+      prefix: obj.prefix
+    }
+  }
+
+  function process_mesh(obj) {
+    return {
+      text: obj.text,
+      id: obj.text,
+      description: obj.description,
+      matchers: obj.matchers,
+      mesh_id: obj.mesh_id,
+      matched: obj.matched,
+      prefix: obj.prefix
+    }
+  }
+
+  function select_2_ajax(suggest_url, process_data_func) {
     return {
       url: suggest_url,
       data: function (params) {
@@ -106,12 +154,7 @@
       processResults: function (data) {
         return {
           //FIXME We should link subjects to the actual table by id
-          results: data.map(function(obj) {
-            return {
-              text: obj.text,
-              id: obj.text
-            }
-          })
+          results: data.map(function(obj) { return process_data_func(obj); })
         }
       }
     }
@@ -124,11 +167,13 @@
   $('#dataset_categories').select2({
     theme: "foundation",
     minimumInputLength: 1,
-    ajax: select_2_ajax('/categories/suggestions')
+    ajax: select_2_ajax('/categories/suggestions', process_mesh),
+    templateResult: mesh_template
   });
 
   $('#dataset_fast_categories').select2({
     theme: "foundation",
     minimumInputLength: 1,
-    ajax: select_2_ajax('/fast_subjects/suggestions')
+    ajax: select_2_ajax('/fast_subjects/suggestions', process_fast),
+    templateResult: fast_template
   });
