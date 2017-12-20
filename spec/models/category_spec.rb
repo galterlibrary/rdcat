@@ -56,13 +56,6 @@ RSpec.describe Category, type: :model do
         expect(suggestions.count).to eq(5)
       end
 
-      describe 'with size limit' do
-        subject { Category.elastic_suggest('te', 'mesh-suggest', 2) }
-
-        it 'returns suggestions' do
-        end
-      end
-
       context 'with matchers' do
         subject { Category.elastic_suggest('te', 'mesh-suggest') }
 

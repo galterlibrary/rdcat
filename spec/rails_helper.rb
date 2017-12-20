@@ -105,7 +105,7 @@ RSpec.configure do |config|
   }
   # Start an in-memory cluster for Elasticsearch as needed
   #NOTE: This wasn't working with elasticsearch from package manager
-  #      on Linx. Tarball from the official page works just fine
+  #      on Linux. Tarball from the official page works just fine
   #      but `command' has to be configured as needed.
   config.before :all, elasticsearch: true do
     WebMock.allow_net_connect!

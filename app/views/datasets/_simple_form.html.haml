@@ -108,9 +108,9 @@
   function mesh_template(state) {
     if (state.prefix === undefined) return;
 
-    var text = state.text
+    var text = state.text;
     var matcher = '';
-    if (state.text.match(new RegExp(state.prefix, 'i'))) {
+    if (state.text.match(new RegExp("^" + state.prefix, 'i'))) {
       text = mark_term(state.text, state.prefix);
     } else {
       matcher = ' <span>(' + mark_term(state.matched, state.prefix) + ')</span>';
