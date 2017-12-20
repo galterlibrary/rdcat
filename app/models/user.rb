@@ -40,11 +40,18 @@ class User < ActiveRecord::Base
     #TODO
   end
 
-  def ldap_before_save
-    return if Rails.env.development? && ENV['BYPASS_LDAP'] == 'true'
-    self.email      = Devise::LDAP::Adapter.get_ldap_param(self.username,'mail').first
-    self.first_name = Devise::LDAP::Adapter.get_ldap_param(self.username,'givenName').first
-    self.last_name  = Devise::LDAP::Adapter.get_ldap_param(self.username,'sn').first
+  def populate_from_ldap(ldap_entry)
+    return if (Rails.env.development? || Rails.env.test?) &&
+              ENV['BYPASS_LDAP'] == 'true'
+
+    self['email'] = ldap_entry['mail'].try(:first)
+    self['first_name'] = ldap_entry['givenname'].try(:first)
+    self['last_name'] = ldap_entry['sn'].try(:first)
+    self['work_address'] = ldap_entry['postaladdress'].try(:first)
+    self['title'] = ldap_entry['title'].try(:first)
+
+    return if ldap_entry['ou'].blank?
+    self.affiliations = ldap_entry['ou'].first.split(';').map(&:strip)
   end
 
   def name
@@ -57,9 +64,8 @@ class User < ActiveRecord::Base
     if user.nil?
       if ldap_entry = Ldap.instance.find_entry_by_netid(username)
         user = User.new(username: username)
-        user.email = ldap_entry['mail'].first
-        user.first_name = ldap_entry['givenName'].first
-        user.last_name = ldap_entry['sn'].first
+        user.populate_from_ldap(ldap_entry)
+        #REMOVEME
         user.password = Devise.friendly_token[0, 20]
         user.save!
       end
