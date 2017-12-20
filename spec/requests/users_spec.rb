@@ -126,4 +126,27 @@ RSpec.describe 'Users', type: :request do
       end #viewing self
     end
   end #show
+
+  describe 'editing user' do
+    before do
+      login_as user_a
+      visit user_path(user_a)
+    end
+
+    specify do
+      click_link 'Edit'
+      expect(page).to have_link('Show')
+      fill_in 'Email', with: 'hello@boo.hoo'
+      fill_in 'First name', with: 'First'
+      fill_in 'Last name', with: 'Last'
+      fill_in 'ORCID', with: '123456'
+      fill_in 'Scopus ID', with: '654321'
+      click_button 'Update User'
+      expect(page).to have_text('hello@boo.hoo')
+      expect(page).to have_text('First')
+      expect(page).to have_text('Last')
+      expect(page).to have_text('123456')
+      expect(page).to have_text('654321')
+    end
+  end
 end

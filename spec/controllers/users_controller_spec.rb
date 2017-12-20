@@ -120,4 +120,39 @@ RSpec.describe UsersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH update' do
+    let(:user) { FactoryGirl.create(:user) }
+    subject { patch :update, params: { id: user.id, user: user_params } }
+
+    before { sign_in user }
+
+    context 'with valid params' do
+      let(:user_params) { {
+        first_name: 'First', last_name: 'Last', email: 'abc@def.ghi',
+        scopusid: 'ABC123', orcid: 'CBA321'
+      } }
+
+      specify do
+        expect(subject).to redirect_to(@user)
+        expect(assigns(:user).first_name).to eq('First')
+        expect(assigns(:user).last_name).to eq('Last')
+        expect(assigns(:user).email).to eq('abc@def.ghi')
+        expect(assigns(:user).scopusid).to eq('ABC123')
+        expect(assigns(:user).orcid).to eq('CBA321')
+        expect(flash.notice).to eq('User was successfully updated.')
+      end
+    end
+
+    context 'with invalid params' do
+      let(:user_params) { {
+        first_name: 'First', last_name: 'Last', email: '',
+        scopusid: 'ABC123', orcid: 'CBA321'
+      } }
+
+      specify do
+        expect(subject).to render_template('edit')
+      end
+    end
+  end
 end

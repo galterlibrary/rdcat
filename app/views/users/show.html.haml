@@ -22,15 +22,26 @@
         %h4
           About
       .card-section
-        .user_org
-          Organization: 
-          .info= "user org"
         .user_title
           Title: 
-          .info= "user title"
+          .info= @user.title
         .user_email
           Email:
           .info= @user.email
+        .user_orcid
+          ORCID:
+          .info= @user.orcid
+        .user_scopusid
+          Scopus ID:
+          .info= @user.scopusid
+        .user_work_address
+          Work Address:
+          .info= @user.work_address
+        .user_org
+          Organizations: 
+          .info= @user.affiliations.join(', ')
+      = link_to 'Edit', edit_user_path(@user), class: "button tiny"
+
     .medium-4.large-3.cell.card.user_dataset
       .card-divider
         %h4

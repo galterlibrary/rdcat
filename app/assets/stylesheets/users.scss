@@ -46,7 +46,9 @@
     margin-right: 5px;
     height: 1%;
     
-    .user_org, .user_title, .user_email {
+    .user_org, .user_title, .user_email, .user_work_address,
+    .user_orcid, .user_scopusid
+    {
       font-weight: bold;
     }
   }

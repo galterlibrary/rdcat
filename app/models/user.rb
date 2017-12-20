@@ -20,6 +20,7 @@
 #  updated_at             :datetime         not null
 #  admin                  :boolean          default(FALSE)
 #
+require 'ldap'
 
 class User < ActiveRecord::Base
 
@@ -40,10 +41,13 @@ class User < ActiveRecord::Base
     #TODO
   end
 
-  def populate_from_ldap(ldap_entry)
+  def populate_from_ldap(ldap_entry=nil)
     return if (Rails.env.development? || Rails.env.test?) &&
               ENV['BYPASS_LDAP'] == 'true'
 
+    if ldap_entry.blank?
+      ldap_entry = Ldap.instance.find_entry_by_netid(username)
+    end
     self['email'] = ldap_entry['mail'].try(:first)
     self['first_name'] = ldap_entry['givenname'].try(:first)
     self['last_name'] = ldap_entry['sn'].try(:first)
@@ -53,12 +57,12 @@ class User < ActiveRecord::Base
     return if ldap_entry['ou'].blank?
     self.affiliations = ldap_entry['ou'].first.split(';').map(&:strip)
   end
+  alias_method :ldap_before_save, :populate_from_ldap
 
   def name
     "#{first_name} #{last_name}".strip
   end
 
-  require 'ldap'
   def self.find_or_create_by_username(username)
     user = User.where(username: username).first
     if user.nil?
