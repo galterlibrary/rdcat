@@ -60,8 +60,10 @@
 
   .input.select.optional.dataset_categories
     = f.label :categories, 'MeSH Categories'
-    = f.select :categories, @categories, {},
-      { multiple: true, class: 'select2-mesh select2' }
+    = f.select :categories,
+      options_for_select(@dataset.categories.reject(&:blank?).map {|o| [o,o] },
+        @dataset.categories.reject(&:blank?)),
+      {}, { multiple: true, class: 'select2' }
 
   .input.select.optional.dataset_fast_categories
     = f.label :fast_categories, 'FAST Categories'
@@ -91,34 +93,87 @@
   = f.button :submit
 
 :javascript
-    $('.select2-orgs').select2({
-      theme: "foundation",
-    });
-    $('.select2-mesh').select2({
-      theme: "foundation",
-    });
-    $('#dataset_fast_categories').select2({
-      theme: "foundation",
-      minimumInputLength: 1,
-      ajax: {
-        url: '/fast_subjects/suggestions',
-        data: function (params) {
-          var query = {
-            query: params.term
-          }
+  function mark_term(term, prefix) {
+    var marked = term.slice(0, prefix.length);
+    var not_marked = term.slice(prefix.length);
+    return '<mark>' + marked + '</mark>' + not_marked;
+  }
 
-          return query;
-        },
-        processResults: function (data) {
-          return {
-            //FIXME We shoul link fast subjects to the actual table by id
-            results: data.map(function(obj) {
-              return {
-                text: obj.text,
-                id: obj.text
-              }
-            })
-          }
+  function fast_template(state) {
+    if (state.prefix === undefined) return;
+
+    return $('<span>' + mark_term(state.text, state.prefix) + '</span>');
+  }
+
+  function mesh_template(state) {
+    if (state.prefix === undefined) return;
+
+    var text = state.text;
+    var matcher = '';
+    if (state.text.match(new RegExp("^" + state.prefix, 'i'))) {
+      text = mark_term(state.text, state.prefix);
+    } else {
+      matcher = ' <span>(' + mark_term(state.matched, state.prefix) + ')</span>';
+    }
+    return $(
+      '<span>' + text + '</span>' + matcher +
+      '<br /><blockquote>' + state.description + '</blockquote>'
+    );
+  }
+
+  function process_fast(obj) {
+    return {
+      text: obj.text,
+      id: obj.text,
+      prefix: obj.prefix
+    }
+  }
+
+  function process_mesh(obj) {
+    return {
+      text: obj.text,
+      id: obj.text,
+      description: obj.description,
+      matchers: obj.matchers,
+      mesh_id: obj.mesh_id,
+      matched: obj.matched,
+      prefix: obj.prefix
+    }
+  }
+
+  function select_2_ajax(suggest_url, process_data_func) {
+    return {
+      url: suggest_url,
+      data: function (params) {
+        var query = {
+          query: params.term
+        }
+
+        return query;
+      },
+      processResults: function (data) {
+        return {
+          //FIXME We should link subjects to the actual table by id
+          results: data.map(function(obj) { return process_data_func(obj); })
         }
       }
-    });
+    }
+  }
+
+  $('.select2-orgs').select2({
+    theme: "foundation",
+  });
+
+  $('#dataset_categories').select2({
+    theme: "foundation",
+    minimumInputLength: 1,
+    ajax: select_2_ajax('/categories/suggestions', process_mesh),
+    templateResult: mesh_template
+  });
+
+  $('#dataset_fast_categories').select2({
+    theme: "foundation",
+    minimumInputLength: 1,
+    ajax: select_2_ajax('/fast_subjects/suggestions', process_fast),
+    templateResult: fast_template
+  });

@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :categories
   devise_for :users
   
   resources :datasets do 
@@ -31,4 +30,5 @@ Rails.application.routes.draw do
   post 'user_lookup/ldap' => 'user_lookup#ldap'
 
   get 'fast_subjects/suggestions' => 'fast_subjects#suggestions'
+  get 'categories/suggestions' => 'categories#suggestions'
 end

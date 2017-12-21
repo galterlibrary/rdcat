@@ -10,6 +10,7 @@
 class FastSubject < ApplicationRecord
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
+  include ElasticsearchConcerns
 
   index_name 'rdcat_suggest'
   document_type self.name.downcase
@@ -31,28 +32,15 @@ class FastSubject < ApplicationRecord
     }
   end
 
-  def self.elastic_suggest(prefix, size=10)
-    __elasticsearch__.search({
-      suggest: {
-        'fast-suggest' => {
-          prefix: prefix,
-          completion: {
-            field: 'suggest',
-            size: size
-          }
-        }
-      }
-    })
-  end
-
   def self.formatted_suggestions(prefix, size=10)
     elastic_suggest(
-      prefix, size
+      prefix, 'fast-suggest', size
     ).suggestions['fast-suggest'].first['options'].map do |sug|
       {
         text: sug['text'],
         fast_id: sug['_source']['fast_id'],
-        id: sug['_source']['id']
+        id: sug['_source']['id'],
+        prefix: prefix
       }
     end
   end

@@ -12,5 +12,57 @@
 #
 
 class Category < ApplicationRecord
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+  include ElasticsearchConcerns
+
+  index_name 'rdcat_suggest_mesh'
+  document_type self.name.downcase
+
   validates :name, presence: true, uniqueness: true
+
+  settings do
+    mapping do
+      indexes :suggest, type: 'completion'
+    end
+  end
+
+  def as_indexed_json(options={})
+    {
+      suggest: [
+        {
+          input: name,
+          weight: 1
+        }, {
+          input: matchers,
+          weight: 2
+        },
+      ],
+      name: name,
+      description: description,
+      mesh_id: uniq_id,
+      matchers: matchers,
+      id: id
+    }
+  end
+
+  def self.formatted_suggestions(prefix, size=10)
+    suggest = elastic_suggest(
+      prefix, 'mesh-suggest', size
+    ).suggestions['mesh-suggest']
+
+    return [] if suggest.blank?
+
+    suggest.first['options'].map do |sug|
+      {
+        text: sug['_source']['name'],
+        description: sug['_source']['description'],
+        mesh_id: sug['_source']['mesh_id'],
+        matchers: sug['_source']['matchers'],
+        id: sug['_source']['id'],
+        matched: sug['text'],
+        prefix: prefix
+      }
+    end
+  end
 end

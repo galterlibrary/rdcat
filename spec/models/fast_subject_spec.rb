@@ -34,7 +34,7 @@ RSpec.describe FastSubject, :type => :model do
     end
 
     context 'self#elastic_suggest' do
-      subject { FastSubject.elastic_suggest('te') }
+      subject { FastSubject.elastic_suggest('te', 'fast-suggest') }
 
       it 'returns suggestions' do
         expect(subject).to be_an_instance_of(
@@ -52,7 +52,7 @@ RSpec.describe FastSubject, :type => :model do
       end
 
       describe 'with size limit' do
-        subject { FastSubject.elastic_suggest('te', 2) }
+        subject { FastSubject.elastic_suggest('te', 'fast-suggest', 2) }
 
         it 'returns suggestions' do
           expect(subject).to be_an_instance_of(
@@ -75,7 +75,8 @@ RSpec.describe FastSubject, :type => :model do
           {
             text: 'test',
             fast_id: @test.identifier,
-            id: @test.id
+            id: @test.id,
+            prefix: 'te'
           }
         )
       end

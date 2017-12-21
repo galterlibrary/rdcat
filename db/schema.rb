@@ -10,18 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171211170517) do
+ActiveRecord::Schema.define(version: 20171215194723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "categories", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "uniq_id"
     t.text     "description"
-    t.string   "matchers",                 array: true
+    t.string   "matchers",    default: [],              array: true
     t.index ["matchers"], name: "index_categories_on_matchers", using: :gin
   end
 
