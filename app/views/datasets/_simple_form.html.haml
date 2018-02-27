@@ -33,12 +33,12 @@
     required: true
 
   = f.fields_for :dataset_organizations do |df|
-    .input.select.required.dataset_organizations_departments
-      = df.label :departments, 'Departments', { class: 'select required' }
+    .input.select.optional.dataset_organizations_departments
+      = df.label :departments, 'Departments', { class: 'select' }
       = df.select :departments,
         options_for_select(Organization.department.order(:name).pluck(:name, :id),
           @dataset.orgs(:department).pluck(:id)),
-        {}, { multiple: true, class: 'select2-orgs select2 required', required: 'required' }
+        {}, { multiple: true, class: 'select2-orgs select2' }
 
     .input.select.optional.dataset_organizations_research_cores
       = df.label :research_cores, 'Research Cores'

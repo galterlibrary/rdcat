@@ -30,7 +30,8 @@ RSpec.describe Dataset, :type => :model do
     end
 
     specify do
-      expect(subject).to have_many(:distributions)
+      expect(subject).to have_many(:distributions).dependent(:destroy)
+      expect(subject).to have_many(:dataset_organizations).dependent(:destroy)
       expect(subject).to have_many(:organizations)
       expect(subject).to belong_to(:author)
       expect(subject).to belong_to(:maintainer)

@@ -32,8 +32,8 @@ class Dataset < ApplicationRecord
   belongs_to :author, class_name: 'User'
   belongs_to :maintainer, class_name: 'User'
   belongs_to :characteristic
-  has_many :distributions
-  has_many :dataset_organizations
+  has_many :distributions, dependent: :destroy
+  has_many :dataset_organizations, dependent: :destroy
   has_many :organizations, :through => :dataset_organizations
   scope :departments, -> {
     joins(:dataset_organizations).joins(:organizations).where(

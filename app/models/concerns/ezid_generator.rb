@@ -83,5 +83,6 @@ module EzidGenerator
       identifier.status = 'unavailable'
       identifier.save
     end
+  rescue Ezid::IdentifierNotFoundError
   end
 end
