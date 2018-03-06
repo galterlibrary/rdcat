@@ -1,7 +1,17 @@
 = simple_form_for @user do |f|
-  = f.input :username, error: 'Username is required, please enter one', disabled: true
-  = f.input :email, error: 'Email is required, please enter one', input_html: { class: 'required' }, required: true
+  = f.input :email,
+    error: 'Email is required,
+    please enter one',
+    input_html: { class: 'required' },
+    required: true
   = f.input :first_name
   = f.input :last_name
+  = f.input :orcid, label: 'ORCID'
+  = f.input :scopusid, label: 'Scopus ID'
+  = field_set_tag "Fields bellow can only be modified in Northwestern's directory" do
+    = f.input :username, error: 'Username is required, please enter one', disabled: true
+    = f.input :work_address, disabled: true
+    = f.input :title, disabled: true
+    = f.input :affiliations, disabled: true
 
   = f.button :submit
