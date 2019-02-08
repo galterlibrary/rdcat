@@ -15,7 +15,7 @@ if [ -z $RAILS_ENV ]; then
 fi
 
 # Bump bundler version after making sure it works
-export BUNDLER_VERSION=1.15.4
+export BUNDLER_VERSION=1.16.0
 
 set +e
 gem list -i bundler -v $BUNDLER_VERSION
