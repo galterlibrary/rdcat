@@ -92,7 +92,7 @@ RSpec.describe 'Datasets', :type => :request, elasticsearch: true do
       click_link('Mint DOI')
       expect(page).to have_link(
         'doi:10.5072/FK2W66HS5K',
-        href: 'https://dx.doi.org/doi:10.5072/FK2W66HS5K'
+        href: 'https://doi.org/doi:10.5072/FK2W66HS5K'
       )
       expect(page).not_to have_link('Mint DOI')
       ds1.update_attributes(doi: nil)

@@ -34,7 +34,7 @@
       .ds_doi.text-center.auto.cell
         - if @dataset.doi
           DOI:
-          = link_to @dataset.doi, "https://dx.doi.org/#{@dataset.doi}"
+          = link_to @dataset.doi, "https://doi.org/#{@dataset.doi}"
         - elsif can_edit?(@dataset) && @dataset.doi.blank?
           = link_to 'Mint DOI', mint_doi_dataset_path(@dataset),
                     :method => :post,
